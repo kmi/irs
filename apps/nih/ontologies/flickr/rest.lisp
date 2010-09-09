@@ -393,6 +393,223 @@
 
 ;;; }}}
 
+;;; {{{ #_photosRecentlyUpdatedRestServiceJson
+
+;;Same as #_photosRecentlyUpdatedRestServiceJson but grounds to the
+;;version of the service that returns JSON output
+
+(def-class #_photosRecentlyUpdatedRestGoalJson (goal) ?goal
+  ((has-input-role :value #_hasAccount
+		   :value #_hasToken
+		   :value #_hasMinimumDate)
+   (has-output-role :value #_hasPhotoList)
+   (#_hasAccount :type #_Account)
+   (#_hasToken :type #_Token)
+   ;; XXX hasMinimumDate is the Unix time.  It must be > 0.
+   (#_hasMinimumDate :type integer)
+   (#_hasPhotoList :type #_PhotoList)))
+
+(def-class
+  #_photosRecentlyUpdatedRestJson-mediator-non-functional-properties
+  (non-functional-properties)
+    nil)
+
+(def-class #_photosRecentlyUpdatedRestJson-mediator (wg-mediator)
+  ?mediator
+  ((has-source-component :value #_photosRecentlyUpdatedRestGoalJson)
+   (has-non-functional-properties :value
+  #_photosRecentlyUpdatedRestJson-mediator-non-functional-properties)))
+
+
+(def-class #_photosRecentlyUpdatedRestServiceJson (web-service)
+  ?web-service
+  ((has-capability :value
+  #_photosRecentlyUpdatedRestServiceJson-capability)
+   (has-interface :value
+  #_photosRecentlyUpdatedRestServiceJson-interface)
+   (has-non-functional-properties :value
+  #_photosRecentlyUpdatedRestServiceJson-non-functional-properties)
+   (has-output-role :value #_hasContent :value #_hasContentType)
+   (#_hasContent :cardinality 1)
+   (#_hasContentType :cardinality 1)))
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-non-functional-properties
+  (non-functional-properties)
+  nil)
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-capability-non-functional-properties
+  (non-functional-properties)
+  nil)
+
+(def-class #_photosRecentlyUpdatedRestServiceJson-capability
+  (capability)
+  ?capability
+  ((used-mediator :value #_photosRecentlyUpdatedRestJson-mediator)
+   (has-non-functional-properties :value
+    #_photosRecentlyUpdatedRestServiceJson-capability-non-functional-properties)))
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-interface-non-functional-properties
+  (non-functional-properties)
+  nil)
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-interface-choreography
+  (choreography)
+  ((has-grounding :value ((grounded-to-rest)))
+   (has-earthing :value
+  #_photosRecentlyUpdatedRestServiceJson-grounding)))
+
+(def-instance #_photosRecentlyUpdatedRestServiceJson-grounding
+  rest-grounding
+  ())
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-interface-orchestration-problem-solving-pattern
+  (problem-solving-pattern)
+  ((has-body :value nil)))
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-interface-orchestration
+  (orchestration)
+  ((has-problem-solving-pattern
+    :value
+    #_photosRecentlyUpdatedRestServiceJson-interface-orchestration-problem-solving-pattern)))
+
+(def-class #_photosRecentlyUpdatedRestServiceJson-interface
+  (interface) ?interface
+  ((has-choreography :value
+  #_photosRecentlyUpdatedRestServiceJson-interface-choreography)
+   (has-orchestration :value
+  #_photosRecentlyUpdatedRestServiceJson-interface-orchestration)
+   (has-non-functional-properties :value
+    #_photosRecentlyUpdatedRestServiceJson-interface-non-functional-properties)))
+
+(def-class
+  #_photosRecentlyUpdatedRestServiceJson-publisher-information
+  (publisher-information)
+  ((has-associated-web-service-interface 
+    :value 
+    #_photosRecentlyUpdatedRestServiceJson-interface)
+   (has-web-service-host :value "yahoo.com")
+   (has-web-service-port :value 80)))
+
+;;; {{{ Lifting and lowering
+
+;;The following lifting and lowering rules are meant for parsing
+;;JSON output such as the following:
+#|
+{"photos":
+   {"page":1, 
+    "pages":2, 
+    "perpage":100, 
+    "total":"197", 
+    "photo":
+        [
+         {"id":"263263790", "owner":"17186009@N00",
+   "secret":"..........", "server":"114", "farm":1, "title":"men on a
+   mission - barbados 2006", "ispublic":1, "isfriend":0,
+   "isfamily":0}, 
+         {"id":"435276838", "owner":"17186009@N00",
+   "secret":"..........", "server":"181", "farm":1, "title":"Cambridge
+   2007 - the original RedMobile crew (minus Nysha)", "ispublic":1,
+   "isfriend":0, "isfamily":0}, 
+         {"id":"623101066", "owner":"17186009@N00",
+   "secret":"..........", "server":"1138", "farm":2, "title":"2007 -
+   london - busspepper", "ispublic":1, "isfriend":0, "isfamily":0},
+         {"id":"391467379", "owner":"17186009@N00",
+   "secret":"..........", "server":"162", "farm":1, "title":"MK Winter
+   2007 - Winter Garden", "ispublic":1, "isfriend":0, "isfamily":0}
+         ...
+        ]
+   }, 
+ "stat":"ok"
+}
+|#
+
+(def-rule #_lower-for-photosRecentlyUpdatedRestServiceJson
+  ((#_grnd:lower #_photosRecentlyUpdatedRestServiceJson ?invocation ?http-request) if
+     (#_rfc2616:set-method ?http-request "GET")
+     (= ?base-url "http://api.flickr.com/services/rest/?")
+     (= ?account (wsmo-role-value ?invocation #_hasAccount))
+     (= ?token (wsmo-role-value ?invocation #_hasToken))
+     (#_hasKey ?account ?apikey)
+     (#_hasValue ?apikey ?apikey-string)
+     (#_hasValue ?token ?token-string)
+     (= ?min-date 
+	(make-string "~A" 
+		     (wsmo-role-value ?invocation #_hasMinimumDate)))
+     (= ?args (#_new-instance #_Arguments))
+     (#_addArgument ?args "method" "flickr.photos.recentlyUpdated")
+     (#_addArgument ?args "api_key" ?apikey-string)
+     (#_addArgument ?args "auth_token" ?token-string)
+     (#_addArgument ?args "min_date" ?min-date)
+     (#_addArgument ?args "format" "json")
+     (#_addArgument ?args "nojsoncallback" "1")
+     (#_signArguments #_rest ?args ?account)
+     (#_asQuery ?args ?query)
+     (= ?url (make-string "~A~A" ?base-url ?query)) (exec (output "here here here"))
+     (#_rfc2616:set-url ?http-request ?url)))
+
+(def-rule #_lift-for-photosRecentlyUpdatedRestServiceJson
+    ((#_grnd:lift #_photosRecentlyUpdatedRestServiceJson ?http-response ?invocation) if (exec (output "here here here"))
+     (#_rfc2616:get-content ?http-response ?http-content) (exec (output "here here here"))
+     (#_json:serialiseJson ?json ?http-content) (exec (output "test ~A~%" ?json))
+     (#_json:Object ?json)
+     (#_json:members ?json ?objMembers)
+     (member ?photosKeyValuePair ?objMembers)
+     (#_json:key ?photosKeyValuePair "photos")
+     (#_json:value ?photosKeyValuePair ?innerPhotosObject)
+     (#_extractPhotoListFromJson ?innerPhotosObject ?photolist)
+     (set-goal-slot-value ?invocation #_hasPhotoList ?photolist)))
+
+(def-rule #_extractPhotoListFromJson
+    ((#_extractPhotoListFromJson ?innerPhotosObject ?photolist) if
+     (= ?photolist
+	(setofall ?photo
+		  (and (#_json:Object ?innerPhotosObject)
+                       (#_json:members ?innerPhotosObject ?innerPhotosObjectMembers)
+                       (member ?photoKeyValuePair ?innerPhotosObjectMembers)
+                       (#_json:key ?photoKeyValuePair "photo")
+                       (#_json:value ?photoKeyValuePair ?photoArray)
+                       (#_json:Array ?photoArray)
+                       (#_json:elements ?photoArray ?photoArrayElements)
+                       (member ?photoObject ?photoArrayElements)
+		       (#_extractPhotoFromJson ?photoObject ?photo))))))
+
+(def-rule #_extractPhotoFromJson
+    ((#_extractPhotoFromJson ?photoObject ?photo) if
+     (#_json:Object ?photoObject)
+     (#_json:members ?photoObject ?photoObjectMembers)
+     (member ?idKeyValuePair ?photoObjectMembers)
+     (#_json:key ?idKeyValuePair "id")
+     (#_json:value ?idKeyValuePair ?id)
+     (member ?titleKeyValuePair ?photoObjectMembers)
+     (#_json:key ?titleKeyValuePair "title")
+     (#_json:value ?titleKeyValuePair ?title)
+     (member ?farmKeyValuePair ?photoObjectMembers)
+     (#_json:key ?farmKeyValuePair "farm")
+     (#_json:value ?farmKeyValuePair ?farm)
+     (member ?serverKeyValuePair ?photoObjectMembers)
+     (#_json:key ?serverKeyValuePair "server")
+     (#_json:value ?serverKeyValuePair ?server)
+     (member ?secretKeyValuePair ?photoObjectMembers)
+     (#_json:key ?secretKeyValuePair "secret")
+     (#_json:value ?secretKeyValuePair ?secret)
+     (= ?slots ((#_id ?id)
+                (#_title ?title)
+                (#_farm ?farm)
+                (#_server ?server)
+                (#_secret ?secret)))
+     (#_new ?photo #_Photo ?slots)))
+
+;;; }}}
+
+;;; }}}
+
+
 ;;; {{{ #_photosGetSizesRestService
 
 ;; Return a list sizes a photo is available in.
