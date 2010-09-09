@@ -12,7 +12,7 @@
   :description "IRS"
   :version "3.5.1"
   :depends-on (:cl-who :cxml :drakma :hunchentoot
-               :ironclad #+:irs-use-lispweb lispweb :ocml)
+               :ironclad :cl-json #+:irs-use-lispweb lispweb :ocml)
   :components
   ((:module :api-javascript
 	    ;; API for Javascript clients: RESTian, with JSON output.
