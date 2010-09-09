@@ -6,7 +6,7 @@
 
 (def-ontology flickr
     "Goals and services for accessing Flickr."
-    :includes (cryptography http-grounding mime rfc2616 xml xml-rpc wsmo)
+    :includes (cryptography http-grounding mime rfc2616 xml xml-rpc wsmo json)
     :type :goal
     :namespace-uri "http://www.kmi.open.ac.uk/projects/irs/flickr#"
     :namespaces (("flickr" flickr)
@@ -15,6 +15,7 @@
                  ("mime" mime)
                  ("rfc2616" rfc2616)
 		 ("xml" xml)
+                 ("json" json)
                  ("xmlrpc" xml-rpc))
     :author "dave" :allowed-editors ("dave" "john")
     :files ("elevation" "flickr" "rest" "sundry" "xmlrpc"))
