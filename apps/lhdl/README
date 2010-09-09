@@ -1,0 +1,44 @@
+This application holds the project specific ontologis and code for the
+EU FP6 project ‘Living Human Digital Library’ (LHDL).
+
+Most, perhaps all, of the services require authentication.  For the
+LHDL services, you need a user account at www.biomedtown.org.  For the
+Amazon services, you will need an account with Amazon's Web Services.
+You must tell the IRS about the account details, by placing the
+account information in an ontology.  Do NOT commit this information to
+Git.  Specifically, the information should be placed in a file in the
+lhdl-application ontology:
+
+    irs/apps/lhdl/ontologies/lhdl-application/secrets.lisp
+
+That file should take the general form:
+
+    (def-instance lhdl-amazons3-account #_s3:amazon-account
+      ((#_s3:has-amazon-access-key lhdl-amazons3-amazon-access-key)
+       (#_s3:has-amazon-secret-key lhdl-amazons3-amazon-secret-key)))
+
+    (def-instance lhdl-amazons3-amazon-access-key #_s3:amazon-access-key
+      ((#_s3:has-value "<your amazon account access key>")))
+
+    (def-instance lhdl-amazons3-amazon-secret-key #_s3:amazon-secret-key
+      ((#_s3:has-value "your amazon account secret key")))
+
+    (def-instance #_defaultBiomedTownAccount #_domain:BiomedTownAccount
+      ((#_domain:hasUsername #_daveBiomedTownUsername)
+       (#_domain:hasPassword #_daveBiomedTownPassword)))
+
+    (def-instance #_daveBiomedTownUsername lhdl-username
+      ((has-value "<your biomed town username>")))
+
+    (def-instance #_daveBiomedTownPassword lhdl-password
+      ((has-value "<your biomed town password>")))
+
+Don't forget: *DO NOT COMMIT THIS INFORMATION!*
+
+The test suite depends on the accounts named above to be available.
+
+Have fun.
+
+Once more, and for all that is holy:
+
+		***DO NOT COMMIT THIS INFORMATION!***

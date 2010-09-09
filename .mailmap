@@ -1,0 +1,25 @@
+### Mapping of email addresses to author names.  The primary reason
+### for this is that, when we converted from SVN, we didn't mung the
+### names.  And part of the reason for that is that some of the
+### commiters didn't have an obvious mapping to a human.  The people
+### behind the root and kmi-demo-service emails, for instance, were
+### not known at the time.
+
+Alessio Gugliotta <a.gugliotta@open.ac.uk> <ag4685@Macintosh-6.open.ac.uk>
+Alessio Gugliotta <a.gugliotta@open.ac.uk> <ag4685@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Barry Norton <bjn48@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Carlos Pedrinaci <c.pedrinaci@open.ac.uk> <cp3982@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Dave Lambert <d.j.lambert@gmail.com> <d.j.lambert@open.ac.uk>
+Dave Lambert <d.j.lambert@gmail.com> <djl432@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Dave Lambert <d.j.lambert@gmail.com> <djl@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Dave Lambert <d.j.lambert@gmail.com> <root@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+John Domingue <j.b.domingue@open.ac.uk> <jbd2@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Liliana Cabral <lc2676@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Michele Pasin <mp4239@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Roxana Belecheanu <rab543@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Simon Foster <sdf77@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Stefan Dietze <s.dietze@open.ac.uk> <sd5595@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Stefan Dietze <s.dietze@open.ac.uk> <stefan.dietze@gmx.de>
+Stefania Galizia <sg4278@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Vlad Tanasescu <vladtn@gmail.com> <kmi-demo-service@f2dad2fb-731f-d443-8bda-5e99e7bb3120>
+Vlad Tanasescu <vladtn@gmail.com> <vt666@f2dad2fb-731f-d443-8bda-5e99e7bb3120>

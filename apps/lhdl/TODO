@@ -1,0 +1,36 @@
+* LHDL
+
+** VME subtyping
+
+Xia says that the VRML import operation generates a surface VME.  This
+means we cannae do iso surface extraction.  but the *typing* info on
+those operations doesn't tell use that.  We need extra asssertions
+about the instances, and I don't know how we can get that in general.
+Can we have a service that asks of a URL ‘what kind of VME is this?’?.
+
+This is a case of the open/closed world assumption.  VMEs are
+unclassified.  So do we assume they are by default able to do
+anything, and then later remove inferences, or start from a base where
+they are useless until proven otherwise?
+
+** Ports
+
+Marco says that all user-facing comms should go through 80 and 443,
+because these are the ones the users' firewalls permit.
+
+Check HTTPS operation.
+
+** SAML
+
+Can we use SAML, particularly the Apache implementation (I guess we
+can, by proxying Hunchentoot through Apache).
+
+** RDF/OWL interop
+
+We would be able to do some cool stuff with this once their metadata
+is in OWL.
+
+
+Local variables:
+mode: outline
+End:

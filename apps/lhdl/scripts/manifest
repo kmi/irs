@@ -1,0 +1,15 @@
+#!/bin/sh
+
+### Files required to run the LHDL application.
+
+git ls-files -- \
+    apps/lhdl
+
+git ls-files -- \
+    ontologies/domains/xml \
+    ontologies/domains/xml-rpc
+
+# We include the source to the IRS, for the future safety of LHDL
+# offshoots.
+git ls-files -- \
+    code

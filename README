@@ -1,0 +1,13 @@
+The Internet Reasoning Service (IRS) is a semantic web services
+broker, developed in the Knowledge Media Institute of the Open
+University.  IRS is implemented in Common Lisp.
+
+IRS features include:
+
+    - WSMO compatibility
+    - Groundings to SOAP, XML-RPC, HTTP GET
+    - Invokable through SOAP, HTTP GET
+    - Service orchestration and choreography
+    - Ontology-based service selection
+
+Installation instructions can be found in the file ‘INSTALL’.

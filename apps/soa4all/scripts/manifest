@@ -1,0 +1,6 @@
+#!/bin/sh
+
+### Files required to run the SOA4all application
+
+git ls-files -- \
+    apps/soa4all

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Math application
+git ls-files -- apps/math
+
+# Trusted travel (which needs plain travel application)
+git ls-files -- apps/travel apps/trusted-travel
+git ls-files -- \
+    ontologies/applications/european-train-travel-application \
+    ontologies/applications/french-cities-kb \
+    ontologies/applications/german-cities-kb \
+    ontologies/applications/trust-heuristic-classification \
+    ontologies/applications/uk-county-knowledge-base \
+    ontologies/domains/common-concepts \
+    ontologies/domains/country-ontology \
+    ontologies/domains/trust-profile \
+    ontologies/domains/wsto \
+    ontologies/methods/heuristic-classification \
+    ontologies/tasks/classificationv2 \
+    ontologies/tasks/classificationv2-class-map

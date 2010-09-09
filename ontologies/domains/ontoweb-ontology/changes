@@ -1,0 +1,30 @@
+relation 'methodology' -> has-methodology
+'s-t-r-i-n-g' -> string
+'d-e-f-a-u-l-t_r-o-o-t_c-o-n-c-e-p-t' -> default_root_concept
+'d-e-f-a-u-l-t_r-o-o-t_r-e-l-a-t-i-o-n' -> default_root_relation
+
+'dc-title' -> 'title'
+
+'PH-D-THESIS' -> 'PHD-THESIS'
+'u-r-l' -> 'url'
+
+added
+(def-class binary-relation (Default_Root_Concept))
+
+commented out
+(def-relation METHODOLOGY (?x ?y)
+:pretty-name "http://www.OntoWeb.org/extended#methodology"
+)
+
+
+and
+(def-relation TOPIC (?x ?y)
+:pretty-name "http://www.OntoWeb.org/extended#topic"
+)
+
+
+'organization' -> 'organisation' to match kb
+
+added missing slots in person (these are in kb)
+((belongs_name :type string) ;;added by john domingue
+ (belongs_url :type url) ;;added by john domingue

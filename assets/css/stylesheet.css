@@ -1,0 +1,404 @@
+body
+{
+   font-family: Sans;
+   font-size: 8pt;
+}
+
+#banner
+{
+   left: 12%;
+   top: -1%;
+   width: 75%;
+   position: absolute;
+}
+
+#content
+{
+   top: 6%;
+   left: 12%;
+/*   right: 15%;*/
+   position: absolute;
+   width: 85%;
+   padding: 0%;
+/*   height: 90%*/
+   /*padding-left: 10%; padding-right: 10px; padding-top: 10px;*/
+  text-align: justify;
+  /* The darker blue from KMi logo */
+  color: #b7d9f1
+  /* The dark blue from the irs logo. */
+  /* color: #364470 */
+  background: #ffffff;
+  }
+
+#menu
+{
+   position: absolute;
+   top: 0px;
+   width: 8%; margin: 0;
+   padding: 1%;
+   /*padding-left: 15px; padding-right: 10px; padding-top: 10px; */
+   background-color: #ffffff; 
+   color: black; 
+}
+
+
+h1,h2,h3
+{
+  text-align: left;
+  /* The darker blue from KMi logo */
+  /* color: #b7d9f1*/
+  /* The dark blue from the irs logo. */
+  color: #364470
+}
+
+.reading-width
+{
+   width: 50%;
+}
+
+table.logo-table
+{
+   width: 50%;
+   padding: 12pt;
+}
+
+.codebox
+{
+   font-family: monospace;
+}
+
+img
+{
+border-style: none;
+}
+
+.advice
+{
+  color: black;
+  background: #ffe0e0;
+  padding: 10px;
+  }
+
+.sidebar
+{
+  color: black; 
+  background: #e0e0ff;
+}
+
+
+tr.sidebar2
+{
+  color: black; 
+  background: #ffffff;
+}
+
+
+tr.tabletop
+{
+  color: black; 
+  font-size: 90%;
+  font-style: bold;
+  background: #ffffff;
+}
+
+
+.navigation
+{
+  color: black; 
+  background: #e0ffe0;
+}
+
+table
+{
+   padding: 0px;
+   cell-padding: 0px;
+   cell-spacing: 0px;
+}
+
+/* td { font-size: 90%; } */
+
+/* a {font-size: 80%} */
+
+  /* The dark blue from the irs logo. */
+  color: #364470
+a:link 		{ color: #ff00ff; }
+
+a:visited 	{ color: #000066; }
+
+#a:active 	{ color: #FF0000; }
+
+#a:hover 	{ color: #FFFFFF; }
+
+
+/* a:hover {
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+      outline does exactly what we want, better than borders.  unfortunately its only implemented in Opera so far. 
+	outline-style: solid;
+	outline-width: 1px;
+	outline-color: black; 
+}
+*/
+
+
+
+
+
+/*  GOAL SECTION  */
+
+
+#goal-section {
+	background: lavender;
+	
+}
+
+#goal-section form.top_form{
+	background: Gainsboro;
+	
+}
+
+
+#goal-section form.bottom_form{
+	background: LightBlue;
+	
+}
+
+
+
+#goal-section .action_title{
+	background: yellow;
+	margin-top: 12px;
+	width: 120px;
+	font-weight: normal;
+	
+}
+
+#goal-section a{
+	margin-top: 10px;
+	
+}
+
+#goal-section td.input_box1 {
+	padding: 3px 18px 0px 0px;		
+}
+
+#goal-section td.input_box2 {
+	padding: 3px 18px 0px 50px;		
+}
+
+#goal-section td.select1 {
+	text-align: left;
+	padding: 3px 140px 10px 0px;	
+}
+
+#goal-section td.select2 {
+	text-align: left;
+	padding: 3px 140px 10px 0px;	
+}
+
+
+#goal-section td.clickable_types {
+	text-align: left;
+	padding: 3px 140px 10px 0px;
+	font-size: 14px;
+	
+}
+
+#slots {
+	margin-top: 30px;
+	
+}
+
+
+#response {
+	margin-top: 30px;
+	
+}
+
+
+
+
+/*  THE POPPUP  */
+
+
+
+#popup_div {
+	width: 635px;
+	height: 500px;
+	border: 1px dashed;
+	padding: 20px;
+	background: lavender;	
+	overflow: auto;
+}
+
+
+#popup_div .close-popup {
+	text-align: right;
+	font-size: 13px;
+}
+
+#popup_div .close-popup:hover {
+	color: blue;
+	font-size: 13px;
+}
+
+
+
+#popup_div li {
+   font-size: 18px;
+   line-height: 1.5em;
+	padding: 5px;
+	
+}
+
+
+#popup_div li:hover {
+ color: BlueViolet;
+	
+}
+
+#popup_div .highlighted {
+ color: red;
+	
+}
+
+
+#popup_div form label { 
+	display: block;  /* block float the labels to left column, set a width */
+	float: left; 
+	width: 330px; 
+	padding: 0; 
+	margin: 10px 0 0; /* set top margin same as form input - textarea etc. elements */
+	text-align: right; 
+	font-size: 14px;
+}
+
+
+#popup_div form {  /* set width in form, not fieldset (still takes up more room w/ fieldset width */
+  font:100% verdana,arial,sans-serif;
+  margin: 28px 0px;
+  padding: 0pt;
+  min-width: 600px;
+  max-width: 700px;
+  width: 630px; 
+}
+
+#popup_div br {  /* set width in form, not fieldset (still takes up more room w/ fieldset width */
+  font:100% verdana,arial,sans-serif;
+  margin: 0;
+  padding: 5pt;
+
+}
+
+#popup_div form fieldset {
+  border-color: DodgerBlue;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px;        
+  margin: 0;
+}
+
+
+
+#popup_div form fieldset legend {
+	font-size:1.1em; 
+}
+
+
+
+
+#popup_div form br {
+	clear:left;
+}
+
+
+#popup_div form input {
+	display: block;  /* block float the labels to left column, set a width */
+	float: left; 
+	padding: 0; 
+	margin:5px 0 0 10px; /* set margin on left of form elements rather than right of
+                              label aligns textarea better in IE */
+}
+
+
+#popup_div form select {
+	display: block;  /* block float the labels to left column, set a width */
+	float: left; 
+	padding: 0; 
+	margin:5px 0 0 10px; /* set margin on left of form elements rather than right of
+                              label aligns textarea better in IE */
+}
+
+
+ #popup_div .submit
+{
+	margin: 34px 240px;
+}
+
+
+ #popup_div .submit input
+{
+margin-left: 1.5em;
+color: #000;
+background: PapayaWhip;
+border: 2px outset #d7b9c9;
+} 
+
+
+
+
+/* {{{ Events */
+
+tr.servicePaneHeader
+{
+    background-color: #99CCCC;
+    border: 1px #000000 solid;
+    font-weight: bold;
+    font-size: 12px;
+    color: #404040;
+}
+
+.servicePane
+{
+    width: 100%;
+    max-height: 3cm;
+    /* Get a scrollbar when we overfill the height. */
+    overflow: auto;
+}
+
+tr.event
+{
+  color: black;
+  background: #ddddff;
+}
+
+tr.event2
+{
+    width:100%;
+  color: black;
+  background: #ddddff;
+}
+
+td.eventTime
+{
+    width: 10%;
+}
+
+td.eventClass
+{
+    width: 10%;
+}
+
+td.eventService
+{
+    width: 20%;
+}
+
+td.eventContent
+{
+    width: 60%;
+}
+
+
+/* }}} */

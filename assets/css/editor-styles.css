@@ -1,0 +1,98 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11pt;
+	overflow-x:hidden;
+}
+
+.yui-skin-sam .yuimenubar {
+	font-size: 11pt;
+}
+
+.yui-skin-sam .filter-button .yui-checkbox-button-checked button {
+ 
+   padding: 0;
+	margin: 0;
+    border: 0;
+	border-collapse:collapse;
+	border-spacing:0;
+	font-size:60%;
+	font-weight: bold;	
+	width: 20px;
+	background: url(../images/filter-button-on.png) no-repeat !important;
+}
+
+.yui-skin-sam .filter-button .yui-button button {
+    padding: 0;
+	margin: 0;
+    border: 0;
+	border-collapse:collapse;
+	border-spacing:0;
+	font-size:60%;
+	font-weight: bold;
+	width: 20px;
+	background: url(../images/filter-button-off.png) no-repeat;
+}
+
+.yui-skin-sam .yui-panel .container-close {	
+	height:12px;
+	width:12px;
+	background: url(../images/filter-panel-close.gif) no-repeat;
+	}
+
+.yui-skin-sam .yui-panel .container-close:hover {
+	background: url(../images/filter-panel-close-hover.gif) no-repeat;
+	}
+
+.yui-skin-sam .yui-navset .yui-content {
+	background-color: whitesmoke;
+}
+
+.ontology-window .bd  {
+	padding: 0px 0px 0px 0px !important; /*The !important directive is crucial for overriding the inherited style*/
+	font-size: 8pt !important;
+}
+
+.ontology-window {
+	margin-right:13.5pt; /*So the right-edge of the window is flush with right-edge of menubar, 13.5 is the new magic number; it used to be 6 */
+}
+
+.ygtvlabel, .ygtvlabel:link, .ygtvlabel:visited, .ygtvlabel:hover {
+	background-color: transparent
+}
+
+.ygtvlabel:hover {
+	text-decoration: underline;
+}
+
+.ygtvspacer { /*Redefined so the node labels in the treeview are aligned for long names - 18px seems to be the 'magic' number*/
+	height: 22px;
+	width: 18px;
+}
+
+.icon-wsmo-g {
+	display:block; 
+	padding-left: 20px;
+	background: transparent url(../images/wsmo-g.gif) no-repeat;
+}
+
+.icon-wsmo-ws {
+	display:block; 
+	padding-left: 20px;
+	background: transparent url(../images/wsmo-ws.gif) no-repeat;
+}
+
+.icon-wsmo-m {
+	display:block; 
+	padding-left: 20px;
+	background: transparent url(../images/wsmo-m.gif) no-repeat;
+}
+
+.icon-wsmo-c {
+	display:block; 
+	padding-left: 20px;
+	background: transparent url(../images/wsmo-c.gif) no-repeat;
+}
+
+input {
+	width: 20em; /*Set all text boxes to a decent width*/
+}

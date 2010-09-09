@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>SUPER MONITORING AND MANAGEMENT TOOL</title>
+		
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/reset-fonts-grids/reset-fonts-grids.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/base/base-min.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.2/build/assets/skins/sam/skin.css">
+<!-- js -->
+<script type="text/javascript" src="http://yui.yahooapis.com/combo?2.5.2/build/utilities/utilities.js&2.5.2/build/autocomplete/autocomplete-min.js&2.5.2/build/container/container-min.js&2.5.2/build/menu/menu-min.js&2.5.2/build/button/button-min.js&2.5.2/build/calendar/calendar-min.js&2.5.2/build/datasource/datasource-beta-min.js&2.5.2/build/json/json-min.js&2.5.2/build/charts/charts-experimental-min.js&2.5.2/build/slider/slider-min.js&2.5.2/build/colorpicker/colorpicker-min.js&2.5.2/build/cookie/cookie-beta-min.js&2.5.2/build/datatable/datatable-beta-min.js&2.5.2/build/editor/editor-beta-min.js&2.5.2/build/history/history-min.js&2.5.2/build/resize/resize-beta-min.js&2.5.2/build/imagecropper/imagecropper-beta-min.js&2.5.2/build/imageloader/imageloader-min.js&2.5.2/build/selector/selector-beta-min.js&2.5.2/build/layout/layout-beta-min.js&2.5.2/build/tabview/tabview-min.js&2.5.2/build/treeview/treeview-min.js&2.5.2/build/uploader/uploader-experimental.js"></script>
+	    <script type="text/javascript" src="/irs/javascript/monitoring-tool.js"></script>
+	</head>
+	<body class="yui-skin-sam">
+		
+		<div id="banner"></div> 
+	 	<div id="tree"></div>
+		<div id="tab"></div>
+			
+		
+		
+		<script>
+			(function() { 
+			    var Dom = YAHOO.util.Dom, 
+			        Event = YAHOO.util.Event; 
+			 
+			    Event.onDOMReady(function() { 
+			        var layout = new YAHOO.widget.Layout({ 
+			            units: [ 
+	                		{ position: 'top', height: 50, body: 'banner',  header: 'MONITORING AND MANAGEMENT TOOL', gutter: '4px', collapse: false, resize: false }, 
+			                { position: 'left',  width: 250, resize: false, body: 'tree', gutter: '2px', collapse: false, close: false, collapseSize: 10, scroll: true, animate: true }, 
+			                { position: 'center', body: 'tab',scroll: true } 
+			            ] 
+			        });
+				layout.render();
+				// Initialize the page
+				init();
+				});
+				
+				})();
+				
+				
+
+		</script>
+	</body>
+</html>

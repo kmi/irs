@@ -1,0 +1,66 @@
+# Backups and autosave files
+*~
+\#*\#
+
+# Lispworks compiled files
+*.fsl
+*.ofasl
+*.ufasl
+*.xfasl
+
+# SBCL compiled files
+*.fasl
+
+# We often need to put ‘secret’ stuff like account login details in
+# ontologies, but which should not be committed to public IRS Git
+# repositories.  These things should be kept in files matching the
+# pattern below.
+
+secret*.lisp
+
+# Built under Linux from the non-small originals.
+assets/images/*-small.bmp
+
+# Private configuration files
+config/ontology-names
+
+# Since the submodules will change over time, and between branches,
+# ignore those that are present but not currently tracked.
+external
+
+# Holds logs produced by the IRS.
+log
+
+# WebOnto leaves droppings in here when ontologies are edited.  On no
+# account should they be commited.
+old-ocml-source
+
+# Images and deliverables under Windows...
+*.exe
+# ...and MacOS
+*.app
+# Specific images
+tutorial-iswc-2007-publisher
+tutorial-iswc-2007-server
+
+# Folders tweaking information from Mac OSX
+.DS_Store
+
+# Texinfo dregs from the manual
+doc/*.aux
+doc/*.cp
+doc/*.cps
+doc/*.fn
+doc/*.fns
+doc/*.html
+doc/*.ky
+doc/*.log
+doc/*.pdf
+doc/*.pg
+doc/*.toc
+doc/*.tp
+doc/*.vr
+
+# Windows image thumbnails
+Thumbs.db
+

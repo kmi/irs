@@ -1,0 +1,18 @@
+#!/bin/sh
+
+### Monitoring engine specific
+
+git ls-files -- \
+    ontologies/domains/cobra \
+    ontologies/domains/events-analysis-ontology \
+    ontologies/domains/evo \
+    ontologies/domains/execution-history \
+    ontologies/domains/fulfillment \
+    ontologies/domains/international-system-units \
+    ontologies/domains/metrics-ontology \
+    ontologies/domains/physical-quantities \
+    ontologies/domains/see-processes \
+    ontologies/domains/standard-dimensions \
+    ontologies/domains/standard-prefixes \
+    ontologies/domains/time-ontology \
+    ontologies/domains/units-manipulation

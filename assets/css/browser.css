@@ -1,0 +1,276 @@
+/* This is used to ensure the browser panels fill the space, instead
+   of shrinking to suit their content.  */
+.tabbycat {
+   height: 600px;
+   overflow: auto;
+}
+
+#classtree h3 {
+background: Bisque;
+}
+
+#classtree h3.imported {
+background: ThreeDShadow;
+}
+
+
+#classtree .node {
+    font-family: monospace;
+}
+
+#classtree .node:hover {
+    font-weight: bold;
+/*    border: 1px dashed;*/
+/* color: red;
+font-size: 16px;  /*17 will make it bump*/
+}
+
+
+/* #info .field*/
+.field
+{
+    font-style: italic;
+    vertical-align: top;
+}
+
+/*#info .field-small*/
+.field-small
+{
+    font-style: italic;
+    vertical-align: top;
+    text-align: center;
+    font-size: 90%;
+}
+
+#info .DOCUMENTATION-TITLE { color: #2e4e4e;  font-weight: bold;  }
+#info .DOCUMENTATION { color: black;  font-style: italic; }
+#info .achievegoal  {color: black; font-size: 12px; font-weight: bold; background: SpringGreen;}
+#info .SUBTITLE { 	color: black;  font-style: bold; }
+#info .SLOT-OPTION {color: #2e4e4e;  font-weight: bold; }
+
+.ocmlClassLink
+{
+    color: green;
+    cursor:pointer;
+}
+
+.ocmlClassLink:hover
+{
+    text-decoration: underline;
+}
+
+.ocmlFunctionLink
+{
+    color: #BB0004;
+    cursor: pointer;
+}
+
+.ocmlFunctionLink:hover
+{
+    text-decoration: underline;
+}
+
+.ocmlInstanceLink
+{
+    color: #1063B5;
+    cursor: pointer;
+}
+
+.ocmlInstanceLink:hover
+{
+    text-decoration: underline;
+}
+
+.ocmlRelationLink
+{
+    color: #6E8c9c;
+    cursor: pointer
+}
+
+.ocmlRelationLink:hover
+{
+    text-decoration: underline;
+}
+
+.ocmlRuleLink
+{
+    color: #6E8c9c;
+    cursor: pointer
+}
+
+.ocmlRuleLink:hover
+{
+    text-decoration: underline;
+}
+
+#info .PROCEDURE
+{
+    color: #BB0009;
+    cursor: pointer;
+}
+
+#info .PROCEDURE:hover { text-decoration: underline; }
+
+#info .RULE
+{
+    color: red;
+    cursor: pointer;
+}
+
+#info .RULE:hover { text-decoration: underline; }
+
+.ocmlOntologyLink
+{
+    color: #b7850a;
+    cursor: pointer;
+}
+
+.ocmlOntologyLink:hover
+{
+    text-decoration: underline;
+}
+
+#servervis h2 {background: MintCream; font-size: 16px; color: DarkSlateBlue;}
+#servervis h3 {color: black;}
+
+
+#visbox {
+	/*  float: left;  */
+	width: 545px;
+	height: 445px;
+	/*  border: 1px dotted blue;   for design purposes  */		
+	overflow: hidden;
+}
+
+#visbox li {
+ color: black;
+ list-style-type: circle;
+ list-style-position: outside;
+ list-style-image: none;   
+ font-size: 14px; 
+ margin-left: 30px;
+ line-height: 20px;
+	
+}
+
+
+#visbox li:hover {
+ color: black;	
+ font-weight: bold;
+ font-size: 13px;
+}
+
+
+
+
+#visbox h3.active {
+	background: LightSkyBlue;
+}
+
+#visbox h3{background: Coral; font-size: 15px;}
+
+
+
+#visbox .one{
+		border: 1px dashed;	
+		overflow: auto;
+		float: left;
+		width: 265px;
+		height: 133px;		
+}
+/*  #visbox .two h3{background: Coral; font-size: 15px;}  <-- in case we wanted different styles x box
+  */ 
+
+
+#visbox .two{
+		border: 1px dashed;	
+		overflow: auto;
+		float: right;
+		width: 265px;
+		height: 133px;
+	
+		
+}
+/*  #visbox .two h3{background: Coral; font-size: 15px;}
+  */
+
+
+#visbox .three{
+		border: 1px dashed;	
+		overflow: auto;
+		float: none;
+		margin-top: 147px;
+		width: 265px;
+		height: 133px;	
+		
+}
+
+/*  #visbox .three h3{background: Coral; font-size: 15px;}  */
+
+
+
+#visbox .four{
+		border: 1px dashed;	
+		overflow: auto;
+		float: right;
+		margin-top: -134px;
+		width: 265px;
+		height: 133px;
+			
+}
+
+/*  #visbox .four h3{background: Coral; font-size: 15px;}  */
+
+
+
+#visbox .five{
+		border: 1px dashed;	
+		overflow: auto;
+		float: none;
+		margin-top: 25px;
+		width: 265px;
+		height: 133px;
+			
+}
+
+/*  #visbox .five h3{background: Coral; font-size: 15px;}  */
+
+
+#visbox .six{
+		border: 1px dashed;	
+		overflow: auto;
+		float: right;
+		margin-top: -135px;
+		width: 265px;
+		height: 133px;
+			
+}
+
+/*  #visbox .six h3{background: Coral; font-size: 15px;}  */
+
+
+
+
+
+
+
+
+
+#footer{
+clear: left;
+width: 100%;
+background: MidnightBlue;
+color: #FFF;
+text-align: center;
+padding: 4px 0;
+}
+
+#footer a{
+color: #FFFF80;
+}
+
+
+#footer .image{
+left: 400px;
+}
+

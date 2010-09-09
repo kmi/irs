@@ -1,0 +1,482 @@
+Description of Changes to 
+Version 1 of of AKT Reference Ontology
+
+Enrico Motta, September 8, 2002
+
+
+
+In this document I discuss the changes made to the AKT reference ontology (v1 -> v2) in terms of the list of change requests agreed at the meeting in southampton on 24-5-02 and circulated by Nick Gibbins. Items from the minutes are in blue/italics, my comments follow in black/plain text.
+
+
+
+GOAL:       recast document issue typology as D3E issue typology
+
+ACTION:     Nick Gibbins to contact sbs re: D3E email notification
+
+Not my action point.
+
+
+RESOLUTION: section 1.1
+            add slot has-telephone-number to PERSON
+
+Actually people are not the only ones with the telephone numbers, also organizations and organization-units can have them.  So, I added slot HAS-TELEPHONE-NUMBER to both LEGAL-AGENT and ORGANIZATION-UNIT
+
+RESOLUTION: section 1.2
+            add slot has-fax-number to PERSON
+
+Added to LEGAL-AGENT and ORGANIZATION-UNIT - same rationale as for 1.1.
+
+
+RESOLUTION: section 1.3
+            add slot has-academic-degree (range ACADEMIC-DEGREE) to PERSON
+
+Done!
+
+
+RESOLUTION: section 1.4
+            add slot to THING
+
+Done. THING has now a slot called HAS-PRETTY-NAME
+
+RESOLUTION: section 1.5
+            add slot to THING
+
+Done. THING has now a slot called HAS-VARIANT-NAME
+
+
+RESOLUTION: section 1.6
+            add slot family-name to PERSON
+            add slot given-name to PERSON
+
+Done.
+
+(def-class PERSON (legal-agent tangible-thing)
+  ((full-name :type string)
+   (family-name :type string)
+   (given-name :type string)
+   (has-gender :type gender)
+   (has-academic-degree :type academic-degree)
+   (has-appellation :type appellation))
+  :slot-renaming ((full-name has-pretty-name)
+                  ))
+
+Note that full-name the more generic HAS-PRETTY-NAME inherited from THING.  I cannot see situations where both may be needed - EM
+
+
+RESOLUTION: section 1.7
+            raises some interesting cultural issues (eg. Italy does
+            not make the distinction between towns and villages)
+            
+            add class TOWN as subclass of MUNICIPAL-UNIT
+
+DONE.
+
+
+RESOLUTION: section 2.1
+            add rationale defining ORGANIZATION-SIZE
+            ACTION on OU
+
+DONE.  John Domingue provided info about guidelines used by EU to determine whether an organization is micro, small, or medium. Dividing line between large and very large fixed at 10000 employees.
+
+RESOLUTION: section 2.2
+            no change
+             - not important if slots are unused
+- not promiscuous/not minimal
+
+No change done to GEOPOLITICAL-ENTITY.  However, rationale has been clarified - see definition below
+
+(def-class GEOPOLITICAL-ENTITY (Geographical-Region Generic-Agent)
+  "A geopolitical entity is a geographical area which is associated with some
+   sort of political structure. For instance, Russia, Italy, 
+   The-city-of-Messina, etc..
+   A geopolitical entity can be also seen as an agent - e.g., France declared 
+   war to Spain")
+
+
+RESOLUTION: section 2.3
+            change documentation for LOCATION and GEOGRAPHICAL-REGION
+             - LOCATIONs can be real or fantastic (ie. imaginary)
+             - GEOGRAPHIC-REGIONS are always real
+
+LOCATION is now a TANGIBLE-THING
+No change needed to GEOGRAPHICAL-REGION.  Current version of the ontology does not distinguish between real or imaginary animals/persons/locations/etc..I suggest we introduce this distinction in later versions, if really needed
+
+RESOLUTION: section 2.3
+            make GEOPOLITICAL-ENTITY a subclass of TANGIBLE-THING
+            make GEOPOLITICAL-ENTITY a subclass of GEOGRAPHICAL-REGION
+            rationale to be clarified and checked against HPKB
+
+
+As said above, I did not need to change the definition of GEOPOLITICAL-ENTITY, simply to clarify the rationale
+ACTION:     Enrico Motta to investigate issue of intangible geopolitical
+            entities (NATO raised as a possible example in the meeting)
+
+The problem with the NATO example is that NATO is both a POLITICAL-ORGANIZATION and a GEOPOLITICAL ENTITY. The latter is a TANGIBLE-THING. The ontology does not specify whether an organization is a tangible or intangible thing, although it should probably be the latter. This means that NATO is one of those examples where something has both a tangible and an intangible connotation, depending whether we look at it as a geopolitical-entity or as an organization.  Because the current ontology does not say anything about the tangibility of organizations, it is OK for the time being to say that NATO is both a POLITICAL-ORGANIZATION and a GEOPOLITICAL ENTITY. 
+
+(def-instance NATO political-organization
+  "nato is both a political organization and a geopolitical entity")
+
+(def-instance NATO geopolitical-entity
+  "nato is both a political organization and a geopolitical entity"))
+
+ However this issue may require more work (another solution could be to distinguish NATO the GEOPOLITICAL ENTITY from NATO-ORGANIZATION the POLITICAL-ORGANIZATION, or we could follow cyc and have things that are both tangible and intangible, etc...).
+
+RESOLUTION: section 2.4
+            no change
+- duplicate of 2.3
+
+No action required
+
+RESOLUTION: section 2.5
+            change PERIODICAL-PUBLICATION to SERIAL-PUBLICATION
+change cardinality of has-periodicity slot on
+            SERIAL-PUBLICATION to max-cardinality 1
+
+I have introduced class SERIAL-PUBLICATION but retained PERIODICAL-PUBLICATION as its subclass. Hope this is OK.
+
+I have also introduced the notion of COMPOSITE-PUBLICATION, so that we can talk about things which contain a number of publications, e.g., edited books, journals, magazines, newspapers, etc..
+
+
+(def-class COMPOSITE-PUBLICATION (publication)
+  "A publication which contains items which cane be themselves referenced through a 
+   publication reference.  Composite publications include newspapers, magazines and journals.
+   A book which is a collection of articles is a composite publication, a monograph is not"
+  ((contains-publication :min-cardinality 1
+                         :type publication)
+   ))
+
+For instance, a newspaper is now defined as follows:
+
+(def-class NEWSPAPER (periodical-publication composite-publication)
+  ((contains-news-item :type news-item))
+  :slot-renaming ((contains-news-item contains-publication)
+                  ))
+
+Note that I have also introduced the notion of NEWS-ITEM.  
+
+(def-class NEWS-ITEM (article-in-a-composite-publication))
+
+This is a subclass of ARTICLE-IN-A-COMPOSITE-PUBLICATION
+
+(def-class ARTICLE-IN-A-COMPOSITE-PUBLICATION (publication)
+  ((included-in-publication :type composite-publication)))
+
+RESOLUTION: section 2.6
+            clarify difference between PUBLICATION and
+            PUBLICATION-REFERENCE in rationale, no other changes
+
+PUBLICATION-REFERENCE is now ABSTRACT-INFORMATION (an intangible thing)
+PUBLICATION is a INFORMATION-BEARING-OBJECT  (a tangible thing)
+
+PUBLICATION now contains a new slot, CITES-PUBLICATION-REFERENCE. This was requested by SBS to handle citations.
+
+RESOLUTION: section 2.7
+            all TANGIBLE need to be TEMPORAL
+
+Done.
+
+
+RESOLUTION: section 2.8
+            no change
+             - PUBLISHING-HOUSEs could be both PROFIT-ORGANIZATIONs and
+               NON-PROFIT-ORGANIZATIONs
+             - LEARNING-CENTERED-ORGANIZATIONs could be both
+               PROFIT-ORGANIZATIONs and NON-PROFIT-ORGANIZATIONs
+             - can't rely on having 'nice' hierarchy
+
+No action required
+
+RESOLUTION: section 2.9
+            add extra values of WORK-STATUS and elaborate
+
+Class EMPLOYEE has now a new slot called HAS-CONTRACT-TYPE.  The type is EMPLOYMENT-CONTRACT-TYPE, which can be PERMANENT-CONTRACT or TEMPORARY-CONTRACT.
+
+
+RESOLUTION: section 3.1
+            remove second definition of CALENDAR-DATE
+
+Done
+
+
+            create a common superclass of CALENDAR-DATE and
+            TIME-ENTITY (coarse-grained time entity?)
+
+            break inheritance between CALENDAR-DATE and TIME-ENTITY
+
+ONGOING:    section 3.2
+            time interval/time point distinction is important
+            use fix from other ontology?
+
+ACTION:     Enrico Motta to propose solution to time interval/time point
+            Issue
+
+This required quite a bit of work..The solution I have adopted is based on the time ontology used in the SUO effort. There is now a common superclass called TIME-POSITION.  This describes a position on the time axis, either a TIME-INTERVAL or a TIME-POINT.  As in the previous version of the ontology CALENDAR-DATE is still a subclass of TIME-POINT. However, the definition now explicitly states that a calendar date must have a day, a month and a year, but cannot have second, minute or hour.
+
+(def-class CALENDAR-DATE (time-point)
+ "A calendar date is a time point in which month, day and year have 
+  been specified but hour, minute and second have not"
+  ((minute-of :type minute-in-time :max-cardinality 0 )
+   (second-of :type second-in-time :max-cardinality 0 )
+   (hour-of :type hour-in-time :max-cardinality 0 )
+   (day-of :type day-in-time :cardinality 1)
+   (month-of :type month-in-time :cardinality 1)
+   (year-of :type year-in-time :cardinality 1)))
+
+
+The new definition of TIME-INTERVAL is as follows:
+
+(def-class TIME-INTERVAL (time-position)
+  "An interval is defined by two time points or a duration.  
+   Classes of intervals, e.g., a day, can be defined by specifying only
+   a duration.  A time interval has no gaps"
+
+  ((begins-at-time-point :type time-point :max-cardinality 1)
+   (ends-at-time-point :type time-point :max-cardinality 1)
+   (has-duration :type duration :max-cardinality 1)))
+
+Note that it now satisfies Austin's request of having begin/end, rather than start/end. 
+
+A new quantity, DURATION, has also been introduced to correctly characterise a TIME-INTERVAL in terms of begin-point, end-point and duration. DURATION is defined as a PHYSICAL-QUANTITY, a new subclass of QUANTITY. NUMBER has been also redefined as a subclass of QUANTITY. The slots has-unit-of-measure and has-magnitude are therefore now associated with PHYSICAL-QUANTITY, rather than with QUANTITY.
+
+
+Another change: SECOND is now a REAL-NUMBER, as requested by Austin.  
+
+Note that a TIME-POSITION is relative to a TIMEZONE - again something Austin requested.
+
+(def-class TIME-POSITION (intangible-thing)
+  "A time position is either a time interval or a time point.
+   Any time position is relative to a time zone"
+  ((in-timezone :default-value "+00:00" :type timezone)))
+
+(def-class TIMEZONE (string)
+  "We represent a time zone as a string with the format 
+   {-/+}hh:mm ")
+
+
+
+
+RESOLUTION: section 3.3
+            change local range of has-author on TECHNOLOGY to
+            GENERIC-AGENT
+
+RESOLUTION: section 3.4
+            change local range of owned-by on TECHNOLOGY to
+            LEGAL-AGENT (not to GENERIC-AGENT, as in Soton document)
+
+Done
+
+RESOLUTION: section 3.5
+            replace slot meeting-attendees on class
+            MEETING-TAKING-PLACE with slot meeting-attendee with
+            multiple cardinality
+
+Done
+
+ONGOING:    section 3.6
+            against first proposal (address as string) as sole solution
+            (although this could be combined with the second proposal
+- first proposal is effectively an address label)
+
+New definition of POSTAL-ADDRESS allows both structured specifications and/or simply specifying an address as a string, slot ADDRESS-PRETTY-LABEL.  This renames the generic HAS-PRETTY-NAME, inherited from THING
+
+(def-class POSTAL-ADDRESS (address)
+  "Modified to allow addresses to be given as strings, with no structure"
+ ((address-street :type string)
+   (address-area :type local-district)
+   (address-number :type integer)
+   (address-building :type string)
+   (address-city-or-village :type municipal-unit)
+   (address-postcode :type string)
+   (address-region :type geographical-region)
+   (address-country :type country)
+   (address-pretty-label :type string))
+ :slot-renaming ((address-pretty-label has-pretty-name )))
+
+
+ACTION:     Nick Gibbins to elaborate second proposal in section 3.6
+
+Not my action.
+
+ONGOING:    section 3.7
+            not acceptable to have appellation as a string
+            needs further work
+
+EM refuses to spend his time worrying about appellations!!!!
+
+
+ACTION:     Kieron O'Hara to propose solution to section 3.7
+             - an ontology of appellations
+             - there exists a fixed ordering for any given combination
+               of appellations
+
+Not my action.
+
+RESOLUTION: section 4.1 (related to section 2.6)
+            (see also comments from Stuart Aitken)
+
+            proposal to include extra top level classes from cyc
+            (COMPOSITE-TANGIBLE-AND-INTANGIBLE, PARTIALLY-TANGIBLE) is
+            not acceptable
+
+            proposal from yk (discard tangible/intangible distinction
+            and use only THING) is not acceptable
+
+            create class INFORMATION-BEARING-THING as subclass of
+            THING, bearing the slots currently on
+            INFORMATION-BEARING-OBJECT 
+
+            make INFORMATION-BEARING-OBJECT a subclass of
+            INFORMATION-BEARING-THING and TANGIBLE-THING
+
+            make ABSTRACT-INFORMATION a subclass of
+            INFORMATION-BEARING-THING and INTANGIBLE-THING
+
+No action on the above points. Not clear why we need INFORMATION-BEARING-THING and in any case ABSTRACT-INFORMATION is not an INFORMATION-BEARING-THING! It is the thing being born!
+
+            make PUBLICATION-REFERENCE a subclass of ABSTRACT-INFORMATION
+
+Done
+
+RESOLUTION: section 4.2
+            PUBLICATION-REFERENCE already fixed (section 4.1)
+
+            make LOCATION a subcless of TANGIBLE-THING
+
+Done
+
+            make ADDRESS a subclass of ABSTRACT-INFORMATION
+
+Done
+
+            change rationale of INTANGIBLE-THING to 'things made of
+            matter, real or fantastic'
+
+Done
+
+RESOLUTION: section 4.3 - repeated inheritance (global properties)
+            redefine has-research-interest as a global property
+
+RESOLUTION: section 4.3 - repeated inheritance (RESEARCHER under
+            WORKING-PERSON and EMPLOYEE) 
+
+            make RESEARCHER a direct subclass of PERSON
+
+Not sure why we want to do this.  Are we talking about unemployed researchers or members of the aristocracy?
+
+            add class CORPORATE-RESEARCHER
+
+Again, not clear why we need this.  Not Done
+
+
+ONGOING:    section 4.3 - misused inheritance (roles vs subclasses)
+
+ACTION:     Nick Gibbins to produce proposal for representing person
+            Roles
+
+Not my action
+
+
+RESOLUTION: section 4.3 - student vs affiliated-person
+            no change
+- students must be affiliated
+
+No change
+
+RESOLUTION: section 4.3 - affiliation to ORGANIZATION-UNIT for
+            AFFILIATED-PERSON 
+
+            add slot has-affiliation-to-unit (range ORGANIZATION-UNIT) on
+            AFFILIATED-PERSON
+
+            EMPLOYEE:
+            works-for is a renaming of has-affiliation
+            works-in-unit is a renaming of has-affiliation-to-unit
+
+            STUDENT:
+            slot studies-at is a renaming of has-affiliation
+
+            add slot studies-in-unit as a renaming of
+            has-affiliation-to-unit 
+
+Done
+
+RESOLUTION: section 4.3 - obscure inheritance (bullet 1)
+            no change
+- duplicate of section 4.3 (roles vs subclasses)
+
+No change
+
+RESOLUTION: section 4.3 - name resolution (bullet 2)
+            add restrictions to (renamed) affiliation relations on
+            subclasses
+
+            i.e. studies-at has range EDUCATIONAL-ORGANIZATION
+
+Done
+
+
+RESOLUTION: section 4.3 - visiting researchers (bullet 3)
+            model visiting researchers as instances of both
+            AFFILIATED-PERSON and EMPLOYEE
+
+            (another example of roles vs subclasses)
+
+VISITING-RESEARCHER introduced as a subclass of both researcher and affiliated-person. The organization and organization-unit being visited should be specified. Rules (axioms) infer new affiliation from organization and organization unit being visited
+
+(def-class VISITING-RESEARCHER (researcher affiliated-person)
+  ((organization-being-visited :type organization)
+   (organization-unit-being-visited :type organization-unit)
+   (person-being-visited :type employee)))
+
+(def-rule VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION
+  ((has-affiliation ?x ?y)
+   if
+   (visiting-researcher ?x)
+   (organization-being-visited ?x ?y)))
+
+(def-rule VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION-UNIT
+  ((has-affiliation-to-unit ?x ?y)
+   if
+   (visiting-researcher ?x)
+   (organization-unit-being-visited ?x ?y)))
+
+
+
+RESOLUTION: section 4.3 - (bullet 4)
+            no change
+- duplicate of repeated inheritance
+
+no action
+
+
+
+RESOLUTION: section 5 - rationale
+
+            (em) rationale is difficult - should be distributed
+            activity
+
+            change management tool should be used to manage rationale
+            as well (part of ontology)
+
+
+RESOLUTION: section 5, paragraph 2 (ORGANIZATION-SIZE)
+            no change
+             - duplicate of section 2.1
+
+RESOLUTION: section 5, paragraph 3 (PUBLICATION vs PUBLICATION-REFERENCE)
+            no change
+             - duplicate of section 2.6
+
+RESOLUTION: section 6 - tool support
+            no change
+             - specific tool limitations not an issue for the ontology
+- use better tools, says enrico
+
+The above issues are either "no action", or generic issues about tools. 
+
+
+ACTION:     John Domingue to extend ontology to cover news items
+
+I have introduced the notion of news-item. More work needed to extend it for marking up stories.
+
+

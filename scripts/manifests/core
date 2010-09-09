@@ -1,0 +1,28 @@
+#!/bin/sh
+
+### Core IRS stuff
+
+# Everything here is required in every conceivable tarball we might
+# make.
+
+git ls-files -- \
+    AUTHORS \
+    NEWS \
+    README \
+    assets \
+    config \
+    javascript \
+    ontologies/domains/monitoring-ontology \
+    ontologies/domains/monitoring-events \
+    ontologies/domains/see-events \
+    ontologies/domains/simple-time \
+    ontologies/domains/top-level-ontology \
+    ontologies/domains/wsmo \
+    ontologies/domains/cryptography \
+    ontologies/domains/http-grounding \
+    ontologies/domains/rfc2616 \
+    ontologies/domains/mime
+
+(cd external/ocml; git ls-files -- library/basic | sed "s%^%external/ocml/%g" )
+
+(cd external/yui/; git ls-files | sed "s%^%external/yui/%g" )

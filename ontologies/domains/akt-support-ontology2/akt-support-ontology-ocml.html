@@ -1,0 +1,1452 @@
+<HTML>
+<HEAD>
+<TITLE>AKT-SUPPORT-ONTOLOGY v1.0 - OCML</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<pre>
+
+</pre>
+
+<H1>LOAD</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=ONTOLOGY?name=AKT-SUPPORT-ONTOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> ontology AKT-SUPPORT-ONTOLOGY</H2>
+<pre>
+(def-ontology akt-support-ontology
+  :author "enrico"
+  :allowed-editors ("john")
+  :do-not-include-base-ontology? t
+  :files ( "foundations" "basic"  "frames" "time" "new"))
+</pre>
+
+<H1>FOUNDATIONS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology akt-support-ontology)
+
+;;;A very simple top-level. We define something called THING, which 
+;;;is the top-level concept in the ontology.  We then distinguish two basic 
+;;;types of 'things': TANGIBLE-THING, something that has some physicality,
+;;;and INTANGIBLE-THING, something which has not. We use a very open definition 
+;;;of being tangible: obviusly a physical object is tangible, but also a sub-atomic
+;;;particle is tangible, even if some of them are very tricky (you do not see them)
+;;;you only see the trace they leave behind.  Also a piece of software will be
+;;;considered a tangible thing, it is something that you can see on a floppy disk.
+;;;In contrast an algorithm will be an intangible, although the file that contains
+;;;its implementation will be a tangible thing.
+
+;;;This is a stop-gap top level. Over the course of teh project we may want to extend this 
+;;;and link to existing top levels (SUO, HPKB, CYC, Sowa, Guarino, etc.)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=THING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class THING</H2>
+<pre>
+(def-class THING ()
+  "This is the top-level concept in the AKT reference ontology"
+  ((has-pretty-name :type string
+                    :max-cardinality 1
+                    :documentation "A human readable name")
+   (has-variant-name :type string
+                     :documentation "Other variants of the human readable name")))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=INTANGIBLE-THING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INTANGIBLE-THING</H2>
+<pre>
+(def-class INTANGIBLE-THING (thing)
+  "This comes from HPKB upper level.
+   The collection of things that are not physical -- are not made 
+   of, or encoded in, matter. Every Collection is an Intangible (even if its
+   instances are tangible), and so are some Individuals. 
+   Caution: do not confuse `tangibility' with `perceivability' -- humans can perceive
+   light even though it's intangible--at least in a sense.")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TEMPORAL-THING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TEMPORAL-THING</H2>
+<pre>
+(def-class TEMPORAL-THING (thing)
+  "Like in Cyc, this is something which has a temporal extent."
+  ((has-time-interval :type time-interval)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TANGIBLE-THING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TANGIBLE-THING</H2>
+<pre>
+(def-class TANGIBLE-THING (temporal-thing)
+  "Something which is not intangible, something which is physical, made of matter.
+   It does not matter whether things are real of imaginary.  Therefore we consider
+   Mickey Mouse's car and a hippogriff as  tangible things")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=AXIOM?name=TANGIBLE-AND-INTANGIBLE-THINGS-ARE-DISJOINT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom TANGIBLE-AND-INTANGIBLE-THINGS-ARE-DISJOINT</H2>
+<pre>
+(def-axiom TANGIBLE-AND-INTANGIBLE-THINGS-ARE-DISJOINT
+  (subclass-partition thing (set-of Tangible-Thing  Intangible-thing)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=INDIVIDUAL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INDIVIDUAL</H2>
+<pre>
+(def-class INDIVIDUAL (Thing) ?x
+  "Something which is not a set.  For instance an instance of a class."
+  :iff-def (not (set ?x))
+
+  ;;;the definitions below are effective ways to prove whether 
+  ;;;somebody is an individual in OCML
+  :prove-by (or 
+             (and (variable-bound ?x)
+                  (not (set ?x)))
+             (= ?x nil))
+  :no-proofs-by (:iff-def))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=QUANTITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class QUANTITY</H2>
+<pre>
+(def-class QUANTITY (Individual Intangible-thing)
+  "From SUO: Any specification of how many or how much of something there is. 
+   Accordingly, there are two subclasses of Quantity: Number (how many) 
+   and Physical-Quantity (how much).")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=PHYSICAL-QUANTITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PHYSICAL-QUANTITY</H2>
+<pre>
+(def-class PHYSICAL-QUANTITY (quantity)
+ "SUO: Physical Quantities are distinguished from Numbers by the
+  fact that the former are associated with a dimension of measurement."
+  ((has-unit-of-measure :type unit-of-measure)
+   (has-magnitude :type number)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=UNIT-OF-MEASURE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class UNIT-OF-MEASURE</H2>
+<pre>
+(def-class UNIT-OF-MEASURE (Intangible-thing)
+  "Any kind of unit of measure, metre, dollar, kilogram, etc..")
+
+
+</pre>
+
+<H1>BASIC</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology akt-support-ontology)
+
+;;;Here we introduce a number of definitions, which provide
+;;;the basic representational layer to define entities in the ontology.
+;;;Here we include basic data types, such 
+;;;as strings, lists, sets and numbers, as well as basic logical concepts, such 
+;;;as FUNCTION and RELATION.  It also provides equality constructs and a meta-level
+;;;relation HOLDS, which takes a rel, say ?rel, and a number of args, say ?args
+;;;and it is satisfied iff ?rel is satisfied by ?args.
+;;;The advantage of expliciting including here the representational layer
+;;;for the set of AKT ontologies is that these become completely self-contained:
+;;;all the notions required to specify any concept in the ontology are themselves
+;;;to be found in the ontologies
+
+;;;BASIC UNIFICATION MECHANISMS
+
+
+;;;RELATION = 
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=="><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation =</H2>
+<pre>
+(def-relation = (?x ?y)
+   "True if ?x and ?y do unify"
+   :lisp-fun #'(lambda ( x y env)
+                 (Let ((result (unify x y env)))
+                   (if (eq result :fail)
+                       :fail
+                       (List result)))))
+
+;;;RELATION ==
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name==="><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation ==</H2>
+<pre>
+(def-relation == (?x ?y)
+   "True if ?x and ?y do unify and they also have the same structure.
+    This means that either they are both atoms, or they are lists with 
+    the same structure"
+   :lisp-fun #'(lambda ( x y env)
+                 (Let ((result (unify-strong x y env)))
+                   (if (eq result :fail)
+                       :fail
+                       (List result)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=LIST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LIST</H2>
+<pre>
+(def-class LIST (Intangible-Thing) ?x
+   "A  class representing lists."
+   :iff-def (or (= ?x nil)
+                (= ?x (?a . ?b)))
+   :prove-by (or (= ?x nil)
+                (and (variable-bound ?x)
+                     (= ?x (?a . ?b))))
+   :no-proofs-by (:iff-def))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=NIL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance NIL</H2>
+<pre>
+(def-instance NIL list
+  "The empty list")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=NULL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation NULL</H2>
+<pre>
+(def-relation NULL (?l)
+   "True if ?l is the empty list"
+   :iff-def (= ?l nil))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=FIRST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function FIRST</H2>
+<pre>
+(def-function FIRST (?l)
+   "Takes the first element of a list.  If the list is empty
+    the function returns :nothing"
+  :constraint (list ?l)
+  :body (if (== ?l (?a . ?b))
+            ?a
+            :nothing))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=REST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function REST</H2>
+<pre>
+(def-function REST (?l)
+   "Takes a list as argument, say ?l, removes the first element of ?s
+    and returns the resulting list.  If ?l = nil, then :nothing is returned"
+  :constraint (list ?l)
+  :body (if (== ?l (?a . ?b))
+            ?b
+            :nothing))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=LIST-OF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function LIST-OF</H2>
+<pre>
+(def-function LIST-OF (&rest ?els)
+   "This is the primitive list constructor.  It is implemented in terms of
+    the underlying LISP list construction primitive, LIST"
+   :lisp-fun #'(lambda (&rest els)
+                 (apply #'list els)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=APPEND"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function APPEND</H2>
+<pre>
+(def-function APPEND (?l1 &rest ?ls)
+  "Appends together a number of lists. I cannot be bothered giving its operational
+   spec...so you only get a lisp attachment"
+  :constraint (and (list ?l1)(every  ?ls list))
+   :lisp-fun #'append)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=CONS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function CONS</H2>
+<pre>
+(def-function CONS (?el ?l)
+  "Adds ?el to the beginning of list ?l.  
+   Note that this cons is less generic than the lisp function with the same name.
+   Here the 2nd argument must be a list (in lisp, it can also be an atom)."
+  :constraint (list ?l)
+  :body (append (list-of ?el)
+                ?l))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=LENGTH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function LENGTH</H2>
+<pre>
+(def-function LENGTH (?l)
+  "Computes the number of elements in a list"
+  :constraint (list ?l)
+  :body (if (= ?l nil)
+          0
+          (if (== ?l (?first . ?rest))
+            (+ 1
+               (length ?rest)))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=REMOVE1"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function REMOVE1</H2>
+<pre>
+(def-function REMOVE1 (?el ?l)
+  "Removes the first occurrence of ?el in ?l and returns the resulting list.
+   If ?el is not a member of ?l then the result is ?l"
+  :constraint (list ?l)
+  :body (if (= ?l nil)
+          ?l
+          (if (== ?l (?el . ?rest))
+            ?rest
+            (if (== ?l (?first . ?rest))
+              (cons ?first
+                    (remove1 ?el ?rest))))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=REMOVE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function REMOVE</H2>
+<pre>
+(def-function REMOVE (?el ?l)
+  "Removes all occurrences of ?el in ?l and returns the resulting list.
+   If ?el is not a member of ?l then the result is ?l"
+  :constraint (list ?l)
+  :body (if (= ?l nil)
+          ?l
+          (if (== ?l (?el . ?rest))
+            (remove ?el ?rest)
+            (if (== ?l (?first . ?rest))
+              (cons ?first
+                    (remove ?el ?rest))))))
+          
+          
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=MEMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation MEMBER</H2>
+<pre>
+(def-relation MEMBER (?el ?list)
+  "A relation to check whether something is a member of a list"
+  :constraint (list ?list)
+  :iff-def (or (== ?list (?el . ?rest))
+               (and (== ?list (?first . ?rest))
+                    (member ?el ?rest))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=EVERY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation EVERY</H2>
+<pre>
+(def-relation EVERY (?l ?rel)
+  "True if for each term in ?l, say ?term, (holds ?rel ?term) is true.
+   For instance, (every '(1 2 3) 'number) is satisfied, while 
+   (every '(1 2 pippo) 'number) is not"
+  :constraint (unary-relation ?rel)
+  :iff-def (or (= ?l nil)
+               (and (== ?l (?first . ?rest))
+                    (holds ?rel ?first)
+                    (every ?rest ?rel))))
+
+;;;FUNCTION BUTLAST
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=BUTLAST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function BUTLAST</H2>
+<pre>
+(def-function BUTLAST (?list)
+   "Returns all the element of ?list, except the last one.
+    If ?list = NIL, then :nothing is returned.  If ?list has
+    length 1, then nil is returned"
+   :constraint (list ?l)
+   :body (cond ((null ?list) :nothing)
+               ((null (rest ?list)) nil)
+               ((true)
+                (cons (first ?list) (butlast (rest ?list))))))
+
+
+;;;FUNCTION LAST
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=LAST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function LAST</H2>
+<pre>
+(def-function LAST (?list)
+   "Returns the last element of a list.  If ?list is empty
+    then :nothing is returned"
+  :constraint (list ?list)
+  :body (cond ((null ?list) :nothing)
+              ((null (rest ?list)) (first ?list))
+              ((true) (last (rest ?list)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;SET
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=SET"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SET</H2>
+<pre>
+(def-class SET (Intangible-Thing) 
+  "A set is something which is not an individual. In cyc sets are distinguished
+   from collections.  Here we just use the term generically to refer to 
+   something which denotes a collection of elements, whether abstract or
+   concrete.
+   Functions and relations represent sets. ")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=AXIOM?name=BASIC-SET-TYPES-ARE-DISJOINT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom BASIC-SET-TYPES-ARE-DISJOINT</H2>
+<pre>
+(def-axiom BASIC-SET-TYPES-ARE-DISJOINT
+  "There are three basic types of sets in our ontology, functions
+   relations and enumerated sets and these do not intersect"
+  (subclass-partition set (set-of function relation enumerated-set)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=SET-OF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function SET-OF</H2>
+<pre>
+(def-function SET-OF (&rest ?args)
+  "This is the basic set constructor to create a set by enumerating its elements.
+   For instance, (setof 1 2) denotes the set {1 2}.
+   We represent such a set as a list whose first item is :set"
+  :body (cons :set ?args))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=ENUMERATED-SET"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ENUMERATED-SET</H2>
+<pre>
+(def-class ENUMERATED-SET (set) ?x
+  "A set represented as (:set-of el1 el_2...el_n), where no el_i is repeated"
+  :constraint (list ?x)
+  :iff-def (and (= ?x (:set . ?elements))
+                (not (exists ?el
+                             (and (member ?el ?elements)
+                                  (member ?el (remove1 ?el ?elements))))))
+  :prove-by (and (variable-bound ?x)
+                 (= ?x (:set . ?elements))
+                 (not (exists ?el
+                              (and (member ?el ?elements)
+                                   (member ?el (remove1 ?el ?elements))))))
+  :no-proofs-by (:iff-def))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=ELEMENT-OF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation ELEMENT-OF</H2>
+<pre>
+(def-relation ELEMENT-OF (?el ?set)
+  "A relation to check whether something is an element of a set.  
+   Note that because functions and relations are sets, we can prove
+   whether a tuple satisfies a relation or a function using ELEMENT-OF.
+   For instance, (element-of '(1 2 3) '+) is satisfied because 
+   1+2=3 - see definitions below for an operationalization of this approach")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RULE?name=ELEMENT-OF-ENUMERATED-SET"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule ELEMENT-OF-ENUMERATED-SET</H2>
+<pre>
+(def-rule ELEMENT-OF-ENUMERATED-SET
+  "An operationalization of element-of, which works with sets represented as lists."
+  ((element-of ?el ?l) if
+   (enumerated-set ?l)
+   (member ?el (rest ?l))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RULE?name=ELEMENT-OF-SET-AS-RELATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule ELEMENT-OF-SET-AS-RELATION</H2>
+<pre>
+(def-rule ELEMENT-OF-SET-AS-RELATION
+  "A tuple, say <t1 t2 t3> is an element of relation r iff
+   (holds r ti t2 t3) is satisfied"
+  ((element-of ?tuple ?rel) if
+   (relation ?rel)
+   (List ?tuple)
+   (sentence-holds (cons ?rel ?tuple))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RULE?name=ELEMENT-OF-SET-AS-FUNCTION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule ELEMENT-OF-SET-AS-FUNCTION</H2>
+<pre>
+(def-rule ELEMENT-OF-SET-AS-FUNCTION
+  "A tuple, say <t1 t2 t3> is an element of function f iff
+   (= (apply f ti t2) t3) is satisfied"
+  ((element-of ?el ?fun) if
+   (function ?fun)
+   (list ?el)
+   (= (last ?el) (apply ?fun (butlast ?el)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;NUMBER
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=NUMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NUMBER</H2>
+<pre>
+(def-class NUMBER (Quantity)
+  "The class of all numbers"
+  :lisp-fun  #'(lambda (x env)
+                 (let ((y (unbound-variable? x env)))
+                   (if y ;;if y is unbound we return a 'sample' number
+                     (list (cons (cons y 0) env))
+                     (if (numberp (instantiate x env)) ;;;make sure to instantiate x
+                       (list env)
+                       :fail)))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=REAL-NUMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class REAL-NUMBER</H2>
+<pre>
+(def-class REAL-NUMBER (number))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=INTEGER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INTEGER</H2>
+<pre>
+(def-class INTEGER (real-number))
+   
+
+;;; RELATION <
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=<"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation <</H2>
+<pre>
+(def-relation < (?x ?y)
+   "A predicate to test whether a number is less than another"
+   :constraint (and (number ?x)(number ?y))
+   :lisp-fun #'(lambda (x y env)
+                 (if (< (instantiate x env)
+                        (instantiate y env))
+		     (List env)
+		     :fail)))
+;;;RELATION >
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=>"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation ></H2>
+<pre>
+(def-relation > (?x ?y)
+   "A predicate to test whether a number is greater than another"
+   :constraint (and (number ?x)(number ?y))
+   :lisp-fun #'(lambda (x y env)
+                 (if (> (instantiate x env)
+                        (instantiate y env))
+		     (List env)
+		     :fail)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=POSITIVE-NUMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class POSITIVE-NUMBER</H2>
+<pre>
+(def-class POSITIVE-NUMBER (number) ?x
+  :iff-def (and (number ?x)
+                (> ?x 0)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=NEGATIVE-NUMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NEGATIVE-NUMBER</H2>
+<pre>
+(def-class NEGATIVE-NUMBER (number) ?x
+  :iff-def (and (number ?x)
+                (< ?x 0)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=NON-NEGATIVE-NUMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NON-NEGATIVE-NUMBER</H2>
+<pre>
+(def-class NON-NEGATIVE-NUMBER (number) ?x
+   :iff-def (and (number ?x)
+                 (not (negative-number ?x))))
+  
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=AXIOM?name=POS-NEG-NUMBERS-EXHAUSTIVE-PARTITION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom POS-NEG-NUMBERS-EXHAUSTIVE-PARTITION</H2>
+<pre>
+(def-axiom POS-NEG-NUMBERS-EXHAUSTIVE-PARTITION
+  (exhaustive-subclass-partition number (set-of positive-number negative-number)))
+
+           
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=POSITIVE-INTEGER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class POSITIVE-INTEGER</H2>
+<pre>
+(def-class POSITIVE-INTEGER (integer) ?x
+  :iff-def (and (integer ?x)
+                (> ?x 0)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=NEGATIVE-INTEGER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NEGATIVE-INTEGER</H2>
+<pre>
+(def-class NEGATIVE-INTEGER (integer) ?x
+  :iff-def (and (integer ?x)
+                (< ?x 0)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=NON-NEGATIVE-INTEGER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NON-NEGATIVE-INTEGER</H2>
+<pre>
+(def-class NON-NEGATIVE-INTEGER (integer) ?x
+  :iff-def (and (integer ?x)
+                (not (negative-integer ?x))))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=+"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function +</H2>
+<pre>
+(def-function + (?X &rest ?y)
+  "Adds numbers"
+  :constraint (and (number ?x) (number ?y))
+  :lisp-fun #'+)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=*"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function *</H2>
+<pre>
+(def-function * (?X ?y)
+  "Multiplies numbers"
+  :constraint (and (number ?x) (number ?y))
+   :lisp-fun #'*)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=SQUARE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function SQUARE</H2>
+<pre>
+(def-function SQUARE (?X)
+  :constraint  (number ?x)  
+  :body (* ?X ?X))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=-"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function -</H2>
+<pre>
+(def-function - (?X &rest ?y)
+  "Subtracts numbers"
+  :constraint (and (number ?x) (number ?y))
+  :lisp-fun #'(lambda (x &rest y)
+                (apply #'- x y)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=/"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function /</H2>
+<pre>
+(def-function / (?X ?y)
+  "Divides numbers"
+  :constraint (and (number ?x) (number ?y))
+  :lisp-fun #'/)
+
+;;;;;;;;;;;;;;;;;;;;;
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=STRING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class STRING</H2>
+<pre>
+(def-class STRING (individual intangible-thing)
+   "A primitive class representing strings"
+   :lisp-fun  #'(lambda (x env)
+                  (let ((y (unbound-variable? x env)))
+                   (if y
+                     (list (cons (cons y "SAMPLE-STRING") env))
+                     (if (stringp (instantiate x env)) 
+                       (list env)
+                       :fail)))))
+
+;;;;;;;;;;;;;;;;;;;;;
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=RELATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RELATION</H2>
+<pre>
+(def-class RELATION (set) 
+  "The class of defined relations.  We assume fixed arity"
+  :lisp-fun #'(lambda (x env)
+                 (let ((y (unbound-variable? x env)))
+                   (if y
+                     (mapcar #'(lambda (rel)
+                                   (cons (cons y rel) env))
+                             (all-relations))
+                     (if (get-relation (instantiate x env)) ;;;make sure to instantiate x
+                       (list env)
+                       :fail)))))
+  
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=UNARY-RELATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class UNARY-RELATION</H2>
+<pre>
+(def-class UNARY-RELATION (relation) ?r
+  :iff-def (and (relation ?r)
+                (= (arity ?r) 1)))
+                
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=BINARY-RELATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class BINARY-RELATION</H2>
+<pre>
+(def-class BINARY-RELATION (relation) ?r
+  :iff-def (and (relation ?r)
+                (= (arity ?r) 2)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=TRUE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation TRUE</H2>
+<pre>
+(def-relation TRUE ()
+  "This is always satisfied"
+   :lisp-fun #'(lambda (env) (list env)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=FALSE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation FALSE</H2>
+<pre>
+(def-relation FALSE ()
+  "This is never satisfied"
+   :lisp-fun #'(lambda (env) :fail))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=ARITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function ARITY</H2>
+<pre>
+(def-function ARITY (?x)
+  "The arity of a function or relation.  If a function or relation
+   has variable arity, then we treat the last argument as if it were
+   a sequence variable.  For instance the argument list for + is
+   (?x &rest ?y).  In this case we say that + has arity 2.
+   It is important to note that OCML does not support relations with variable
+   arity.  The only exception is HOLDS, which has variable arity and is built in
+   the OCML proof system"
+
+  :constraint (or (function ?X)(relation ?X))
+  :body  (in-environment 
+          ((?l . (the-schema ?x))
+           (?n . (length ?l)))
+          (if (every ?l variable)
+            ?n
+            ;we assume that the only non-var can be &rest
+            (- ?n 1))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=VARIABLE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation VARIABLE</H2>
+<pre>
+(def-relation VARIABLE (?x) 
+  "True of an OCML variable"
+  :lisp-fun #'(lambda (x env)
+                (if
+                  (variable? (instantiate x env))
+                  (list env)
+                  :fail)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=VARIABLE-BOUND"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation VARIABLE-BOUND</H2>
+<pre>
+(def-relation VARIABLE-BOUND (?var)
+  "True if ?var is  bound in teh current environment"
+  :lisp-fun #'(lambda (x env)
+                (if
+                  (unbound-variable? x env)
+                  :fail
+                  (list env))))
+  
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=THE-SCHEMA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function THE-SCHEMA</H2>
+<pre>
+(def-function THE-SCHEMA (?x)
+  "The schema of a function or relation"
+  :constraint (or (function ?X)(relation ?X))
+  :body (if (relation ?x)
+          (relation-schema ?x)
+          (if (function ?x)
+            (function-schema ?x)
+            :nothing)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=FUNCTION-SCHEMA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function FUNCTION-SCHEMA</H2>
+<pre>
+(def-function FUNCTION-SCHEMA (?f)
+  :constraint (function ?f)
+   :lisp-fun #'(lambda (x)
+                  (rename-variables (schema (get-function x)))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=RELATION-SCHEMA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function RELATION-SCHEMA</H2>
+<pre>
+(def-function RELATION-SCHEMA (?rel)
+  :constraint (relation ?rel)
+  :lisp-fun #'(lambda (x)
+                 (rename-variables (schema (get-relation x)))))
+  
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=HOLDS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation HOLDS</H2>
+<pre>
+(def-relation HOLDS (?rel &rest ?args)
+  "A meta-level relation which is true iff the sentence (?rel . ?args) is true.
+   The length of ?args must be consistent with the arity of the relation"
+  :constraint (and (relation ?r)
+                   (= (arity ?rel)
+                      (length ?args))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=SENTENCE-HOLDS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation SENTENCE-HOLDS</H2>
+<pre>
+(def-relation SENTENCE-HOLDS (?sentence)
+  "The same as HOLDS, but takes only one argument, a sentence whose truth
+   value is to be checked"
+  :constraint (and (== ?sentence (?rel . ?args ))
+                   (relation ?rel)
+                   (= (arity ?rel)
+                      (length ?args)))
+  :lisp-fun #'(lambda (sent env)
+                (ask-top-level 
+                 (cons 'holds (instantiate sent env)) 
+                 :env env
+                 :all t)))
+                
+  
+                
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=FUNCTION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class FUNCTION</H2>
+<pre>
+(def-class FUNCTION (set)  
+  "The class of all defined functions"
+  :lisp-fun #'(lambda (x env)
+                 (let ((y (unbound-variable? x env)))
+                   (if y
+                     (mapcar #'(lambda (rel)
+                                   (cons (cons y rel) env))
+                             (all-functions))
+                     (if (ocml-function? 
+                          (instantiate x env)) 
+                       (list env)
+                       :fail)))))
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=APPLY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function APPLY</H2>
+<pre>
+(def-function APPLY (?f ?args)
+  "(apply f (arg1 .....argn)) is the same as 
+   (f arg1 ....argn)"
+  :constraint (and (function ?f)
+                   (list ?args)))
+  
+  
+</pre>
+
+<H1>FRAMES</H1>
+<pre>
+
+;;; -*- Mode: LISP; Syntax: Common-lisp; Base: 10; Package: OCML;   -*-
+
+(in-package "OCML")
+
+(in-ontology akt-support-ontology)
+
+;;;here I have defined a few basic notions we need to have to talk about frame-based models
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=CLASS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CLASS</H2>
+<pre>
+(def-class CLASS (unary-relation) 
+  "The class of all classes.  We consider a class as a unary relation, true for all its instances"
+  :lisp-fun  #'(lambda (x env)
+               (let ((y (unbound-variable? x env)))
+                   (if y
+                     (mapcar #'(lambda (rel)
+                                 (cons (cons y rel) env))
+                             (all-ocml-classes))
+                     (if (get-ocml-class 
+                          (instantiate x env))
+                       (list env)
+                       :fail)))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=CLASS-PARTITION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CLASS-PARTITION</H2>
+<pre>
+(def-class CLASS-PARTITION (enumerated-set) ?set-of-classes
+  "A set of mutually disjoint classes.  Disjointness of
+   classes is a special case of disjointness of sets."
+  :constraint (enumerated-set ?set-of-classes)
+  :iff-def (and (enumerated-set ?set-of-classes)
+                (forall ?C
+                        (=> (element-of ?C ?set-of-classes)
+                            (class ?C)))
+                (forall (?C1 ?C2)
+                        (=> (and (element-of ?C1 ?set-of-classes)
+                                 (element-of ?C2 ?set-of-classes)
+                                 (not (= ?C1 ?C2)))
+                            (forall (?i)
+                                    (=> (instance-of ?i ?C1)
+                                        (not (instance-of ?i ?C2)))))))
+  :avoid-infinite-loop t)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=SUBCLASS-PARTITION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation SUBCLASS-PARTITION</H2>
+<pre>
+(def-relation SUBCLASS-PARTITION (?C ?class-partition)
+   "A subclass-partition of a class C is a set of
+    subclasses of C that are mutually disjoint."
+   :iff-def (and (class ?C)
+                 (class-partition ?class-partition)
+                 (forall ?subclass
+                         (=> (element-of ?subclass ?class-partition)
+                             (subclass-of ?subclass ?C)))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=EXHAUSTIVE-SUBCLASS-PARTITION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation EXHAUSTIVE-SUBCLASS-PARTITION</H2>
+<pre>
+(def-relation EXHAUSTIVE-SUBCLASS-PARTITION (?C ?class-partition)
+   "A subrelation-partition of a class C is a set of
+    mutually-disjoint classes (a subclass partition) which covers C.
+    Every instance of C is is an instance of exactly one of the subclasses
+    in the partition."
+   :iff-def (and (subclass-partition ?C ?class-partition)
+                 (forall ?instance
+                         (=> (instance-of ?instance ?C)
+                             (exists ?subclass
+                                     (and (element-of ?subclass ?class-partition)
+                                          (instance-of ?instance ?subclass)))))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=INSTANCE-OF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation INSTANCE-OF</H2>
+<pre>
+(def-relation INSTANCE-OF (?x ?c)
+  "This definition relates the notion of 'being an instance' to the notion
+   of satisfying a relation: ?I is an instance of a class ?c, 
+   iff (holds ?I ?c) is true"
+   :constraint (class ?c)
+   :iff-def (and (class ?c)
+                 (holds ?c ?x)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=RELATION?name=SUBCLASS-OF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation SUBCLASS-OF</H2>
+<pre>
+(def-relation SUBCLASS-OF (?sub ?c)
+  "?sub is a subclass of ?c if every instance of ?sub is also an instance of 
+   ?c.  Note that according to this definition every class is a subclass of itself"
+
+  :constraint (and (class ?sub)(class ?c))
+  
+  :prove-by (or (and (variable-bound ?sub)
+                      (member ?c (all-superclasses ?sub)))
+                 (and (variable-bound ?c)
+                      (member ?sub (all-subclasses ?c)))
+                 (and 
+                      (not (variable-bound ?c))
+                      (not (variable-bound ?sub))
+                      (class ?sub1)(class ?super1)
+                      (subclass-of ?sub1 ?super1)))
+
+  :iff-def (and (class ?sub) (class ?c)
+                (forall ?inst
+                        (=> (instance-of ?inst ?sub)
+                            (instance-of ?inst ?c))))
+  :no-proofs-by (:iff-def))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=ALL-SUPERCLASSES"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function ALL-SUPERCLASSES</H2>
+<pre>
+(def-function ALL-SUPERCLASSES (?class) -> ?supers
+  "returns all superclasses of a class"
+  :constraint (class ?class)
+  :def (forall ?super (<=> (member ?super ?supers)
+                           (subclass-of ?class ?super)))
+  :lisp-fun  #'(lambda (class)
+                 (let ((class-s (get-ocml-class class)))
+                   (if class-s
+                     (mapcar #'name (domain-superclasses class-s))))))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=ALL-SUBCLASSES"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function ALL-SUBCLASSES</H2>
+<pre>
+(def-function ALL-SUBCLASSES (?class) -> ?subs
+    "returns all subclasses of a class"
+  :constraint (class ?class)
+   :def (forall ?sub (<=> (member ?sub ?subs)
+                           (subclass-of ?sub ?class)))
+   :lisp-fun  #'(lambda (class)
+                  (let ((class-s (get-ocml-class class)))
+                   (if class-s
+                     (mapcar #'name (current-subclasses class-s))))))
+
+
+
+
+                
+</pre>
+
+<H1>TIME</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+;;;A minimalist set of time-related definitions. 
+;;;We may want to extend this in the future
+
+(in-ontology akt-support-ontology)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=YEAR-IN-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class YEAR-IN-TIME</H2>
+<pre>
+(def-class YEAR-IN-TIME (integer) ?x
+	"A year-in-time must be an integer and integer can be a year-in-time"
+	:iff-def (integer ?x)
+        :avoid-infinite-loop t)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=MONTH-IN-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MONTH-IN-TIME</H2>
+<pre>
+(def-class MONTH-IN-TIME (positive-integer)?x
+	"A month-in-time is an integer in the interval 1-12"
+	:iff-def (and (positive-integer ?x)(< ?x 13) )
+        :avoid-infinite-loop t)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=DAY-IN-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DAY-IN-TIME</H2>
+<pre>
+(def-class DAY-IN-TIME (positive-integer)?x
+	"A day-in-time is an integer in the interval 1-31"
+	:iff-def (and (positive-integer ?x)(< ?x 32) )
+        :avoid-infinite-loop t)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=HOUR-IN-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class HOUR-IN-TIME</H2>
+<pre>
+(def-class HOUR-IN-TIME (non-negative-integer)?x
+	"A hour-in-time is an integer in the interval 0-23"
+	:iff-def (and (non-negative-integer ?x)(< ?x 24) )
+        :avoid-infinite-loop t)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=MINUTE-IN-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MINUTE-IN-TIME</H2>
+<pre>
+(def-class MINUTE-IN-TIME (non-negative-integer) ?x
+	"A minute-in-time is an integer in the interval 0-59"
+	:iff-def (and (non-negative-integer ?x)(< ?x 60) )
+        :avoid-infinite-loop t)
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=SECOND-IN-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SECOND-IN-TIME</H2>
+<pre>
+(def-class SECOND-IN-TIME (real-number)?x
+  "A second-in-time is a real number greater or equal to 0, less than 60"
+  :iff-def (and (real-number ?x)(not (< ?x 0))(< ?x 60))
+  :avoid-infinite-loop t)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TIME-POSITION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TIME-POSITION</H2>
+<pre>
+(def-class TIME-POSITION (intangible-thing)
+  "A time position is either a time interval or a time point.
+   Any time position is relative to a time zone"
+  ((in-timezone :default-value "+00:00" :type timezone)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TIMEZONE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TIMEZONE</H2>
+<pre>
+(def-class TIMEZONE (string)
+  "We represent a time zone as a string with the format 
+   {-/+}hh:mm ")
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TIME-POINT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TIME-POINT</H2>
+<pre>
+(def-class TIME-POINT (time-position)
+  "A point in time"
+  ((second-of :type second-in-time :max-cardinality 1 )
+   (minute-of :type minute-in-time :max-cardinality 1 )
+   (hour-of :type hour-in-time :max-cardinality 1 )
+   (day-of :type day-in-time :max-cardinality 1)
+   (month-of :type month-in-time :max-cardinality 1)
+   (year-of :type year-in-time :max-cardinality 1 ))
+  :constraint  (and (not (and (month-of ?x 2)
+                             (> (the ?day (day-of ?x ?day))
+                                29)))
+                    (not (and (member-of ?x (4 6 9 11))
+                              (> (the ?day (day-of ?x ?day))
+                                30)))))
+
+
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=CALENDAR-DATE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CALENDAR-DATE</H2>
+<pre>
+(def-class CALENDAR-DATE (time-point)
+ "A calendar date is a time point in which month, day and year have 
+  been specified but hour, minute and second have not"
+  ((minute-of :type minute-in-time :max-cardinality 0 )
+   (second-of :type second-in-time :max-cardinality 0 )
+   (hour-of :type hour-in-time :max-cardinality 0 )
+   (day-of :type day-in-time :cardinality 1)
+   (month-of :type month-in-time :cardinality 1)
+   (year-of :type year-in-time :cardinality 1)))
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TIME-INTERVAL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TIME-INTERVAL</H2>
+<pre>
+(def-class TIME-INTERVAL (time-position)
+  "An interval is defined by two time points or a duration.  
+   Classes of intervals, e.g., a day, can be defined by specifying only
+   a duration.  A time interval has no gaps"
+
+  ((begins-at-time-point :type time-point :max-cardinality 1)
+   (ends-at-time-point :type time-point :max-cardinality 1)
+   (has-duration :type duration :max-cardinality 1)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=DAY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DAY</H2>
+<pre>
+(def-class DAY (time-interval)
+  ((has-duration :value 24-hour-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=WEEK"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEEK</H2>
+<pre>
+(def-class WEEK (time-interval)
+  ((has-duration :value 7-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=MONTH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MONTH</H2>
+<pre>
+(def-class MONTH (time-interval))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=JANUARY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class JANUARY</H2>
+<pre>
+(def-class JANUARY (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=FEBRUARY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class FEBRUARY</H2>
+<pre>
+(def-class FEBRUARY (month)
+  ((has-duration :default-value 28-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=FEBRUARY-IN-LEAP-YEARS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class FEBRUARY-IN-LEAP-YEARS</H2>
+<pre>
+(def-class FEBRUARY-IN-LEAP-YEARS (february)
+  ((has-duration :value 29-day-duration)))
+  
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=MARCH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MARCH</H2>
+<pre>
+(def-class MARCH (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=APRIL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class APRIL</H2>
+<pre>
+(def-class APRIL (month)
+  ((has-duration :value 30-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=MAY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MAY</H2>
+<pre>
+(def-class MAY (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=JUNE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class JUNE</H2>
+<pre>
+(def-class JUNE (month)
+  ((has-duration :value 30-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=JULY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class JULY</H2>
+<pre>
+(def-class JULY (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=AUGUST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class AUGUST</H2>
+<pre>
+(def-class AUGUST (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=SEPTEMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SEPTEMBER</H2>
+<pre>
+(def-class SEPTEMBER (month)
+  ((has-duration :value 30-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=OCTOBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class OCTOBER</H2>
+<pre>
+(def-class OCTOBER (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=NOVEMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NOVEMBER</H2>
+<pre>
+(def-class NOVEMBER (month)
+  ((has-duration :value 30-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=DECEMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DECEMBER</H2>
+<pre>
+(def-class DECEMBER (month)
+  ((has-duration :value 31-day-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=YEAR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class YEAR</H2>
+<pre>
+(def-class YEAR (time-interval)
+  ((has-duration :value 12-month-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DURATION</H2>
+<pre>
+(def-class DURATION (physical-quantity)
+  "A measure of time, e.g., 5 hours"
+  ((has-unit-of-measure :type time-measure)
+   ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=24-HOUR-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 24-HOUR-DURATION</H2>
+<pre>
+(def-instance 24-HOUR-DURATION duration
+  ((has-unit-of-measure time-measure-hour)
+   (has-magnitude 24)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=7-DAY-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 7-DAY-DURATION</H2>
+<pre>
+(def-instance 7-DAY-DURATION duration
+  ((has-unit-of-measure time-measure-day)
+   (has-magnitude 7)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=28-DAY-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 28-DAY-DURATION</H2>
+<pre>
+(def-instance 28-DAY-DURATION duration
+  ((has-unit-of-measure time-measure-day)
+   (has-magnitude 28)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=29-DAY-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 29-DAY-DURATION</H2>
+<pre>
+(def-instance 29-DAY-DURATION duration
+  ((has-unit-of-measure time-measure-day)
+   (has-magnitude 29)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=30-DAY-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 30-DAY-DURATION</H2>
+<pre>
+(def-instance 30-DAY-DURATION duration
+  ((has-unit-of-measure time-measure-day)
+   (has-magnitude 30)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=31-DAY-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 31-DAY-DURATION</H2>
+<pre>
+(def-instance 31-DAY-DURATION duration
+  ((has-unit-of-measure time-measure-day)
+   (has-magnitude 31)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=12-MONTH-DURATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance 12-MONTH-DURATION</H2>
+<pre>
+(def-instance 12-MONTH-DURATION duration
+  ((has-unit-of-measure time-measure-year)
+   (has-magnitude 12)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=CLASS?name=TIME-MEASURE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TIME-MEASURE</H2>
+<pre>
+(def-class TIME-MEASURE (unit-of-measure)
+  "The class of all unit of measures used to measure time,
+   e.g., minute, second, hour, etc...")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-SECOND"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-SECOND</H2>
+<pre>
+(def-instance TIME-MEASURE-SECOND time-measure)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-MINUTE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-MINUTE</H2>
+<pre>
+(def-instance TIME-MEASURE-MINUTE time-measure)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-HOUR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-HOUR</H2>
+<pre>
+(def-instance TIME-MEASURE-HOUR time-measure)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-DAY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-DAY</H2>
+<pre>
+(def-instance TIME-MEASURE-DAY time-measure)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-MONTH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-MONTH</H2>
+<pre>
+(def-instance TIME-MEASURE-MONTH time-measure)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-YEAR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-YEAR</H2>
+<pre>
+(def-instance TIME-MEASURE-YEAR time-measure)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=INSTANCE?name=TIME-MEASURE-CENTURY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TIME-MEASURE-CENTURY</H2>
+<pre>
+(def-instance TIME-MEASURE-CENTURY time-measure)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=AXIOM?name=DURATION-IS-BEGIN-TIME-MINUS-END-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom DURATION-IS-BEGIN-TIME-MINUS-END-TIME</H2>
+<pre>
+(def-axiom DURATION-IS-BEGIN-TIME-MINUS-END-TIME
+  "This axiom states the relation between duration, begin time 
+   and end time in an interval"
+  (=> (and (time-interval ?x)
+           (begins-at-time-point ?x ?tp1)
+           (ends-at-time-point ?x ?tp2))
+      (= (has-duration ?x (time-difference 
+                           (the ?tp1 (begins-at-time-point ?x ?tp1))
+                           (the ?tp2 (ends-at-time-point ?x ?tp2)))))))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKT-SUPPORT-ONTOLOGY?type=FUNCTION?name=TIME-DIFFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> function TIME-DIFFERENCE</H2>
+<pre>
+(def-function TIME-DIFFERENCE (?tp1 ?tp2) -> ?d
+  "The duration between two time points.
+   No operational definition is given here, only a spec"
+  :def (and (time-point ?tp1)
+            (time-point ?tp2)
+            (duration ?d)))
+
+
+
+
+            
+
+
+      
+
+
+
+</pre>
+
+<H1>NEW</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology akt-support-ontology)
+</pre>
+</body>
+</html>

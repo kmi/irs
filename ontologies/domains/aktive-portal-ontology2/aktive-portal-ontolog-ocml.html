@@ -1,0 +1,2551 @@
+<HTML>
+<HEAD>
+<TITLE>AKTIVE-PORTAL-ONTOLOGY v2.0 - OCML</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<pre>
+
+</pre>
+
+<H1>LOAD</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+
+
+(ensure-ontology akt-support-ontology domain
+                 "OCML:LIBRARY;domains;akt-support-ontology;load.lisp")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=ONTOLOGY?name=AKTIVE-PORTAL-ONTOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> ontology AKTIVE-PORTAL-ONTOLOGY</H2>
+<pre>
+(def-ontology aktive-portal-ontology
+  :author "enrico"
+  :includes (akt-support-ontology)
+  :allowed-editors ("john")
+  :do-not-include-base-ontology? t
+  :files ("docs"  "organizations" 
+           "events" "research-areas" "techs" "projects"    
+           "new")
+  :version 2.0)
+</pre>
+
+<H1>DOCS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+;;;This file deals with publications. I have reused some stuff from a 'documents'
+;;;ontology which can be found on the ontolingua server
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=INFORMATION-BEARING-OBJECT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INFORMATION-BEARING-OBJECT</H2>
+<pre>
+(def-class INFORMATION-BEARING-OBJECT (tangible-thing)
+  "This notion comes from Cyc.  It is useful to group together all
+   information bearing entities, including video, audio and documents.
+   An information bearing object may have an author (a generic agent)
+   and may be owned by a legal agent. It is a tangible object"
+  ((has-author :type generic-agent)
+   (owned-by :type legal-agent)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ABSTRACT-INFORMATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ABSTRACT-INFORMATION</H2>
+<pre>
+(def-class ABSTRACT-INFORMATION (intangible-thing)
+  "Information in general, independent of an object in which it is encoded. 
+   Whatever is transferred in an information-transfer event.
+   It is clearly an intangible thing")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RECORDED-AUDIO"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RECORDED-AUDIO</H2>
+<pre>
+(def-class RECORDED-AUDIO (Information-Bearing-Object)
+  "Any kind of recorded audio, which is tangible.  This also includes a  
+   audio file on a machine")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RECORDED-VIDEO"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RECORDED-VIDEO</H2>
+<pre>
+(def-class RECORDED-VIDEO (Information-Bearing-Object)
+  "Any kind of recorded video, which is tangible.  This also includes (e.g.,) a mpeg 
+   video file on a machine")
+
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PUBLICATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PUBLICATION</H2>
+<pre>
+(def-class PUBLICATION (Information-Bearing-Object)
+  "A publication is something which has one or more publication references.
+   A publication can be both an article in a journal or a journal itself.
+   The distinction between publication and publication-reference makes it possible
+   to distinguish between multiple occurrences of the sam publication, for instance in
+   different media"
+  ((has-publication-reference :min-cardinality 1
+                              :type publication-reference)
+   (cites-publication-reference :type publication-reference)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=COMPOSITE-PUBLICATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class COMPOSITE-PUBLICATION</H2>
+<pre>
+(def-class COMPOSITE-PUBLICATION (publication)
+  "A publication which contains items which cane be themselves referenced through a 
+   publication reference.  Composite publications include newspapers, magazines and journals.
+   A book which is a collection of articles is a composite publication, a monograph is not"
+  ((contains-publication :min-cardinality 1
+                         :type publication)
+   ))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SERIAL-PUBLICATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SERIAL-PUBLICATION</H2>
+<pre>
+(def-class SERIAL-PUBLICATION (Publication) ?x
+  "This used to be called periodical publication.  However, many periodicals
+do not appear at fixed intervals, which is why librarians refer to them as serials.
+So, we now use the concept of serial publication and the has-periodicity slot has been 
+removed"
+  )
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PERIODICAL-PUBLICATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PERIODICAL-PUBLICATION</H2>
+<pre>
+(def-class PERIODICAL-PUBLICATION (serial-publication) ?x 
+  "This comes from the ontolingua library.
+   A periodical-publication is published regularly, such as once
+   every week.  Strictly speaking, the noun 'periodical' is used
+   by librarians to refer to things published at intervals of greater
+   than a day.  We use the phase periodical-publication to include
+   newspapers and other daily publications, since they share many
+   bibliographic features.
+   The periodicity indicates how often the publication comes out. Note that this is
+   a duration, rather than a time interval. A time interval indicates a specific time interval
+   on the time continuum, so we need to model periodicity as a time quantity"
+  ((has-periodicity :cardinality 1 :type duration)))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ARTICLE-IN-A-COMPOSITE-PUBLICATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ARTICLE-IN-A-COMPOSITE-PUBLICATION</H2>
+<pre>
+(def-class ARTICLE-IN-A-COMPOSITE-PUBLICATION (publication)
+  ((included-in-publication :type composite-publication)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=AXIOM?name=CONSISTENCY-BETWEEN-COMPOSITE-PUBLICATIONS-AND-THEIR-CONTENTS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom CONSISTENCY-BETWEEN-COMPOSITE-PUBLICATIONS-AND-THEIR-CONTENTS</H2>
+<pre>
+(def-axiom CONSISTENCY-BETWEEN-COMPOSITE-PUBLICATIONS-AND-THEIR-CONTENTS
+  (<=> (included-in-publication ?a ?p)
+       (contains-publication ?p ?a)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=JOURNAL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class JOURNAL</H2>
+<pre>
+(def-class JOURNAL (serial-publication composite-publication)
+   ((contains-article :type publication))
+   :slot-renaming ((contains-article contains-publication)
+                  ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=MAGAZINE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MAGAZINE</H2>
+<pre>
+(def-class MAGAZINE (serial-publication composite-publication)
+  ((contains-article :type publication))
+  :slot-renaming ((contains-article contains-publication)
+                  ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=NEWSPAPER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NEWSPAPER</H2>
+<pre>
+(def-class NEWSPAPER (periodical-publication composite-publication)
+  ((contains-news-item :type news-item))
+  :slot-renaming ((contains-news-item contains-publication)
+                  ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=DAILY-NEWSPAPER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DAILY-NEWSPAPER</H2>
+<pre>
+(def-class DAILY-NEWSPAPER (newspaper)
+  ((has-periodicity :value 24-hour-duration)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=NEWS-ITEM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NEWS-ITEM</H2>
+<pre>
+(def-class NEWS-ITEM (article-in-a-composite-publication))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=AXIOM?name=MUTUALLY-EXCLUSIVE-SERIAL-PUBLICATIONS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom MUTUALLY-EXCLUSIVE-SERIAL-PUBLICATIONS</H2>
+<pre>
+(def-axiom MUTUALLY-EXCLUSIVE-SERIAL-PUBLICATIONS
+  (subclass-partition  Serial-Publication 
+                                  (Setof Journal Magazine Newspaper)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=BOOK"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class BOOK</H2>
+<pre>
+(def-class BOOK (publication)
+  ((has-publication-reference :min-cardinality 1
+                              :type book-reference)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EDITED-BOOK"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EDITED-BOOK</H2>
+<pre>
+(def-class EDITED-BOOK (publication)
+  ((has-publication-reference :min-cardinality 1
+                              :type edited-book-reference)))
+
+ 
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PUBLICATION-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PUBLICATION-REFERENCE</H2>
+<pre>
+(def-class PUBLICATION-REFERENCE (abstract-information)
+  "we have decided that a publication reference is an intangible, abstract information"
+  ((has-title :type string)
+   (has-author :type generic-agent)
+   (has-date :type calendar-date)
+   (has-place-of-publication :type location)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WEB-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEB-REFERENCE</H2>
+<pre>
+(def-class WEB-REFERENCE (publication-reference)
+  ((has-URL :type URL)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=URL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class URL</H2>
+<pre>
+(def-class URL (string) ?x
+  "A URL is a particular type of string"
+  :sufficient-for-type-checking (string ?x))
+  
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=BOOK-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class BOOK-REFERENCE</H2>
+<pre>
+(def-class BOOK-REFERENCE (Publication-Reference)
+  ((published-by :type publishing-house)
+   (has-ISBN-number :type ISBN-Number)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EDITED-BOOK-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EDITED-BOOK-REFERENCE</H2>
+<pre>
+(def-class EDITED-BOOK-REFERENCE (Book-Reference)
+  ((edited-by :type person)
+   )
+  :slot-renaming ((edited-by has-author)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CONFERENCE-PROCEEDINGS-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CONFERENCE-PROCEEDINGS-REFERENCE</H2>
+<pre>
+(def-class CONFERENCE-PROCEEDINGS-REFERENCE (Publication-Reference)
+  ((edited-by :type person)
+   (has-page-numbers :type string)
+   (published-in-conference :type conference))
+   :slot-renaming ((edited-by has-author)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WORKSHOP-PROCEEDINGS-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WORKSHOP-PROCEEDINGS-REFERENCE</H2>
+<pre>
+(def-class WORKSHOP-PROCEEDINGS-REFERENCE (Publication-Reference)
+  ((edited-by :type person)
+   (has-page-numbers :type string)
+   (published-in-workshop :type workshop))
+   :slot-renaming ((edited-by has-author)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ISBN-NUMBER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ISBN-NUMBER</H2>
+<pre>
+(def-class ISBN-NUMBER (string))
+   
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=BOOK-SECTION-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class BOOK-SECTION-REFERENCE</H2>
+<pre>
+(def-class BOOK-SECTION-REFERENCE (Publication-Reference)
+  ((has-page-numbers :type string)
+   (section-of-book :type book-reference)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ARTICLE-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ARTICLE-REFERENCE</H2>
+<pre>
+(def-class  ARTICLE-REFERENCE (Publication-Reference)
+  ((has-page-numbers :type string)
+   (article-of-journal :type journal)
+   (issue-number :type integer)
+   (issue-volume :type integer)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROCEEDINGS-PAPER-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROCEEDINGS-PAPER-REFERENCE</H2>
+<pre>
+(def-class PROCEEDINGS-PAPER-REFERENCE (Publication-Reference)
+  ((has-page-numbers :type string)
+   (paper-in-proceedings :type conference-Proceedings-Reference)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=THESIS-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class THESIS-REFERENCE</H2>
+<pre>
+(def-class THESIS-REFERENCE (Publication-Reference)
+  ((degree-of-thesis :type academic-degree)
+   (institute-of-thesis :type academic-unit)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=TECHNICAL-REPORT-REFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TECHNICAL-REPORT-REFERENCE</H2>
+<pre>
+(def-class TECHNICAL-REPORT-REFERENCE (Publication-Reference)
+  ((published-by :type organization)
+   (has-tech-report-number :type integer)))
+</pre>
+
+<H1>ORGANIZATIONS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GENERIC-AGENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GENERIC-AGENT</H2>
+<pre>
+(def-class GENERIC-AGENT (temporal-thing)
+  "This is a generic notion, an agent can be an organization, a person
+   an animal, a software agent, etc"
+  ((has-web-address :type URL)
+   (has-email-address :type email-address)))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LEGAL-AGENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LEGAL-AGENT</H2>
+<pre>
+(def-class LEGAL-AGENT (generic-agent)
+  "Some agents have legal status: definitely organizations and people,
+   anybody else?"
+  ((has-telephone-number :type string)
+   (has-fax-number :type string)
+   (has-postal-address :type postal-address)))
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ORGANIZATION</H2>
+<pre>
+(def-class ORGANIZATION (legal-agent)
+  "An organization is a type of legal agent"
+  (
+   (affiliated-people :type affiliated-person) 
+   (organization-part-of :type organization)
+   (has-sub-unit :type organization-unit)
+   (headed-by :type affiliated-person)
+   (has-size :cardinality 1 :type organization-size)
+   ))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=POLITICAL-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class POLITICAL-ORGANIZATION</H2>
+<pre>
+(def-class POLITICAL-ORGANIZATION (organization)
+  "An organization which has a political connotation")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ORGANIZATION-SIZE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ORGANIZATION-SIZE</H2>
+<pre>
+(def-class ORGANIZATION-SIZE (intangible-thing)
+  "We use EU guidelines to distinguish between different organization sizes")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=VERY-LARGE-SIZE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance VERY-LARGE-SIZE</H2>
+<pre>
+(def-instance VERY-LARGE-SIZE organization-size
+  "An organization with over 10000 employees")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=LARGE-SIZE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance LARGE-SIZE</H2>
+<pre>
+(def-instance LARGE-SIZE organization-size
+  "An organization with more than 250 employees")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MEDIUM-SIZE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MEDIUM-SIZE</H2>
+<pre>
+(def-instance MEDIUM-SIZE organization-size
+  "An organization with no more than 250 employees.  It also has to be independent,
+   i.e., less than 25% owned by one enterprise (or jointly by several enterprises) 
+   falling outside the definition of medium-sized enterprise.
+   Finally, either the turnover total must be less than 40M Euros or the balance sheet 
+   total must be less than 27M Euros.")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=SMALL-SIZE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance SMALL-SIZE</H2>
+<pre>
+(def-instance SMALL-SIZE organization-size
+  "An organization with no more than 50 employees.  It also has to be independent,
+   i.e., less than 25% owned by one enterprise (or jointly by several enterprises) 
+   falling outside the definition of small-sized enterprise.
+   Finally, either the turnover total must be less than 7M Euros or the balance sheet 
+   total must be less than 5M Euros.")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MICRO-SIZE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MICRO-SIZE</H2>
+<pre>
+(def-instance MICRO-SIZE organization-size
+  "An organization with no more than 10 employees.  It also has to be independent,
+   i.e., less than 25% owned by one enterprise (or jointly by several enterprises) 
+   falling outside the definition of micro-sized enterprise.")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SMALL-OR-MEDIUM-SIZED-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SMALL-OR-MEDIUM-SIZED-ORGANIZATION</H2>
+<pre>
+(def-class SMALL-OR-MEDIUM-SIZED-ORGANIZATION (organization) ?x
+  "SME are important, so we define a class to represent them explicitly.
+   In some case we might not know or we do not want to bother specifying 
+   excatly whether something is a small-organization or a medium-organization.
+   Hence, we can just say 'x is a SME' without going into further detail."
+  :iff-def (and (organization ?x)
+                (has-size ?x  ?size)
+                (member ?size '(micro-size small-size medium-size)))
+   :avoid-infinite-loop t)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ORGANIZATION-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ORGANIZATION-UNIT</H2>
+<pre>
+(def-class ORGANIZATION-UNIT (generic-agent)
+  "An organization may have a number of units. Units may themselves have sub-units"
+  (
+   (has-telephone-number :type string)
+   (has-fax-number :type string)
+   (has-postal-address :type postal-address) 
+   (has-size :type  organization-size)
+   (affiliated-people :type affiliated-person) 
+   (unit-of-organization :type organization)
+   (sub-unit-of-organization-unit :type organization-unit)
+   (has-sub-unit :type organization-unit)
+   (headed-by :type affiliated-person)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RULE?name=UNIT-OF-ORGANIZATION-IS-TRANSITIVE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule UNIT-OF-ORGANIZATION-IS-TRANSITIVE</H2>
+<pre>
+(def-rule UNIT-OF-ORGANIZATION-IS-TRANSITIVE
+  ((unit-of-organization ?u ?o)
+   if
+   (sub-unit-of-organization-unit ?u ?u-super)
+   (unit-of-organization ?u-super ?o)))
+   
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=NON-PROFIT-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class NON-PROFIT-ORGANIZATION</H2>
+<pre>
+(def-class NON-PROFIT-ORGANIZATION (organization))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROFIT-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROFIT-ORGANIZATION</H2>
+<pre>
+(def-class PROFIT-ORGANIZATION (organization)
+  ((subsidiary-of :type profit-organization)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PARTNERSHIP"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PARTNERSHIP</H2>
+<pre>
+(def-class PARTNERSHIP (profit-organization)
+  "A partnership is not necessarily a company, e.g. a consultancy firm is 
+   not a company")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=COMPANY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class COMPANY</H2>
+<pre>
+(def-class COMPANY (profit-organization))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PRIVATE-COMPANY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PRIVATE-COMPANY</H2>
+<pre>
+(def-class PRIVATE-COMPANY (company))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PUBLIC-COMPANY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PUBLIC-COMPANY</H2>
+<pre>
+(def-class PUBLIC-COMPANY (company))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=INDUSTRIAL-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INDUSTRIAL-ORGANIZATION</H2>
+<pre>
+(def-class INDUSTRIAL-ORGANIZATION (profit-organization ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GOVERNMENT-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GOVERNMENT-ORGANIZATION</H2>
+<pre>
+(def-class GOVERNMENT-ORGANIZATION (non-profit-organization))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CIVIL-SERVICE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CIVIL-SERVICE</H2>
+<pre>
+(def-class CIVIL-SERVICE (GOVERNMENT-ORGANIZATION))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GOVERNMENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GOVERNMENT</H2>
+<pre>
+(def-class GOVERNMENT (GOVERNMENT-ORGANIZATION)
+  ((government-of-country :type country)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CHARITABLE-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CHARITABLE-ORGANIZATION</H2>
+<pre>
+(def-class CHARITABLE-ORGANIZATION (non-profit-organization))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LEARNING-CENTRED-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LEARNING-CENTRED-ORGANIZATION</H2>
+<pre>
+(def-class LEARNING-CENTRED-ORGANIZATION (organization))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=R&D-INSTITUTE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class R&D-INSTITUTE</H2>
+<pre>
+(def-class R&D-INSTITUTE (learning-centred-organization ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=R&D-INSTITUTE-WITHIN-LARGER-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class R&D-INSTITUTE-WITHIN-LARGER-ORGANIZATION</H2>
+<pre>
+(def-class R&D-INSTITUTE-WITHIN-LARGER-ORGANIZATION (r&d-institute organization-unit))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EDUCATIONAL-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EDUCATIONAL-ORGANIZATION</H2>
+<pre>
+(def-class EDUCATIONAL-ORGANIZATION (learning-centred-organization ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=HIGHER-EDUCATIONAL-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class HIGHER-EDUCATIONAL-ORGANIZATION</H2>
+<pre>
+(def-class HIGHER-EDUCATIONAL-ORGANIZATION (educational-organization)
+  ((has-academic-unit :type academic-unit) 
+   (has-support-unit :type academic-support-unit)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RULE?name=HAS-ACADEMIC-UNIT-IMPLIES-HAS-ORGANIZATION-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule HAS-ACADEMIC-UNIT-IMPLIES-HAS-ORGANIZATION-UNIT</H2>
+<pre>
+(def-rule HAS-ACADEMIC-UNIT-IMPLIES-HAS-ORGANIZATION-UNIT
+  ((has-sub-unit ?x ?y)
+   if
+   (has-academic-unit ?x ?y)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RULE?name=HAS-SUPPORT-UNIT-IMPLIES-HAS-ORGANIZATION-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule HAS-SUPPORT-UNIT-IMPLIES-HAS-ORGANIZATION-UNIT</H2>
+<pre>
+(def-rule HAS-SUPPORT-UNIT-IMPLIES-HAS-ORGANIZATION-UNIT
+  ((has-sub-unit ?x ?y)
+   if
+   (has-support-unit ?x ?y)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=UNIVERSITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class UNIVERSITY</H2>
+<pre>
+(def-class UNIVERSITY (higher-educational-organization)
+  ((has-faculty :type university-faculty)
+   (has-vice-chancellor :type educational-employee))
+  :slot-renaming ((has-vice-chancellor headed-by)))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=DISTANCE-TEACHING-UNIVERSITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DISTANCE-TEACHING-UNIVERSITY</H2>
+<pre>
+(def-class DISTANCE-TEACHING-UNIVERSITY (university))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SCHOOL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SCHOOL</H2>
+<pre>
+(def-class SCHOOL (educational-organization))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EDUCATIONAL-ORGANIZATION-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EDUCATIONAL-ORGANIZATION-UNIT</H2>
+<pre>
+(def-class EDUCATIONAL-ORGANIZATION-UNIT (organization-unit)
+  ((unit-of-organization :type educational-organization)
+   ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACADEMIC-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACADEMIC-UNIT</H2>
+<pre>
+(def-class ACADEMIC-UNIT (educational-organization-unit)
+  ((unit-of-organization :type university)
+   ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=UNIVERSITY-FACULTY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class UNIVERSITY-FACULTY</H2>
+<pre>
+(def-class UNIVERSITY-FACULTY (academic-unit))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACADEMIC-SUPPORT-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACADEMIC-SUPPORT-UNIT</H2>
+<pre>
+(def-class ACADEMIC-SUPPORT-UNIT (educational-organization-unit))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PUBLISHING-HOUSE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PUBLISHING-HOUSE</H2>
+<pre>
+(def-class PUBLISHING-HOUSE (organization))
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LOCATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LOCATION</H2>
+<pre>
+(def-class LOCATION (tangible-thing)
+  "A generic class for locations.  It includes both real and 
+   fantastic places")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GEOGRAPHICAL-REGION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GEOGRAPHICAL-REGION</H2>
+<pre>
+(def-class GEOGRAPHICAL-REGION (tangible-thing location)
+  "'Real' geographical regions")
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GEOPOLITICAL-ENTITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GEOPOLITICAL-ENTITY</H2>
+<pre>
+(def-class GEOPOLITICAL-ENTITY (Geographical-Region Generic-Agent)
+  "A geopolitical entity is a geographical area which is associated with some sort of 
+   political structure. For instance, Russia, Italy, The-city-of-Messina, etc..
+   A geopolitical entity can be also seen as an agent - e.g., France declared 
+   war to Spain")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=COUNTRY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class COUNTRY</H2>
+<pre>
+(def-class COUNTRY (Geopolitical-Entity)
+  ((has-capital :type capital-city)
+   (has-currency :type currency)
+   (has-government :type government)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CURRENCY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CURRENCY</H2>
+<pre>
+(def-class CURRENCY (information-bearing-object)
+   ((issued-by :type government)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=AMOUNT-OF-MONEY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class AMOUNT-OF-MONEY</H2>
+<pre>
+(def-class AMOUNT-OF-MONEY (Physical-Quantity)
+  ((has-unit-of-measure :type currency)
+   (has-amount :type number))
+  :slot-renaming ((has-amount has-magnitude)))
+  
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=MUNICIPAL-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MUNICIPAL-UNIT</H2>
+<pre>
+(def-class MUNICIPAL-UNIT (geopolitical-entity))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CITY</H2>
+<pre>
+(def-class CITY (municipal-unit))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=TOWN"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TOWN</H2>
+<pre>
+(def-class TOWN (municipal-unit))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CAPITAL-CITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CAPITAL-CITY</H2>
+<pre>
+(def-class CAPITAL-CITY (city)
+  ((is-capital-of :type country)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=AXIOM?name=CONSISTENCY-BETWEEN-COUNTRIES-AND-CAPITAL-CITIES"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> axiom CONSISTENCY-BETWEEN-COUNTRIES-AND-CAPITAL-CITIES</H2>
+<pre>
+(def-axiom CONSISTENCY-BETWEEN-COUNTRIES-AND-CAPITAL-CITIES
+  (<=> (is-capital-of ?city ?country) 
+       (has-capital ?country ?city)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=VILLAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class VILLAGE</H2>
+<pre>
+(def-class VILLAGE (municipal-unit))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LOCAL-DISTRICT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LOCAL-DISTRICT</H2>
+<pre>
+(def-class LOCAL-DISTRICT (geopolitical-entity))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ADDRESS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ADDRESS</H2>
+<pre>
+(def-class ADDRESS (abstract-information)
+  "A generic class for addresses, whether email or postal.
+   We see an address as abstract information and therefore it is an intangible thing")
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=POSTAL-ADDRESS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class POSTAL-ADDRESS</H2>
+<pre>
+(def-class POSTAL-ADDRESS (address)
+  "Modified to allow addresses to be given as strings, with no structure"
+ ((address-street :type string)
+   (address-area :type local-district)
+   (address-number :type integer)
+   (address-building :type string)
+   (address-city-or-village :type municipal-unit)
+   (address-postcode :type string)
+   (address-region :type geographical-region)
+   (address-country :type country)
+   (address-pretty-label :type string))
+ :slot-renaming ((address-pretty-label has-pretty-name )))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EMAIL-ADDRESS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EMAIL-ADDRESS</H2>
+<pre>
+(def-class EMAIL-ADDRESS (string address) ?x
+ :sufficient-for-type-checking (string ?x))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PERSON"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PERSON</H2>
+<pre>
+(def-class PERSON (legal-agent tangible-thing)
+  ((full-name :type string)
+   (family-name :type string)
+   (given-name :type string)
+   (has-gender :type gender)
+   (has-academic-degree :type academic-degree)
+   (has-appellation :type appellation))
+  :slot-renaming ((full-name has-pretty-name)
+                  ))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=APPELLATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class APPELLATION</H2>
+<pre>
+(def-class APPELLATION (Intangible-thing))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DR</H2>
+<pre>
+(def-instance DR appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MR</H2>
+<pre>
+(def-instance MR appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MS</H2>
+<pre>
+(def-instance MS appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MISS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MISS</H2>
+<pre>
+(def-instance MISS appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PROF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PROF</H2>
+<pre>
+(def-instance PROF appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MRS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MRS</H2>
+<pre>
+(def-instance MRS appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=SIR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance SIR</H2>
+<pre>
+(def-instance SIR appellation)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=LADY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance LADY</H2>
+<pre>
+(def-instance LADY appellation)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GENDER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GENDER</H2>
+<pre>
+(def-class GENDER (Intangible-thing) ?x
+  "HPKB says that genders are intangible..Uhm..."
+  :iff-def (element-of  ?x (set-of male-gender female-gender)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MALE-GENDER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MALE-GENDER</H2>
+<pre>
+(def-instance MALE-GENDER gender)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=FEMALE-GENDER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance FEMALE-GENDER</H2>
+<pre>
+(def-instance FEMALE-GENDER gender)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=AFFILIATED-PERSON"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class AFFILIATED-PERSON</H2>
+<pre>
+(def-class AFFILIATED-PERSON (person)
+  "A person which has an affiliation with some organization.
+   For instance employees are affiliated to the organization they work for,
+   students to the institution where they are studying, etc..
+   A person can have multiple affiliations, which means that there is no 
+   constraint relating the values of slot has-affiliation-to-unit to the values 
+   of slot has-affiliation"
+  ((has-affiliation-to-unit :type organization-unit)
+   (has-affiliation :type organization :min-cardinality 1)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WORKING-PERSON"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WORKING-PERSON</H2>
+<pre>
+(def-class WORKING-PERSON (person)
+  ((has-work-status :type work-status)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WORK-STATUS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WORK-STATUS</H2>
+<pre>
+(def-class WORK-STATUS (Intangible-thing))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=FULL-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance FULL-TIME</H2>
+<pre>
+(def-instance FULL-TIME work-status)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PART-TIME"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PART-TIME</H2>
+<pre>
+(def-instance PART-TIME  work-status)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SELF-EMPLOYED-PERSON"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SELF-EMPLOYED-PERSON</H2>
+<pre>
+(def-class SELF-EMPLOYED-PERSON (working-person))
+
+
+
+                        
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EMPLOYEE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EMPLOYEE</H2>
+<pre>
+(def-class EMPLOYEE (affiliated-person working-person) ?x
+  ((works-for :type organization)
+   (works-in-unit :type organization-unit)
+   (has-job-title :type string)
+   (has-contract-type :type employment-contract-type)
+   )
+  :slot-renaming ((works-for has-affiliation)
+                  (works-in-unit has-affiliation-to-unit)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EMPLOYMENT-CONTRACT-TYPE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EMPLOYMENT-CONTRACT-TYPE</H2>
+<pre>
+(def-class EMPLOYMENT-CONTRACT-TYPE (Intangible-thing))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PERMANENT-CONTRACT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PERMANENT-CONTRACT</H2>
+<pre>
+(def-instance PERMANENT-CONTRACT employment-contract-type)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=TEMPORARY-CONTRACT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TEMPORARY-CONTRACT</H2>
+<pre>
+(def-instance TEMPORARY-CONTRACT  employment-contract-type)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SYSTEM-ADMINISTRATOR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SYSTEM-ADMINISTRATOR</H2>
+<pre>
+(def-class SYSTEM-ADMINISTRATOR (employee)) 
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=MULTIMEDIA-DESIGNER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MULTIMEDIA-DESIGNER</H2>
+<pre>
+(def-class MULTIMEDIA-DESIGNER (employee)) 
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GRAPHIC-DESIGNER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GRAPHIC-DESIGNER</H2>
+<pre>
+(def-class GRAPHIC-DESIGNER (employee)) 
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SECRETARY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SECRETARY</H2>
+<pre>
+(def-class SECRETARY (employee))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EDUCATIONAL-EMPLOYEE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EDUCATIONAL-EMPLOYEE</H2>
+<pre>
+(def-class EDUCATIONAL-EMPLOYEE (employee) ?x
+  ((works-for :min-cardinality 1 :type educational-organization))
+  :iff-def (and  (works-for ?x ?y)
+                 (educational-organization ?y))
+  
+  :no-proofs-by (:iff-def)) ;;to avoid endless loops with the renaming in 
+                            ;;the definition of Employee
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACADEMIC-SUPPORT-STAFF"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACADEMIC-SUPPORT-STAFF</H2>
+<pre>
+(def-class ACADEMIC-SUPPORT-STAFF (educational-employee)
+  ((works-for :type higher-educational-organization)
+   ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROJECT-OFFICER-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROJECT-OFFICER-IN-ACADEMIA</H2>
+<pre>
+(def-class PROJECT-OFFICER-IN-ACADEMIA (academic-support-staff))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RELATION?name=HAS-RESEARCH-INTEREST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation HAS-RESEARCH-INTEREST</H2>
+<pre>
+(def-relation HAS-RESEARCH-INTEREST (?x ?r)
+  "People and in general even organizations and organization units
+   may have research interests.  This relation shoudl be used to 
+   specify them"
+  :constraint (and (or (organization-unit ?x)
+                       (organization ?x)
+                       (person ?x))
+                   (research-area ?r)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=STUDENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class STUDENT</H2>
+<pre>
+(def-class STUDENT (affiliated-person)
+  ((studies-at :type educational-organization :min-cardinality 1)
+   (studies-in-unit :type educational-organization-unit :min-cardinality 1))
+   :slot-renaming ((studies-at has-affiliation)
+                   (studies-in-unit has-affiliation-to-unit)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PHD-STUDENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PHD-STUDENT</H2>
+<pre>
+(def-class PHD-STUDENT (student)
+  ((has-research-interest :type research-area)
+   (studies-at :type higher-educational-organization :min-cardinality 1)
+   (has-supervisor :type person)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACADEMIC"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACADEMIC</H2>
+<pre>
+(def-class ACADEMIC (educational-employee)
+  ((works-for :type higher-educational-organization)
+   (has-research-interest :type research-area)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RESEARCHER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RESEARCHER</H2>
+<pre>
+(def-class RESEARCHER (working-person)
+  ((has-research-interest :type research-area)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=VISITING-RESEARCHER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class VISITING-RESEARCHER</H2>
+<pre>
+(def-class VISITING-RESEARCHER (researcher affiliated-person)
+  ((organization-being-visited :type organization)
+   (organization-unit-being-visited :type organization-unit)
+   (person-being-visited :type employee)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RULE?name=VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION</H2>
+<pre>
+(def-rule VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION
+  ((has-affiliation ?x ?y)
+   if
+   (visiting-researcher ?x)
+   (organization-being-visited ?x ?y)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RULE?name=VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> rule VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION-UNIT</H2>
+<pre>
+(def-rule VISITING-RESEARCHER-GETS-AFFILIATION-TO-VISITED-ORGANIZATION-UNIT
+  ((has-affiliation-to-unit ?x ?y)
+   if
+   (visiting-researcher ?x)
+   (organization-unit-being-visited ?x ?y)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RESEARCHER-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RESEARCHER-IN-ACADEMIA</H2>
+<pre>
+(def-class RESEARCHER-IN-ACADEMIA (academic researcher))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RESEARCH-FELLOW-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RESEARCH-FELLOW-IN-ACADEMIA</H2>
+<pre>
+(def-class RESEARCH-FELLOW-IN-ACADEMIA  (researcher-in-academia))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SENIOR-RESEARCH-FELLOW-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SENIOR-RESEARCH-FELLOW-IN-ACADEMIA</H2>
+<pre>
+(def-class SENIOR-RESEARCH-FELLOW-IN-ACADEMIA  (researcher-in-academia))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RESEARCH-ASSISTANT-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RESEARCH-ASSISTANT-IN-ACADEMIA</H2>
+<pre>
+(def-class RESEARCH-ASSISTANT-IN-ACADEMIA  (researcher-in-academia))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LECTURER-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LECTURER-IN-ACADEMIA</H2>
+<pre>
+(def-class LECTURER-IN-ACADEMIA  (academic))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SENIOR-LECTURER-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SENIOR-LECTURER-IN-ACADEMIA</H2>
+<pre>
+(def-class SENIOR-LECTURER-IN-ACADEMIA  (academic))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROFESSOR-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROFESSOR-IN-ACADEMIA</H2>
+<pre>
+(def-class PROFESSOR-IN-ACADEMIA  (academic))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=READER-IN-ACADEMIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class READER-IN-ACADEMIA</H2>
+<pre>
+(def-class READER-IN-ACADEMIA  (academic))
+
+;;;Some sample instances below.....
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=THE-OPEN-UNIVERSITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance THE-OPEN-UNIVERSITY</H2>
+<pre>
+(def-instance THE-OPEN-UNIVERSITY distance-teaching-university
+  ((has-web-address "http://www.open.ac.uk")
+   (has-sub-unit knowledge-media-institute-at-the-open-university)
+   (has-size large-size)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=UNIVERSITY-OF-SOUTHAMPTON"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance UNIVERSITY-OF-SOUTHAMPTON</H2>
+<pre>
+(def-instance UNIVERSITY-OF-SOUTHAMPTON university
+  ((has-web-address "http://www.ecs.soton.ac.uk")
+   (has-academic-unit dept-of-electronics-and-computer-science-at-southampton)
+   (has-size large-size)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=UNIVERSITY-OF-EDINBURGH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance UNIVERSITY-OF-EDINBURGH</H2>
+<pre>
+(def-instance UNIVERSITY-OF-EDINBURGH university
+  ((has-size large-size)
+   (has-web-address "http://www.ed.ac.uk/")
+   (has-academic-unit division-of-informatics-at-edinburgh)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=UNIVERSITY-OF-SHEFFIELD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance UNIVERSITY-OF-SHEFFIELD</H2>
+<pre>
+(def-instance UNIVERSITY-OF-SHEFFIELD university
+  ((has-web-address "http://www.shef.ac.uk")
+   (has-academic-unit dept-of-computer-science-at-sheffield)
+   (has-size large-size)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=UNIVERSITY-OF-ABERDEEN"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance UNIVERSITY-OF-ABERDEEN</H2>
+<pre>
+(def-instance UNIVERSITY-OF-ABERDEEN university
+  ((has-size large-size)
+   (has-web-address "http://www.abdn.ac.uk/")
+   (has-academic-unit dept-of-computing-science-at-aberdeen)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=EPSRC"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance EPSRC</H2>
+<pre>
+(def-instance EPSRC non-profit-organization
+  ((has-size small-size)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DEPT-OF-COMPUTING-SCIENCE-AT-ABERDEEN"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DEPT-OF-COMPUTING-SCIENCE-AT-ABERDEEN</H2>
+<pre>
+(def-instance DEPT-OF-COMPUTING-SCIENCE-AT-ABERDEEN academic-unit
+  ((has-web-address "http://www.csd.abdn.ac.uk/")
+   (unit-of-organization  university-of-aberdeen)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DEPT-OF-COMPUTER-SCIENCE-AT-SHEFFIELD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DEPT-OF-COMPUTER-SCIENCE-AT-SHEFFIELD</H2>
+<pre>
+(def-instance DEPT-OF-COMPUTER-SCIENCE-AT-SHEFFIELD academic-unit
+  ((has-web-address "http://www.dcs.shef.ac.uk")
+   (unit-of-organization university-of-sheffield)))
+  
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-MEDIA-INSTITUTE-AT-THE-OPEN-UNIVERSITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-MEDIA-INSTITUTE-AT-THE-OPEN-UNIVERSITY</H2>
+<pre>
+(def-instance KNOWLEDGE-MEDIA-INSTITUTE-AT-THE-OPEN-UNIVERSITY  r&d-institute-within-larger-organization
+  ((has-pretty-name "Knowledge Media Institute")
+   (has-web-address "http://kmi.open.ac.uk")
+   (has-telephone-number "+44 1908 653800")
+   (has-size medium-size)
+   (unit-of-organization the-open-university)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=FACULTY-OF-SCIENCE-AND-ENGINEERING-AT-EDINBURGH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance FACULTY-OF-SCIENCE-AND-ENGINEERING-AT-EDINBURGH</H2>
+<pre>
+(def-instance FACULTY-OF-SCIENCE-AND-ENGINEERING-AT-EDINBURGH university-faculty
+  ((unit-of-organization university-of-edinburgh)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DIVISION-OF-INFORMATICS-AT-EDINBURGH"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DIVISION-OF-INFORMATICS-AT-EDINBURGH</H2>
+<pre>
+(def-instance DIVISION-OF-INFORMATICS-AT-EDINBURGH academic-unit
+  ((has-web-address "http://www.informatics.ed.ac.uk/")
+   (sub-unit-of-organization-unit faculty-of-science-and-engineering-at-edinburgh)
+   (unit-of-organization university-of-edinburgh)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DEPT-OF-ELECTRONICS-AND-COMPUTER-SCIENCE-AT-SOUTHAMPTON"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DEPT-OF-ELECTRONICS-AND-COMPUTER-SCIENCE-AT-SOUTHAMPTON</H2>
+<pre>
+(def-instance DEPT-OF-ELECTRONICS-AND-COMPUTER-SCIENCE-AT-SOUTHAMPTON academic-unit
+  ((unit-of-organization university-of-southampton)))
+  
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=JOHN-DOMINGUE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance JOHN-DOMINGUE</H2>
+<pre>
+(def-instance JOHN-DOMINGUE senior-research-fellow-in-academia 
+  ((has-research-interest e-commerce-research-area
+                          software-visualization
+                          knowledge-management
+                          organizational-learning)
+   (works-for the-open-university)
+   (works-in-unit knowledge-media-institute-at-the-open-university )
+   (has-job-title "Deputy Director, Knowledge Media Institute")
+   (has-work-status full-time)
+   (has-appellation dr)
+   (has-email-address "j.b.domingue@open.ac.uk")
+   (has-web-address "http://kmi.open.ac.uk/people/john")
+   (has-gender  male-gender)
+   (full-name "john domingue")))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=NIGEL-SHADBOLT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance NIGEL-SHADBOLT</H2>
+<pre>
+(def-instance NIGEL-SHADBOLT professor-in-academia
+  "What does 'R.' stand for in 'Nigel R. Shadbolt'?"
+  ((has-research-interest knowledge-acquisition
+                          knowledge-management)
+   (works-for University-of-southampton)
+   (works-in-unit dept-of-electronics-and-computer-science-at-southampton)
+   (has-job-title "Professor of Knowledge Something")
+   (has-work-status full-time)
+   (has-appellation prof)
+   (has-email-address "nrs@ecs.soton.ac.uk")
+   (has-web-address "http://www.ecs.soton.ac.uk/~nrs/")
+   (has-gender  male-gender)
+   (full-name "Nigel Rodriguez Shadbolt")))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=NATO"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance NATO</H2>
+<pre>
+(def-instance NATO political-organization
+  "nato is both a political organization and a geopolitical entity")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=NATO"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance NATO</H2>
+<pre>
+(def-instance NATO geopolitical-entity
+  "nato is both a political organization and a geopolitical entity")
+ 
+
+
+
+</pre>
+
+<H1>EVENTS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+;;;A simple, initial ontology for events.  We use some of Roger Schank's categories
+;;;to give some kind of top-level structuring
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EVENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EVENT</H2>
+<pre>
+(def-class EVENT (temporal-thing) ?x
+  "This is a minimalist definition of class event.  We start with the very basic
+   and we will then add slots as we specialise this definition for specific classes of events.
+   The fillers of slots has-other-agents-involved and has-main-agent should not 
+   intersect"
+  ((has-main-agent 
+        :type generic-agent 
+	:documentation "The agents causing the event to happen, if they are known.")
+   (has-other-agents-involved 
+   	:type generic-agent
+	:documentation "Other agents involved in the event")
+   (has-sub-event :type event)
+   (has-location 
+	:type location
+	:documentation "The location at which an event takes place"))
+  :constraint (not (exists ?a
+                           (and (has-main-agent ?x ?a)
+                                (has-other-agents-involved ?x ?a)))))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EVENT-INVOLVING-PRODUCTION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EVENT-INVOLVING-PRODUCTION</H2>
+<pre>
+(def-class EVENT-INVOLVING-PRODUCTION (event)
+  "When something is produced"
+  ((Event-product :type individual)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EVENT-INVOLVING-MOVEMENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EVENT-INVOLVING-MOVEMENT</H2>
+<pre>
+(def-class EVENT-INVOLVING-MOVEMENT (event)
+  "This is an event in which the main agent (plus maybe others)
+   goes from some place to another"
+  ((Location-at-start :type location :max-cardinality 1)
+   (Location-at-end :type location :max-cardinality 1)
+   (means-of-transport-used :type generalised-means-of-transport))
+ :slot-renaming ((location-at-start has-location)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GENERALIZED-TRANSFER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GENERALIZED-TRANSFER</H2>
+<pre>
+(def-class GENERALIZED-TRANSFER (event-involving-movement)
+  "An event in which the main agent transfers something (the thing-acted-on, tangible or intangible) 
+   to one or more recipient agents.
+   Note that we do not say anything about whether the original agent still retain
+   the thing-acted-on.  In some cases this is clearly true ('I pass my wisdom on to my daughter'),
+   in other cases it is not (I give you my wallet)."
+
+   ((thing-acted-on :type individual 
+                     :documentation "What is being transferred")
+    (recipient-agents :type generic-agent 
+                      :documentation "The agents which receive the thing-acted-on"))
+   :slot-renaming ((recipient-agents has-other-agents-involved)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=INFORMATION-TRANSFER-EVENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INFORMATION-TRANSFER-EVENT</H2>
+<pre>
+(def-class INFORMATION-TRANSFER-EVENT (generalized-transfer)
+  "A generalized transfer in which information is passed from main agent to one or more
+   recipient agents.  Examples include giving a tutorial."
+  ((sender-of-information :type generic-agent)
+   (information-being-transferred  :type abstract-information)
+   (information-object-being-transferred  :type information-bearing-object)
+   (information-transfer-medium-used :type information-transfer-medium))
+  :slot-renaming ((sender-of-information has-main-agent)
+                  (information-being-transferred thing-acted-on)
+                  (information-transfer-medium-used means-of-transport-used)))
+
+ 
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GENERALISED-MEANS-OF-TRANSPORT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GENERALISED-MEANS-OF-TRANSPORT</H2>
+<pre>
+(def-class GENERALISED-MEANS-OF-TRANSPORT (thing) 
+  "This is a generic class to catch all sorts of borderline and metaphorical 
+   ways to carry things from A to B")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=TRANSPORTATION-DEVICE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TRANSPORTATION-DEVICE</H2>
+<pre>
+(def-class TRANSPORTATION-DEVICE (generalised-means-of-transport tangible-thing)
+  "Something tangible designed to transport people, animals, objects from A to B. 
+   For instance a bycicle, a car, a boat, etc.")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=INFORMATION-TRANSFER-MEDIUM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INFORMATION-TRANSFER-MEDIUM</H2>
+<pre>
+(def-class INFORMATION-TRANSFER-MEDIUM (generalised-means-of-transport))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=EMAIL-MEDIUM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance EMAIL-MEDIUM</H2>
+<pre>
+(def-instance EMAIL-MEDIUM INFORMATION-TRANSFER-MEDIUM)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=MESSAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MESSAGE</H2>
+<pre>
+(def-class MESSAGE (information-bearing-object)
+  ((sender-of-message :type generic-agent)
+   (recipient-of-message :type generic-agent)
+   (time-of-message :type time-point)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LETTER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LETTER</H2>
+<pre>
+(def-class LETTER (message))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EMAIL-MESSAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EMAIL-MESSAGE</H2>
+<pre>
+(def-class EMAIL-MESSAGE (message))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SENDING-AN-EMAIL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SENDING-AN-EMAIL</H2>
+<pre>
+(def-class SENDING-AN-EMAIL (information-transfer-event )
+  "a generalized transfer in which information is passed from main agent to one or more
+   recipient agents.  examples include giving a tutorial."
+  ((sender-of-information :type generic-agent)
+   (information-object-being-transferred  :type email-message)
+   (information-transfer-medium-used :value email-medium )))
+  
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SOCIAL-GATHERING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SOCIAL-GATHERING</H2>
+<pre>
+(def-class SOCIAL-GATHERING (event))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=MEETING-TAKING-PLACE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MEETING-TAKING-PLACE</H2>
+<pre>
+(def-class MEETING-TAKING-PLACE (social-gathering)
+  "A meeting type of event. Note that both attendee and organizer have
+   multiple cardinality"
+  ((meeting-attendee :type person)
+   (meeting-organizer :type person)
+   )
+  :slot-renaming ((meeting-organizer has-main-agent)
+                  (meeting-attendee  has-other-agents-involved)))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PUBLICATION-TYPE-EVENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PUBLICATION-TYPE-EVENT</H2>
+<pre>
+(def-class PUBLICATION-TYPE-EVENT (event-involving-production)
+  ((event-product :type publication)
+   ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CONFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CONFERENCE</H2>
+<pre>
+(def-class CONFERENCE (meeting-taking-place publication-type-event)
+  ((published-proceedings :type conference-Proceedings-Reference))
+  :slot-renaming ((published-proceedings event-product)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WORKSHOP"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WORKSHOP</H2>
+<pre>
+(def-class WORKSHOP (meeting-taking-place publication-type-event)
+  ((published-proceedings :type workshop-Proceedings-Reference))
+  :slot-renaming ((published-proceedings event-product)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=BOOK-PUBLISHING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class BOOK-PUBLISHING</H2>
+<pre>
+(def-class BOOK-PUBLISHING (publication-type-event)
+  ((published-book :type book))
+ :slot-renaming ((published-book event-product)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=CONFERRING-AN-AWARD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class CONFERRING-AN-AWARD</H2>
+<pre>
+(def-class CONFERRING-AN-AWARD (generalized-transfer )
+  ((has-awarding-body :type awarding-body)
+   (has-award-rationale :type string)
+   (confers-award :type award))
+  :slot-renaming ((has-awarding-body has-main-agent)
+                  (confers-award thing-acted-on)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=AWARDING-BODY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class AWARDING-BODY</H2>
+<pre>
+(def-class AWARDING-BODY (legal-agent)
+  "Legal agents can be either organizations or people.
+   An awarding body is normally an organization, an individual, or a bunch of people")
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=AWARD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class AWARD</H2>
+<pre>
+(def-class AWARD (Intangible-thing)
+  "An award is an intangible thing, even if the 
+   piece of paper which is often associated with an award is 
+   tangible.  What about the virtual piece of paper in the 
+   virtual degree ceremony?  I guess that ought to be an intangible")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=FINANCIAL-AWARD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class FINANCIAL-AWARD</H2>
+<pre>
+(def-class FINANCIAL-AWARD (Award)
+  ((has-amount :type amount-of-money)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=DEGREE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class DEGREE</H2>
+<pre>
+(def-class DEGREE (award)
+  "A degree is type of award"
+)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACADEMIC-DEGREE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACADEMIC-DEGREE</H2>
+<pre>
+(def-class ACADEMIC-DEGREE (degree))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PHD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PHD</H2>
+<pre>
+(def-instance PHD academic-degree)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DENG"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DENG</H2>
+<pre>
+(def-instance DENG academic-degree)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MSC"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MSC</H2>
+<pre>
+(def-instance MSC academic-degree)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MA</H2>
+<pre>
+(def-instance MA academic-degree)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=BA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance BA</H2>
+<pre>
+(def-instance BA academic-degree)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=BSC"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance BSC</H2>
+<pre>
+(def-instance BSC academic-degree)
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GIVING-A-TALK"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GIVING-A-TALK</H2>
+<pre>
+(def-class GIVING-A-TALK (information-transfer-event)
+  ((has-speaker :type person)
+   )
+  :slot-renaming ((has-speaker sender-of-information)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ATTENDING-AN-EVENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ATTENDING-AN-EVENT</H2>
+<pre>
+(def-class ATTENDING-AN-EVENT (event)
+  ((event-attended :type event)))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ATTENDING-A-CONFERENCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ATTENDING-A-CONFERENCE</H2>
+<pre>
+(def-class ATTENDING-A-CONFERENCE (attending-an-event)
+  ((event-attended :type conference)))
+
+
+
+
+
+  
+
+
+
+</pre>
+
+<H1>RESEARCH-AREAS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+
+;;;This file  provides a very simple notion of GENERIC-AREA-OF-INTEREST,
+;;;with two main subclasses: BUSINESS-AREA and RESEARCH-AREA.
+;;;Areas can have sub-areas, e.g., adaptive-hypermedia is a sub-area of
+;;;hypermedia.
+;;;I have also done an initial list of research areas relevant to AKT.  I have
+;;;used the sub-area-of slot very timidly, because I know that these are very 
+;;;sensitive relations!
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=GENERIC-AREA-OF-INTEREST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class GENERIC-AREA-OF-INTEREST</H2>
+<pre>
+(def-class GENERIC-AREA-OF-INTEREST (intangible-thing)
+ "A generic class to specify generic areas for research or business initiatives.
+  For instance, the area in which a project is situated"
+ ((sub-area-of :type generic-area-of-interest)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class RESEARCH-AREA</H2>
+<pre>
+(def-class RESEARCH-AREA (generic-area-of-interest)
+  ((sub-area-of :type research-area)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=BUSINESS-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class BUSINESS-AREA</H2>
+<pre>
+(def-class BUSINESS-AREA (generic-area-of-interest)
+  )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=LEARNING-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance LEARNING-RESEARCH-AREA</H2>
+<pre>
+(def-instance  LEARNING-RESEARCH-AREA  research-area) 
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=COMPUTING-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance COMPUTING-RESEARCH-AREA</H2>
+<pre>
+(def-instance COMPUTING-RESEARCH-AREA research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=ARTIFICIAL-INTELLIGENCE-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance ARTIFICIAL-INTELLIGENCE-RESEARCH-AREA</H2>
+<pre>
+(def-instance ARTIFICIAL-INTELLIGENCE-RESEARCH-AREA research-area
+  )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=COGNITIVE-MODELLING-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance COGNITIVE-MODELLING-RESEARCH-AREA</H2>
+<pre>
+(def-instance COGNITIVE-MODELLING-RESEARCH-AREA research-area
+  )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=E-COMMERCE-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance E-COMMERCE-RESEARCH-AREA</H2>
+<pre>
+(def-instance E-COMMERCE-RESEARCH-AREA research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=TELEPRESENCE-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance TELEPRESENCE-RESEARCH-AREA</H2>
+<pre>
+(def-instance TELEPRESENCE-RESEARCH-AREA research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=HUMAN-COMPUTER-INTERACTION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance HUMAN-COMPUTER-INTERACTION</H2>
+<pre>
+(def-instance HUMAN-COMPUTER-INTERACTION research-area
+  ((sub-area-of computing-research-area)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=SOFTWARE-VISUALIZATION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance SOFTWARE-VISUALIZATION</H2>
+<pre>
+(def-instance SOFTWARE-VISUALIZATION  research-area
+  ((sub-area-of human-computer-interaction)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=INFORMATION-RETRIEVAL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance INFORMATION-RETRIEVAL</H2>
+<pre>
+(def-instance INFORMATION-RETRIEVAL research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=AGENT-BASED-COMPUTING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance AGENT-BASED-COMPUTING</H2>
+<pre>
+(def-instance AGENT-BASED-COMPUTING research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=HYPERMEDIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance HYPERMEDIA</H2>
+<pre>
+(def-instance HYPERMEDIA research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=ADAPTIVE-HYPERMEDIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance ADAPTIVE-HYPERMEDIA</H2>
+<pre>
+(def-instance ADAPTIVE-HYPERMEDIA research-area
+  ((sub-area-of hypermedia)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=COLLABORATIVE-HYPERMEDIA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance COLLABORATIVE-HYPERMEDIA</H2>
+<pre>
+(def-instance COLLABORATIVE-HYPERMEDIA research-area
+  ((sub-area-of hypermedia)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MULTIMEDIA-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MULTIMEDIA-RESEARCH-AREA</H2>
+<pre>
+(def-instance MULTIMEDIA-RESEARCH-AREA  research-area
+  )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DYNAMIC-LINKING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DYNAMIC-LINKING</H2>
+<pre>
+(def-instance DYNAMIC-LINKING research-area
+  ((sub-area-of adaptive-hypermedia)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=ORGANIZATIONAL-LEARNING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance ORGANIZATIONAL-LEARNING</H2>
+<pre>
+(def-instance ORGANIZATIONAL-LEARNING research-area
+  ((sub-area-of Learning-research-area)))
+
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-MANAGEMENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-MANAGEMENT</H2>
+<pre>
+(def-instance KNOWLEDGE-MANAGEMENT research-area
+  )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-ACQUISITION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-ACQUISITION</H2>
+<pre>
+(def-instance KNOWLEDGE-ACQUISITION research-area
+  ((sub-area-of knowledge-management)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=INCIDENTAL-KA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance INCIDENTAL-KA</H2>
+<pre>
+(def-instance INCIDENTAL-KA  research-area
+  ((sub-area-of knowledge-acquisition)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-LIFECYCLE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-LIFECYCLE</H2>
+<pre>
+(def-instance KNOWLEDGE-LIFECYCLE  research-area
+  ((sub-area-of knowledge-management)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-MODELLING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-MODELLING</H2>
+<pre>
+(def-instance KNOWLEDGE-MODELLING  research-area
+  ((sub-area-of knowledge-management)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=ONTOLOGIES"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance ONTOLOGIES</H2>
+<pre>
+(def-instance ONTOLOGIES  research-area
+  ((sub-area-of knowledge-modelling knowledge-reuse)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=WEB-RESEARCH-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance WEB-RESEARCH-AREA</H2>
+<pre>
+(def-instance WEB-RESEARCH-AREA research-area)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=SEMANTIC-WEB-AREA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance SEMANTIC-WEB-AREA</H2>
+<pre>
+(def-instance SEMANTIC-WEB-AREA  research-area
+  ((sub-area-of web-research-area)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PROBLEM-SOLVING-METHODS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PROBLEM-SOLVING-METHODS</H2>
+<pre>
+(def-instance PROBLEM-SOLVING-METHODS  research-area
+  ((sub-area-of knowledge-modelling knowledge-reuse)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-MAINTENANCE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-MAINTENANCE</H2>
+<pre>
+(def-instance KNOWLEDGE-MAINTENANCE  research-area
+  ((sub-area-of knowledge-management)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-RETRIEVAL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-RETRIEVAL</H2>
+<pre>
+(def-instance KNOWLEDGE-RETRIEVAL  research-area
+  ((sub-area-of knowledge-management)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-REUSE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-REUSE</H2>
+<pre>
+(def-instance KNOWLEDGE-REUSE  research-area
+ ((sub-area-of knowledge-management)) )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KNOWLEDGE-PUBLISHING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KNOWLEDGE-PUBLISHING</H2>
+<pre>
+(def-instance KNOWLEDGE-PUBLISHING  research-area
+ ((sub-area-of knowledge-management)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=LANGUAGE-ENGINEERING"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance LANGUAGE-ENGINEERING</H2>
+<pre>
+(def-instance LANGUAGE-ENGINEERING  research-area
+  )
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=INFORMATION-EXTRACTION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance INFORMATION-EXTRACTION</H2>
+<pre>
+(def-instance  INFORMATION-EXTRACTION research-area
+  ((sub-area-of language-engineering)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+<H1>TECHS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RELATION?name=ADDRESSES-GENERIC-AREA-OF-INTEREST"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation ADDRESSES-GENERIC-AREA-OF-INTEREST</H2>
+<pre>
+(def-relation ADDRESSES-GENERIC-AREA-OF-INTEREST (?X ?area)
+  :constraint (generic-area-of-interest ?area)
+  :sufficient (and (sub-area-of ?sub-area ?area)
+                   (addresses-generic-area-of-interest ?x ?sub-area)))
+                   
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class TECHNOLOGY</H2>
+<pre>
+(def-class TECHNOLOGY (thing) 
+  "By technology we mean engineered applications of science.
+   I guess we are probably confining ourselves to tangible things
+   but as I am not sure I will use thing as the direct superclass - 
+   e.g., an algorithm is an intangible thing, but it could be seen as 
+   a technology, if we give a broad interpretation of the term"
+  ((has-author :type generic-agent)
+   (owned-by :type legal-agent)
+   (technology-builds-on :type technology)
+   (supports-method :type method)
+   (addresses-generic-area-of-interest :type generic-area-of-interest)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=METHOD"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class METHOD</H2>
+<pre>
+(def-class METHOD (intangible-thing) 
+  "Merrian-Webster has a good set of definitions for a method.
+   They say it is 'a systematic procedure,
+   technique, or mode of inquiry employed by or proper to a particular 
+   discipline or art;  a systematic plan followed in presenting 
+   material for instruction; a way, technique, or
+   process of or for doing something; a body of skills or techniques'.
+   This is very much also what we mean by method."
+  ((has-author :type person)
+   (owned-by :type organization)
+   (method-builds-on :type method)
+   (addresses-generic-area-of-interest 
+    :type generic-area-of-interest)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=COMPUTING-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class COMPUTING-TECHNOLOGY</H2>
+<pre>
+(def-class COMPUTING-TECHNOLOGY (technology))
+ 
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SOFTWARE-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SOFTWARE-TECHNOLOGY</H2>
+<pre>
+(def-class SOFTWARE-TECHNOLOGY (computing-technology))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=IMPLEMENTED-SYSTEM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class IMPLEMENTED-SYSTEM</H2>
+<pre>
+(def-class IMPLEMENTED-SYSTEM (software-technology)
+  ((requires-hardware-platform :type hardware-platform) 
+   (runs-on-operating-system :type operating-system) 
+   (requires-software-technology :type software-technology)
+   (has-status :type software-status 
+               :documentation "Whether the software is released, alpha or beta")))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WEB-SITE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEB-SITE</H2>
+<pre>
+(def-class WEB-SITE (implemented-system Information-bearing-object)
+  ((has-url :type url)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROGRAMMING-ENVIRONMENT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROGRAMMING-ENVIRONMENT</H2>
+<pre>
+(def-class PROGRAMMING-ENVIRONMENT (implemented-system)
+  ((supports-language :type programming-language)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WEB-BASED-SYSTEM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEB-BASED-SYSTEM</H2>
+<pre>
+(def-class WEB-BASED-SYSTEM (implemented-system)
+  "A system which is accessible through the web"
+  ((requires-hardware-platform-on-server-side :type hardware-platform) 
+   (runs-on-operating-system-on-server-side :type operating-system) 
+   (requires-software-technology-on-server-side :type software-technology)
+   (requires-hardware-platform-on-client-side :type hardware-platform) 
+   (runs-on-operating-system-on-client-side :type operating-system) 
+   (requires-software-technology-on-client-side :type software-technology))
+  :slot-renaming ((requires-software-technology-on-server-side requires-software-technology)
+                  (requires-hardware-platform-on-server-side requires-hardware-platform)
+                  (runs-on-operating-system-on-server-side runs-on-operating-system)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WEB-BROWSER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEB-BROWSER</H2>
+<pre>
+(def-class WEB-BROWSER (implemented-system)
+  "A web browser is not a web-based system!")
+
+  
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=HARDWARE-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class HARDWARE-TECHNOLOGY</H2>
+<pre>
+(def-class HARDWARE-TECHNOLOGY (computing-technology))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=OPERATING-SYSTEM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class OPERATING-SYSTEM</H2>
+<pre>
+(def-class OPERATING-SYSTEM (implemented-system))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=EDITOR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class EDITOR</H2>
+<pre>
+(def-class EDITOR (implemented-system)
+  ((supports-language :type specification-or-computing-language)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WEB-BASED-EDITOR"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEB-BASED-EDITOR</H2>
+<pre>
+(def-class WEB-BASED-EDITOR (editor web-based-system))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=HARDWARE-PLATFORM"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class HARDWARE-PLATFORM</H2>
+<pre>
+(def-class HARDWARE-PLATFORM (hardware-technology))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SPECIFICATION-OR-COMPUTING-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SPECIFICATION-OR-COMPUTING-LANGUAGE</H2>
+<pre>
+(def-class SPECIFICATION-OR-COMPUTING-LANGUAGE (software-technology))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROGRAMMING-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROGRAMMING-LANGUAGE</H2>
+<pre>
+(def-class PROGRAMMING-LANGUAGE (specification-or-computing-language))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SPECIFICATION-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SPECIFICATION-LANGUAGE</H2>
+<pre>
+(def-class SPECIFICATION-LANGUAGE (specification-or-computing-language))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SCRIPTING-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SCRIPTING-LANGUAGE</H2>
+<pre>
+(def-class SCRIPTING-LANGUAGE (programming-language))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SOFTWARE-STATUS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SOFTWARE-STATUS</H2>
+<pre>
+(def-class SOFTWARE-STATUS (intangible-thing))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=ALPHA-VERSION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance ALPHA-VERSION</H2>
+<pre>
+(def-instance ALPHA-VERSION software-status)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=BETA-VERSION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance BETA-VERSION</H2>
+<pre>
+(def-instance BETA-VERSION software-status)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=RELEASED-VERSION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance RELEASED-VERSION</H2>
+<pre>
+(def-instance RELEASED-VERSION software-status)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=BROKEN-VERSION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance BROKEN-VERSION</H2>
+<pre>
+(def-instance BROKEN-VERSION software-status)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=EXPERIMENTAL-VERSION"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance EXPERIMENTAL-VERSION</H2>
+<pre>
+(def-instance EXPERIMENTAL-VERSION software-status)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=WEB-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class WEB-TECHNOLOGY</H2>
+<pre>
+(def-class WEB-TECHNOLOGY (computing-technology)
+  ((addresses-generic-area-of-interest :value web-research-area)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SERVER-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SERVER-TECHNOLOGY</H2>
+<pre>
+(def-class SERVER-TECHNOLOGY (software-technology web-technology))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=MULTIMEDIA-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class MULTIMEDIA-TECHNOLOGY</H2>
+<pre>
+(def-class MULTIMEDIA-TECHNOLOGY (software-technology)
+  ((addresses-generic-area-of-interest :value multimedia-research-area))) 
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=LANGUAGE-ENGINEERING-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class LANGUAGE-ENGINEERING-TECHNOLOGY</H2>
+<pre>
+(def-class LANGUAGE-ENGINEERING-TECHNOLOGY (software-technology)
+  ((addresses-generic-area-of-interest :value  language-engineering)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=INFORMATION-EXTRACTION-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class INFORMATION-EXTRACTION-TECHNOLOGY</H2>
+<pre>
+(def-class INFORMATION-EXTRACTION-TECHNOLOGY (language-engineering-technology)
+  ((addresses-generic-area-of-interest :value  INFORMATION-EXTRACTION )))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=AGENT-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class AGENT-TECHNOLOGY</H2>
+<pre>
+(def-class AGENT-TECHNOLOGY (software-technology)
+  ((addresses-generic-area-of-interest :value AGENT-BASED-COMPUTING )))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=SOFTWARE-VISUALIZATION-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class SOFTWARE-VISUALIZATION-TECHNOLOGY</H2>
+<pre>
+(def-class SOFTWARE-VISUALIZATION-TECHNOLOGY (software-technology)
+  ((addresses-generic-area-of-interest  SOFTWARE-VISUALIZATION)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=KNOWLEDGE-MODELLING-TECHNOLOGY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class KNOWLEDGE-MODELLING-TECHNOLOGY</H2>
+<pre>
+(def-class KNOWLEDGE-MODELLING-TECHNOLOGY (software-technology)
+  ((addresses-generic-area-of-interest :value knowledge-modelling )))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ONTOLOGY-SPECIFICATION-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ONTOLOGY-SPECIFICATION-LANGUAGE</H2>
+<pre>
+(def-class ONTOLOGY-SPECIFICATION-LANGUAGE (specification-language 
+                                            knowledge-modelling-technology)
+  ((addresses-generic-area-of-interest :value ontologies)))
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=KNOWLEDGE-PROGRAMMING-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class KNOWLEDGE-PROGRAMMING-LANGUAGE</H2>
+<pre>
+(def-class KNOWLEDGE-PROGRAMMING-LANGUAGE (programming-language 
+                                           knowledge-modelling-technology)
+  "These are knowledge modelling languages which have an interpreter and that
+   can be used to build systems")
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=OPERATIONAL-ONTOLOGY-SPECIFICATION-LANGUAGE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class OPERATIONAL-ONTOLOGY-SPECIFICATION-LANGUAGE</H2>
+<pre>
+(def-class OPERATIONAL-ONTOLOGY-SPECIFICATION-LANGUAGE (ontology-specification-language 
+                                                        knowledge-programming-language))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;Below I define some instances to give examples of 
+;;;the above categories
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=CLIPS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance CLIPS</H2>
+<pre>
+(def-instance CLIPS knowledge-programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=ONTOLINGUA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance ONTOLINGUA</H2>
+<pre>
+(def-instance ONTOLINGUA ontology-specification-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=DAML+OIL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance DAML+OIL</H2>
+<pre>
+(def-instance DAML+OIL operational-ontology-specification-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=OIL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance OIL</H2>
+<pre>
+(def-instance OIL operational-ontology-specification-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=OCML"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance OCML</H2>
+<pre>
+(def-instance OCML operational-ontology-specification-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=JAVA"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance JAVA</H2>
+<pre>
+(def-instance JAVA programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=LISP"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance LISP</H2>
+<pre>
+(def-instance LISP programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PROLOG"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PROLOG</H2>
+<pre>
+(def-instance PROLOG programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=C++"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance C++</H2>
+<pre>
+(def-instance C++ programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=SMALLTALK"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance SMALLTALK</H2>
+<pre>
+(def-instance SMALLTALK programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=PERL"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance PERL</H2>
+<pre>
+(def-instance PERL programming-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=CGI"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance CGI</H2>
+<pre>
+(def-instance CGI scripting-language)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=JAVASCRIPT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance JAVASCRIPT</H2>
+<pre>
+(def-instance JAVASCRIPT scripting-language)
+
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=KMI-WEB-LISP-SERVER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance KMI-WEB-LISP-SERVER</H2>
+<pre>
+(def-instance KMI-WEB-LISP-SERVER server-technology)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=HARLEQUIN-COMMON-LISP"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance HARLEQUIN-COMMON-LISP</H2>
+<pre>
+(def-instance HARLEQUIN-COMMON-LISP programming-environment
+  ((supports-language lisp)
+   (has-status released-version)
+   (owned-by Xanalys)
+   (RUNS-ON-OPERATING-SYSTEM windows2000 unix)
+   ))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=GLOBAL-GRAPHICS-SOFTWARE"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance GLOBAL-GRAPHICS-SOFTWARE</H2>
+<pre>
+(def-instance GLOBAL-GRAPHICS-SOFTWARE public-company
+  "About 600 employees - I guess we consider it a medium-sized organization"
+  ((has-size medium-size)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=XANALYS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance XANALYS</H2>
+<pre>
+(def-instance XANALYS company
+  ((subsidiary-of GLOBAL-GRAPHICS-SOFTWARE)
+   (has-size small-size)))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=WINDOWS2000"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance WINDOWS2000</H2>
+<pre>
+(def-instance WINDOWS2000 operating-system)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=MAC-OS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance MAC-OS</H2>
+<pre>
+(def-instance MAC-OS operating-system)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=UNIX"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance UNIX</H2>
+<pre>
+(def-instance UNIX operating-system)
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=NETSCAPE-COMMUNICATOR-BROWSER"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance NETSCAPE-COMMUNICATOR-BROWSER</H2>
+<pre>
+(def-instance NETSCAPE-COMMUNICATOR-BROWSER web-browser)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=WEB-ONTO"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance WEB-ONTO</H2>
+<pre>
+(def-instance WEB-ONTO web-based-editor
+  ((supports-language ocml)
+   (has-status released-version)
+   (has-author john-domingue)
+   (owned-by The-Open-University)
+   (RUNS-ON-OPERATING-SYSTEM-ON-CLIENT-SIDE windows2000 unix)
+   (RUNS-ON-OPERATING-SYSTEM-ON-SERVER-SIDE windows2000  unix)
+   (requires-software-technology-on-server-side  kmi-web-lisp-server harlequin-common-lisp)
+   (requires-software-technology-on-client-side netscape-communicator-browser java)))
+</pre>
+
+<H1>PROJECTS</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACTIVITY"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACTIVITY</H2>
+<pre>
+(def-class ACTIVITY (temporal-thing)
+  ((has-sub-activity :type activity)
+   (has-status :type activity-status)
+   (uses-resource :type thing)
+   (produces-output :type thing)))
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=ACTIVITY-STATUS"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class ACTIVITY-STATUS</H2>
+<pre>
+(def-class activity-status (string))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=CLASS?name=PROJECT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> class PROJECT</H2>
+<pre>
+(def-class project (activity) ?x
+  ((has-leading-organization :type organization)
+   (produces-output :type (or event technology method organization
+                              information-bearing-object))
+   (involves-organization :type organization :min-cardinality 1)
+   (has-goals :type string)
+   (has-project-leader :type person)
+   (has-project-member :type person :min-cardinality 1)
+   (funding-source :type organization)
+   (has-web-address :type URL)
+   (addresses-generic-area-of-interest 
+    :type generic-area-of-interest)
+   )
+  :constraint (and (forall ?y
+                      (=> (has-leading-organization ?x ?y)
+                          (involves-organization ?x ?y)))
+                   (forall ?y
+                      (=> (has-project-leader ?x ?y)
+                          (has-project-member ?x ?y)))))
+
+
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=RELATION?name=PROJECT-INVOLVES-ORGANIZATION-UNIT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> relation PROJECT-INVOLVES-ORGANIZATION-UNIT</H2>
+<pre>
+(def-relation PROJECT-INVOLVES-ORGANIZATION-UNIT (?p ?u)
+  "It is sufficient that somebody in unit ?u works in project ?p"
+  :constraint (and (project ?p)(organization-unit ?u))
+  :sufficient (and (project ?p)(organization-unit ?u)
+                   (has-project-member ?p ?x)
+                   (works-in-unit ?x ?u)))
+                
+
+;;;A random example....
+</pre>
+
+<H2><A HREF="http://eldora.open.ac.uk:3000/webonto?ontology=AKTIVE-PORTAL-ONTOLOGY?type=INSTANCE?name=AKT-PROJECT"><IMG SRC="../../img/webonto.jpg" ALIGN="middle" BORDER=0></A> instance AKT-PROJECT</H2>
+<pre>
+(def-instance  AKT-PROJECT project
+  ((has-leading-organization university-of-southampton)
+   (involves-organization the-open-university
+                          university-of-edinburgh
+                          university-of-sheffield
+                          university-of-aberdeen
+                          university-of-southampton)
+   (has-project-leader nigel-shadbolt)
+   (has-project-member john-domingue
+                       nigel-shadbolt)
+   (funding-source epsrc)
+   (has-web-address "http://www.aktors.org")
+   (addresses-generic-area-of-interest knowledge-management
+                                       knowledge-acquisition
+                                       incidental-ka
+                                       semantic-web-area 
+                                       knowledge-retrieval
+                                       knowledge-reuse 
+                                       information-extraction
+                                       knowledge-maintenance 
+                                       knowledge-publishing
+                                       dynamic-linking
+                                       ontologies)))
+
+
+
+
+
+</pre>
+
+<H1>NEW</H1>
+<pre>
+
+;;; Mode: Lisp; Package: ocml
+
+;;; The Open University
+
+(in-package "OCML")
+
+(in-ontology aktive-portal-ontology)
+
+</pre>
+</body>
+</html>

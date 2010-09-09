@@ -1,0 +1,7 @@
+This is Carlos Pedrinaci's monitoring engine.
+
+With IRS loaded, the following line will load and start the
+application.
+
+    CL-USER> (irs:use-application :monitoring-engine)
+

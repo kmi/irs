@@ -1,0 +1,3 @@
+Code and web pages for the ISWC 2007 tutorial.
+
+    CL-USER> (irs:use-application :tutorial-iswc-2007)

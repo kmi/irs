@@ -1,0 +1,562 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c %**start of header
+@setfilename irs-manual.info
+@settitle IRS Manual 0.1
+@c %**end of header
+
+@macro definition {word}
+@emph{\word\}
+@end macro
+
+@copying
+Very early draft of a manual for the Internet Reasoning Service.
+
+Copyright (C) 2007,2008 Open University.
+@end copying
+
+@titlepage
+@title The Internet Reasoning Service
+@author Dave Lambert
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c Output the table of the contents at the beginning.
+@contents
+
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top The Internet Reasoning Service
+
+@insertcopying
+@end ifnottex
+
+@menu
+* Introduction::                
+* Getting started::             
+* OCML::                        
+* WSMO::                        
+* Groundings::                  
+* APIs::                        
+* Web interface::               
+* The Web Servers::             
+* IRS applications::            
+* Bibliography::                
+* Function Index::              
+* Concept Index::               
+@end menu
+
+@node Introduction, Getting started, Top, Top
+@chapter Introduction
+
+The IRS is a semantic web services broker which has been developed at
+the Open University over several years.  The current version adopts
+and extends the WSMO framework @ref{Enabling Semantic Web Services}.
+The IRS uses semantics defined in the OCML knowledge modelling
+language to broker the use of web services using standard internet
+protocols, including SOAP, XML-RPC and HTTP GET.  It exposes its own
+functionality through SOAP, REST and Javascript interfaces.  It offers
+an Ajax interface for web browsers, allowing the browsing of
+ontologies, invocation of goals, and monitoring of calls to web
+services in an interactive and familiar way.
+
+@node Getting started, OCML, Introduction, Top
+@chapter Getting started
+
+See the @file{INSTALL} for installation instructions.
+To start the IRS:
+
+@smallexample
+> (irs:start)
+@end smallexample
+
+If this has worked properly, you should be able to see something
+interesting at @url{http://localhost:8080/irs}@footnote{IRS
+development is targeted at Firefox
+(@url{http://www.mozilla.com/en-US/firefox/}).  Other browsers may not
+offer all the IRS's web functionality.  Microsoft's Internet Explorer
+will offer almost none.}.  The IRS has a graphical event visualiser
+which can be enabled when you start the IRS.  To open a visualiser
+with three columns:
+@smallexample
+> (irs:start :visualiser-columns 3)
+@end smallexample
+
+Ontologies can be loaded using the function
+@code{ocml:load-ontology-by-name}, or the shortcut form @code{#l}.
+Thus, these two forms are equivalent:
+
+@smallexample
+> #llhdl-goals
+> (ocml:load-ontology-by-name :lhdl-goals)
+@end smallexample
+
+Ontologies, services, and interface code can be bundled together into
+`applications' which can be loaded using @code{irs:use-application},
+or, again, using the shortcut @code{#l}.
+
+@smallexample
+> (irs:use-application :lhdl)
+> #ltrusted-travel
+@end smallexample
+
+@xref{IRS applications} on how to write applications.
+
+@node OCML, WSMO, Getting started, Top
+@chapter OCML
+
+OCML seems to allow list values in the following way:
+
+@smallexample
+(def-instance bone-result-sample bone-result
+  ((has-bone-list (femur sacrum))))
+@end smallexample
+
+goal invocation objects are instances of goals (at least, they are
+congruent with them).
+
+where @code{femur} and @code{sacrum} are instance names.  You can then
+get the list of instances as a value.
+
+@node WSMO, Groundings, OCML, Top
+@chapter WSMO
+
+WSMO is the Web Services Modelling Ontology.  It defines four
+top-level concepts:
+
+@itemize
+@item @definition{Ontologies}
+define, in a precise and formal way, a conceptual model of some
+domain.  They typically contain a set of classes (or concepts),
+instances of those classes, and a set of relations between them.  WSMO
+itself is an ontology for describing web services.
+
+@item @definition{Goals}
+capture users’ desire for functionality.  WSMO makes this modelling
+distinction to allow user needs to be defined without reference to
+implementation details.  Goals may not be achievable by the system,
+but they should be expressible nonetheless.
+
+@item @definition{Web services}
+are the computational entities that can be invoked to achieve goals.
+
+@item @definition{Mediators}
+are used between the various components, in order to achieve
+translations between ontologies, enable interoperation of different
+process models, compose goals, and communicate with web services.
+@end itemize
+
+In WSMO, the web services are described in terms of their
+@definition{capability} and @definition{interface}.  The capability is
+defined by preconditions and postconditions (which dictated what must
+be true of the arguments and results to and from the web service
+respectively), and assumptions and effects, which define the state of
+the world before and after invocation.  Pre and post conditions can be
+verified by the user, broker, or web service while assumptions and
+effects may not be verifiable.  The capability is used to determine
+which services can meet a goal.  The interface specifies the
+behavioural aspect of the service, defining the choreography (how to
+interact with an individual service) and the orchestration (how to
+achieve a service by coordinating several web services).
+
+Semantic web services use semantic descriptions to reason about
+services, but the services themselves are implemented in various ways
+at a lower, syntactic, level, usually as web services using HTTP and
+XML.  Thus, we must “ground” the semantic descriptions to actual
+remote procedure calls which invoke the appropriate web services.
+This grounding can be considered at three levels: protocol, message
+format, and message content.  The IRS supports grounding to web
+services using the SOAP, XML-RPC and HTTP GET protocols.  We conflate
+the first two, since SOAP is usually invoked over HTTP, and XML-RPC
+and HTTP GET always do so.  The interface to message content is
+handled by a process WSMO calls “lifting and lowering”.  In this,
+ontological instances are “lowered” (that is, serialised) to the
+particular format that a service expects, and the return values are
+“lifted” to their ontological representations.  The IRS handles simple
+lifting and lowering cases can be handled by a pattern language based
+on XPath @ref{XPath}.  More complicated cases are dealt with by using
+OCML’s operational extensions to invoke arbitrary Lisp code to perform
+the necessary transformations.
+
+@menu
+* WSMO example::                
+@end menu
+
+@node WSMO example,  , WSMO, WSMO
+@section WSMO Example
+
+We will describe in detail one of the goal/service pairs, the VTK
+import operation.  The description of the goal for importing VTK files
+is this:
+
+@smallexample
+(def-class import-vtk-goal (import-goal)
+    ((has-input-role :value has-filename)
+     (has-input-soap-binding :value (has-filename “string”))
+     (has-output-role :value has-uri-result)
+     (has-filename :type lhdl-filename)
+     (has-uri-result :type uri-result)
+     (has-non-functional-properties
+       :value import-vtk-goal-non-functional-properties)))
+@end smallexample
+
+@smallexample
+(def-class import-vtk-goal-non-functional-properties (non-functional-properties)
+    ((has-description “Convert VTK file to VME.  Returns URL pointing at new VME.”)))
+@end smallexample
+
+
+Where the input and output roles are named (using has-input-role) and
+then typed (each role is typed by indicating its name and then the
+@code{:type} keyword followed by the ontological class of the slot’s
+allowable values).  The SOAP binding roles indicate to the IRS how the
+goal instance’s role values are serialised by the invoker, and how the
+IRS should serialise the return value.  The non-functional properties
+show a short description of the goal’s purpose.
+
+The web service is defined thus:
+
+@smallexample
+(def-class import-vtk-web-service (web-service) ?web-service
+    (has-capability :value import-vtk-web-service-capability)
+    (has-interface :value import-vtk-web-service-interface))
+
+(def-class import-vtk-web-service-capability (capability) ?capability
+    ((used-mediator :value import-vtk-mediator)))
+
+(def-class import-vtk-web-service-interface (interface) ?interface
+    ((has-choreography vtk-web-service-interface-choreography)
+     (has-orchestration vtk-web-service-interface-orchestration)))
+
+(def-class vtk-web-service-interface-choreography (choreography) ?choreography
+    ((has-problem-solving-pattern vtk-web-service-orchestration-psp)))
+
+(def-class vtk-web-service-orchestration-psp (problem-solving-pattern) ?psp
+    ((has-body :value nil)))
+
+(def-class import-vtk-web-service-interface-choreography (choreography) ?choreography
+    ((has-grounding :import-vtk-web-service-grounding)))
+@end smallexample
+
+The capability is empty, but would contain the pre or post conditions
+for the services.  Similarly, since each goal maps directly to a
+single web service, the orchestrations have empty problem solving
+patterns.  The grounding describes a SOAP service, detailing the URL
+to POST the request to, the SOAP action, method and XML namespace:
+
+@smallexample
+(def-instance vtk-importer-web-service-grounding soap-grounding
+    ((has-url :value “http://lhdl.cis.beds.ac.uk/ImportVTKService/ImportVTKService.asmx”)
+     (has-soap-action “http://lhdl.cis.beds.ac.uk/importVTK”)
+     (has-soap-method “importVTK”)
+     (has-target-namespace “http://lhdl.cis.beds.ac.uk”)))
+@end smallexample
+
+As with the goal, and indeed most WSMO elements, the classes also have
+a slot for non-functional properties, which we omit here for clarity.
+
+@node Groundings, APIs, WSMO, Top
+@chapter Groundings
+
+We currently seem to have groundings to XML-RPC, WSDL, HTTP GET.
+
+The XML-RPC grounding has the beginnings of a ``pre-lift'' facility,
+in which incoming SOAP arguments are converted to OCML instances.
+
+@menu
+* Lifting and Lowering::        
+@end menu
+
+@node Lifting and Lowering,  , Groundings, Groundings
+@section Lifting and Lowering
+
+@cindex lifting, lowering, grounding
+
+The lifting and lowering functions, as defined by @code{deflift} and
+@code{deflower}, map between OCML instances and XML code.  
+
+@deffn Macro deflower form
+@end deffn
+
+Where @var{form} is ...  
+
+@smallexample
+(deflower )
+@end smallexample
+
+@deffn Macro deflift form
+@end deffn
+
+@node APIs, Web interface, Groundings, Top
+@chapter APIs
+
+The invocation of semantic web services is a crucial component.  In
+WSMO, services are invoked as a result of requesting the broker to
+achieve a goal.  The IRS supports several mechanisms to invoke goals,
+from the Lisp language, through language network APIs, and finally web
+interfaces.  We cover them in that order.
+
+@menu
+* Lisp Interface::              
+* SOAP interface::              
+* REST interface::              
+* Javascript interface::        
+@end menu
+
+@node Lisp Interface, SOAP interface, APIs, APIs
+@section The Lisp Interface
+
+Since the IRS is implemented in Lisp, the most fundamental call is at
+the Lisp level.  The Lisp function achieve-goal is the entry point.
+It takes arguments indicating the ontology, goal, and goal slot
+values.
+
+@smallexample
+(achieve-goal 'lhdl-goals 'extract-iso-surface-goal
+    '((has-file-url http://lhdl.cis.beds.ac.uk/storage/head.zmsf)
+      (has-contour “1.0”)
+      (has-auto-lod “true”)
+      (has-optimise “true”)))
+@end smallexample
+
+To be useful in a web services context, the broker must be invoked
+over the internet, so the IRS exposes the achieve-goal function
+through both SOAP and HTTP GET APIs.
+
+@node SOAP interface, REST interface, Lisp Interface, APIs
+@section SOAP interface
+
+SOAP @ref{SOAP} is the dominant message format for web services.  The
+IRS supports invocation over SOAP.  An HTTP connection is opened to
+the IRS server, and a message like the following is sent:
+
+@smallexample
+POST /soap HTTP/1.1
+Content-Type: text/xml; charset="utf-8"
+Content-Length: LENGTH
+SOAPAction: ""
+User-Agent: Java/1.5.0_07
+Host: lhdl.open.ac.uk:3000
+Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+Connection: keep-alive
+
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <SOAP-ENV:Header/>
+  <SOAP-ENV:Body>
+    <achieve-goal>
+      <ONTOLOGY type="sexpr">lhdl-goals</ONTOLOGY>
+      <GOAL-TYPE type="sexpr">import-vtk-goal</GOAL-TYPE>
+      <NUMBER-OF-INPUT-ROLE-VALUE-PAIRS type="int">1</NUMBER-OF-INPUT-ROLE-VALUE-PAIRS>
+      <INPUT-NAME type="sexpr">has-filename</INPUT-NAME>
+      <INPUT-VALUE type="string">sample/head.vtk</INPUT-VALUE>
+    </achieve-goal>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+@end smallexample
+
+The achieve-goal element identifies the SOAP method being invoked, the ontology and goal-type elements identify the goal, and the input-name / input-value pairs supply the goal’s input slot values.
+
+@node REST interface, Javascript interface, SOAP interface, APIs
+@section The REST interface
+
+The HTTP GET interface supports the REST approach to web services
+@ref{REST}.  It allows the invocation of web services by making an
+HTTP GET request to an IRS server.  For instance, in the @code{math}
+application, there is an @code{add-goal} which sums two integers.  The
+arguments are @var{ontology}, which is the name of the ontology to
+invoke the goal in, and @var{goal}, the name of the goal.  The
+@code{math:add-goal} goal has two input slots: @code{math:hasA} and
+@code{HAS-B}.  These slots are passed as additional query parameters
+in the URL:
+
+@smallexample
+GET http://localhost:8080/api-rest/achieve-goal
+    ?ontology=MATH-ONTOLOGY&goal=math:add-goal&math:hasA=4&HAS-B=5
+@end smallexample
+
+The IRS then invokes the goal, and returns the result as the HTTP
+response.  Note that namespaces can be used.
+
+@node Javascript interface,  , REST interface, APIs
+@section Javascript interface
+
+Javascript is the de facto scripting language of contemporary web
+browsers, and underpins recent developments in highly interactive
+web-browser based user interfaces, such as Flckr, Google Mail.  It is
+used in the IRS interface and the prototype LHDL semantic web portal.
+Providing easy access to IRS goal invocation from Javascript is
+essential.  We have done this as part of a growing IRS Javascript API.
+The API code can be viewed at
+@url{http://lhdl.open.ac.uk:8080/irs/javascript/irs-api.js}.
+
+The function irs.achieveGoal is used to invoke a goal on the IRS server:
+
+@smallexample
+irs.achieveGoal(callback, ontology, goal, args)
+@end smallexample
+
+Where the callback is a function to be called when the server responds
+with the operation’s result; ontology is the name of the ontology in
+which the goal type goal is defined; and args is a vector of objects
+@code{@{name: slot-name, value: value@}}.  The Javascript call is
+translated into an HTTP GET request to the IRS’s REST API, covered in
+the previous section.
+
+@node Web interface, The Web Servers, APIs, Top
+@chapter Web interface
+
+The IRS provides a web interface, allowing users to perform a range of
+tasks through a web browser.  This includes events monitoring (see
+figure 1), ontology browsering (see figure 3), various plugins (like
+the LHDL demonstrator shown in figure 4), as well as the ability to
+invoke goals through a Javascript-enhanced HTML form.  From the IRS
+browser, a user can find a suitable goal, and click on the “achieve
+goal” button, whereupon they are taken to an HTML form which lists the
+ontology, goal and goal slots which must be completed.  Type
+information is available to assist the user in completing the fields.
+
+
+@node The Web Servers, IRS applications, Web interface, Top
+@chapter The Web Servers
+
+There are two HTTP servers within the IRS.  The first is Lispweb, the
+other is Hunchentoot.  Lispweb currently provides the programmatic
+interfaces to the IRS (usually on port 3000), while Hunchentoot
+provides the human interface (on port 8080).  We intend to eventually
+move all functionality to Hunchentoot.
+
+@node IRS applications, Bibliography, The Web Servers, Top
+@chapter IRS applications
+
+The IRS is a platform for semantic web services.  A convenient way to
+provide these services is through `applications', which are
+collections of web page interfaces, web services, and ontologies.  The
+IRS offers an interface for creating applications as `plugins'.  Two
+methods---@code{initialise-application} and
+@code{start-application}---are defined by the application.
+Applications are named by keywords.
+
+@menu
+* Using an application::        
+* Creating an application::     
+@end menu
+
+@node Using an application, Creating an application, IRS applications, IRS applications
+@section Using an application
+
+@smallexample
+CL-USER> (irs:use-application :trusted-travel)
+@end smallexample
+
+This loads the application named @code{:trusted-travel} by first using
+ASDF to load the @code{trusted-travel} system, then calling
+@code{(initialise-application trusted-travel)} and then
+@code{(start-application trusted-travel)}.
+
+@deffn Function irs:use-application (application)
+This is a convenience for the user. It loads the application as an
+ASDF package, then calls @code{initialise-application} and
+@code{start-application}.
+@end deffn
+
+@node Creating an application,  , Using an application, IRS applications
+@section Creating an application
+
+The IRS uses the ASDF@footnote{ASDF is `Another System Definition
+Facility', and is available from @url{http://www.cliki.net/asdf}}
+package to manage code.  This means your application will probably be
+defined as an ASDF system.  See the examples in @file{irs/apps}.
+
+Typically, @code{initialise-application} will call
+@code{webonto:require-ontologies} and @code{irs.web:register-plugin}.
+
+An application must define two entry points for itself, the methods
+@code{irs:initialise-application} and @code{irs:start-application}.
+Both take one paratemer, the keyword identifier for the application
+they represent.
+
+@deffn Method irs:initialise-application (application)
+Initialise data structures for the @var{application}.  Whatever
+actions are taken should hold between images, that is, if an image is
+created of the Lisp system after @code{initialise-application} has
+been called on a package, @code{initialise-application} should not
+need to be called again when the image is later rerun.
+@end deffn
+
+@deffn Method irs:start-application (application)
+Run @var{application} specific code in the IRS.  Add process
+visualisers.  If running from an image, this must be called after
+loading image.
+@end deffn
+
+Applications will typically require specific ontologies to be loaded.
+They can do this by calling @code{webonto:require-ontologies}.
+
+@deffn Function webonto:require-ontologies (ontologies)
+WebOnto will ensure that all ontologies (as named by their keyword
+identifier) are loaded.  If they are already loaded, no action is
+taken.  @code{require-ontologies} is safe across image restarts.
+
+@smallexample
+(webonto:require-ontologies
+  '(:trust-heuristic-classification :trust-profile :wsto))
+@end smallexample
+@end deffn
+
+To have the IRS web server display pages (which most applications will
+want), you need to call @code{irs:register-plugin}.
+
+@deffn Function irs.web:register-plugin (name type description dispatch-table)
+Where @var{name} is a keyword which is used to identify the plugin
+(this is used to dispatch the @code{initialise-application} and
+@code{start-application} methods ).  @var{type} is the class of
+plugin: for non-core IRS plugins, this will always be
+@code{:application}.  @var{description} is a textual description of
+the application, and is displayed on the webpage
+@url{http://localhost:8080/irs/plugins}.  @var{dispatch-table} is used
+for dispatching URL requests to the handlers.  See the Hunchentoot
+documentation for more details.  @code{register-plugin} is safe across
+image restarts.
+@end deffn
+
+@node Bibliography, Function Index, IRS applications, Top
+@chapter Bibliography
+
+@noindent
+
+@anchor{XPath}
+
+[Clarke99] J Clarke and S DeRose.  @i{XML Path Language
+(Xpath)}.  @url{http://www.w3.org/TR/xpath/}.
+
+@anchor{Enabling Semantic Web Services}
+
+[Fensel06] D Fensel, H Lausen, A Polleres, J De Bruijn, M Stollberg, D
+Roman, J Domingue. @i{Enabling Semantic Web Services: Web Services
+Modeling Ontology}. Springer.
+
+@anchor{REST}
+
+[Fielding00] Roy T. Fielding. @i{Architectural Styles and the Design
+of Network-based Software Architecture}.  University of California,
+Irvine.
+
+@anchor{SOAP}
+
+[Mitra07] N Mitra, Yves Lafon, @i{SOAP Version 1.2}.  W3C.  Available
+at @url{http://www.w3.org/TR/2007/REC-soap12-part0-20070427}.
+
+@node Function Index, Concept Index, Bibliography, Top
+@unnumbered Function Index
+@printindex fn
+
+@node Concept Index,  , Function Index, Top
+@unnumbered Concept Index
+@printindex cp
+
+@bye

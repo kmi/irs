@@ -1,0 +1,5 @@
+(achieve-task-through-irs
+ExchangeRateProvider
+exchange_rate_provision 
+'(has_source_currency euro)
+'( has_target_currency usdollar))

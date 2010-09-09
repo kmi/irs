@@ -1,0 +1,6 @@
+This is Stefania Galizia's trust ontology demonstration application.
+With IRS loaded, the following line will load and start the
+application.
+
+    CL-USER> (irs:use-application :trusted-travel)
+

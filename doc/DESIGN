@@ -1,0 +1,104 @@
+* High-level structure of the IRS source.
+
+The IRS directory at the top level comprises:
+
+    - apps: contains subdirectories which each hold an application,
+      usually an IRS-related research project.  The most complete at
+      the moment is ‘lhdl’.
+
+    - assets: Contains non-code files used by various bits of code.
+      In particular, Cascading Style Sheets files and images are kept
+      here.
+
+    - doc: contains this file and the beginnings of a manual for the
+      IRS.
+
+    - external: Packages which the IRS needs but which live outside
+      the tree.  We use the ‘submodule’ feature of Git to manage the
+      contents of external.
+
+    - javascript: JavaScript code for running the web broswer and
+      editor interfaces to the IRS.
+
+    - ontologies: The OCML ontologies.
+
+    - publisher: Code which publishes Lisp code as SOAP web services.
+      Contains a subdirectory ‘services’ which contain the
+      service-specific code.
+
+    - scripts: Various scripts for loading IRS, building images and
+      executables, and updating the local checkouts of code projects
+      which are maintained seperately from IRS.
+
+    - src: contains the IRS server code.
+
+    - tests: Unit tests.
+
+Most of the goodness is in the ‘src’ directory.  Previously, much of
+this code was divided between directories in a way dictated by
+historical accident, but we are slowly moving to a division based on
+functionality.
+
+    - api-javascript: Interface for the Javascript APIs in the
+      ‘javascript’ directory.  This is a REST style interface which
+      uses JSON for data exchange.
+
+    - api-rest: A REST interface for the IRS.  Primarily being used
+      for new work on the SUPER project.
+
+    - api-soal-old: The IRS's legacy SOAP interface lives on port
+      3000, under the control of the Lispweb server.  Most of this
+      code is scattered across the server, but it is migrating in
+      here over time.
+
+    - cashew: parser for the Cashew orchestration language.
+
+    - grounding: code for lifting and lowering between OCML and
+      various groundings.  This only holds the XML-RPC grounding code
+      at the moment, but other stuff should move there eventually.
+
+    - kernel: Defines the packages, some fundamental stuff, startup
+      procedures.
+
+    - monitoring: Carlos's process monitoring hooks.
+
+    - soap-irs: Remnants of IRS-I/II, whose files have utterly
+      meaningless names.
+
+    - soap-irs-protocol: SOAP stuff, and much of what will move to the
+      api-soap-old directory.
+
+    - utilities: XML wrangling, etc.
+
+    - visualiser: Lispworks CAPI-based GUI for showing IRS invocations
+      and calls to web services.
+
+    - web: A collection of code from other historical projects.  This
+      is WebOnto and related things.  It feeds the human consumable
+      web interface at http::/an.irs.server:8080/irs, including the
+      homepage, events display and IRS Browser.
+
+    - webonto: The WebOnto code.
+
+    - wsmo-protocol: 90% of today's core IRS functionality.
+
+    - xpath-mini: A largely standalone package.  This is a fair chunk
+      of the XPath standard, and is the foundation for the elevation
+      code in the grounding component.
+
+The ‘config’ directory contains configuration data for WebOnto and
+LispWeb.
+
+    - Now used principally to tell WebOnto about its users' login
+      details.  WebOnto configuration data used to live in
+      ‘code/webonto-info’.
+
+    - Although WebOnto will load ‘config/ontology-names’ if present,
+      this mechanism is deprecated.  You should use the IRS's
+      plugin/application framework and the function
+      ‘webonto:require-ontologies’ instead.
+
+
+Local variables:
+mode: outline
+End:

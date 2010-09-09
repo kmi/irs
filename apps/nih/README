@@ -1,0 +1,66 @@
+
+
+How to use Flickr
+
+You need to get an API key and secret from Flickr.  Place these in a
+file ontologies/nih-application/secrets.lisp.  For Flickr, the file
+should look like this:
+
+    (in-package #:ocml)
+
+    (in-ontology nih-application)
+
+    (def-instance #_theFlickrAccount #_flickr:Account
+      ((#_flickr:hasKey #_theFlickrKey)
+       (#_flickr:hasSecret #_theFlickrSecret)))
+
+    (def-instance #_theFlickrKey #_flickr:APIKey
+      ((#_flickr:hasValue "yourFlickrAPIKeyHeX")))
+
+    (def-instance #_theFlickrSecret #_flickr:APISecret
+      ((#_flickr:hasValue "yourFlickrSecretHeX")))
+
+With that, load the ontology.  You should be able to invoke goals from
+the nih-application ontology, using #_theFlickrAccount as the account
+name.
+
+You first have to allow the application to access your account.  Do
+this by getting a Frob:
+
+    (with-output-to-string (str)
+          (ip::raw-irs-achieve-goal
+           'ocml::nih-application '#_flickr:authGetFrobRestGoal
+           `((#_flickr:hasAccount "#_theFlickrAccount"))
+           str nil t))
+
+This should return a string containing a Frob instance name, such as
+"INSTANCE123".  Use that value in the following OCML query:
+
+    (ask (#_flickr:authenticate #_theFlickrAccount INSTANCE123 ?url))
+
+Visit the URL in a browser, and give the IRS complete access to your
+Flickr account.  You need then to get a Token using the same Frob:
+
+    (with-output-to-string (str)
+      (ip::raw-irs-achieve-goal
+       'ocml::nih-application '#_flickr:authGetTokenRestGoal
+       `((#_flickr:hasAccount "#_theFlickrAccount")
+        (#_flickr:hasFrob "INSTANCE123"))
+       str nil t))
+
+This will return another string of the form "INSTANCE456".  You need
+to get the token string out of this:
+
+    > (ocml::describe-instance 'ocml::INSTANCE456)
+    Instance OCML::INSTANCE900 of class #_flickr:Token
+    Home Ontology: OCML::NIH-APPLICATION
+    #_flickr:hasValue: "82188204528541713-b70e39f884ea427c"
+    The following slots have no value: OCML::HAS-PRETTY-NAME
+
+The "82188204528541713-b70e39f884ea427c" value should be put in the
+secrets.lisp file:
+
+    (def-instance #_theFlickrToken #_flickr:Token
+      ((#_flickr:hasValue "82188204528541713-b70e39f884ea427c")))
+
+With these values set up, the tests should run.
