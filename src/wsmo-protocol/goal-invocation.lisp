@@ -18,9 +18,7 @@
 ;;; There's no other choice.  God willing, we will prevail in peace
 ;;; and freedom from fear and in true health through the purity and
 ;;; essence of our natural fluids.  God bless you all.
-(defun ip::raw-irs-achieve-goal (ontology goal-type input-role-value-pairs
-                                 html-stream soap-response-p
-                                 &optional http-request-p)
+(defun ip::raw-irs-achieve-goal (ontology goal-type input-role-value-pairs)
   (ocml:with-ontology (ontology)
     (unless (ocml::findall '?x `(ocml::subclass-of ,goal-type ocml::goal))
       (error "No goal class matching name ~S." goal-type))
@@ -45,21 +43,34 @@
                      role/value-pairs))
            (skyhooked (grounding:apply-skyhooks slots classes values))
            (final-pairs (mapcar #'list slots skyhooked)))
-      (irs-solve-goal ontology goal-type final-pairs html-stream soap-response-p http-request-p))))
+      (irs-solve-goal ontology goal-type final-pairs))))
 
 (defun achieve-goal-slotted (ontology goal slot-value-pairs)
   "A simpler entry point to the invocation machinary."
   ;; Hides the nonsense about SOAP/HTTP, output to string etc.
-  (with-output-to-string (str)
-    (ip::raw-irs-achieve-goal ontology goal slot-value-pairs str nil t)))
+  (ip::raw-irs-achieve-goal ontology goal slot-value-pairs))
 
 ;;; 2007/04/05 Dave: Factor out raw-irs-achieve-goal, so we can get
 ;;; any signalled conditions if we want.
 (defun ip::irs-achieve-goal (ontology goal-type input-role-value-pairs 
                                       html-stream soap-response-p &optional http-request-p)
   (handler-case
-      (ip::raw-irs-achieve-goal ontology goal-type input-role-value-pairs 
-                                html-stream soap-response-p http-request-p)
+      ;; Invoke the goal, and deal with the result according to the
+      ;; invocation path.
+      (let* ((result (ip::raw-irs-achieve-goal ontology goal-type input-role-value-pairs))
+	    (soap-output-type (second (output-role-with-soap-binding goal-type))))
+	(if soap-response-p
+	    (if (ip::soap-attachment-type-p soap-output-type)
+		(ip::send-soap-attachment
+		 (symbol-name goal-type)
+		 result `((result ,soap-output-type)) html-stream)
+		(iu::send-soap-response2 (symbol-name goal-type)
+					 (list result)
+					 `((result ,soap-output-type))
+					 :stream html-stream)))
+	(if http-request-p
+	    (format html-stream "~a" result)
+	    (format html-stream "~s" result)))
     (iu::soap-response-error
      (c)
      (send-achieve-goal-error-message2 (iu::has-soap-response c)
@@ -81,8 +92,7 @@
 ;; Dave 2007-03-29: Clean up.
 ;; XXX Are soap-p/http-request-p mutually exclusive?  If so, shouldn't
 ;; we have an invocation-path type, with values :soap/:http?
-(defun irs-solve-goal (ontology goal-type input-role-value-pairs 
-                       html-stream &optional soap-p http-request-p)
+(defun irs-solve-goal (ontology goal-type input-role-value-pairs)
   (ocml:with-ontology (nil)
     #+:irs-lispworks
     (visualiser:received-achieve-task-message
@@ -92,8 +102,7 @@
          (result (ip::internal-solve-goal ontology goal-type
                                           input-role-value-pairs))
          (output-type (get-output-type result))
-         (lower-function (grounding:get-lower-function output-type))
-         (soap-output-type (second (output-role-with-soap-binding goal-type))))
+         (lower-function (grounding:get-lower-function output-type)))
     ;; Carlos 22-10-2006 - Put visualization before the lowering
     (ocml:with-ontology (nil)
       #+:irs-lispworks
@@ -102,20 +111,7 @@
     (irs.api.javascript:event :goal-return goal-type result)
     (when lower-function 
       (setf result (funcall lower-function result)))
-    (if soap-p
-        (if (ip::soap-attachment-type-p soap-output-type)
-            (ip::send-soap-attachment 
-             (symbol-name goal-type)
-             result `((result ,soap-output-type)) html-stream)
-          (iu::send-soap-response2 (symbol-name goal-type)
-                                   (list result) 
-                                   `((result ,soap-output-type)) 
-                                   :stream html-stream))
-      ;;(setf go goal-output-type lf lower-function rr result)
-      ;; Minor fix to avoid duplication of the result in SOAP messages (Carlos 23-1-07)
-      (if http-request-p
-          (format html-stream "~a" result)
-        (format html-stream "~s" result)))))
+	result))
 
 ;;(ip::internal-solve-goal 'ocml::wsmo-test 'ocml::exchange-rate-goal '((ocml::has_source_currency ocml::euro) (ocml::has_target_currency ocml::us-dollar)))
 
