@@ -48,15 +48,14 @@
      `((#_flickr:hasAccount "#_nih:theFlickrAccount")))))
 
 (test (flickr-get-sizes :depends-on flickr-photos-recently-updated)
-  (is (listp (read-from-string
-	      (wp:achieve-goal-slotted
+  (is (listp (wp:achieve-goal-slotted
 	       'ocml::nih-application '#_flickr:photosGetSizesRestGoal
 	       `((#_flickr:hasAccount "#_nih:theFlickrAccount")
 		 (#_flickr:hasToken "#_nih:theFlickrToken")
-		 (#_flickr:hasPhoto ,(first (read-ocml-from-string *photos-recently-updated*))))))))
+		 (#_flickr:hasPhoto ,(first *photos-recently-updated*))))))
   (is (listp (read-from-string
 	      (wp:achieve-goal-slotted
 	       'ocml::nih-application '#_flickr:photosGetSizesXmlrpcGoal
 	       `((#_flickr:hasAccount "#_nih:theFlickrAccount")
 		 (#_flickr:hasToken "#_nih:theFlickrToken")
-		 (#_flickr:hasPhoto ,(first (read-ocml-from-string *photos-recently-updated*))))))))  )
+		 (#_flickr:hasPhoto ,(first *photos-recently-updated*))))))))
