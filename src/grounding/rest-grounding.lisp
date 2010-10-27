@@ -53,7 +53,10 @@
               `(and
                 (= ?httpmsg (#_rfc2616:new-instance #_rfc2616:http-request))
                 (#_grnd:lower ,service-type ,invocation ?httpmsg)))))
-    res))
+    (if res
+	res
+	(error (make-condition 'irs.grounding::<grounding-fault>
+			       :other-cause "Lowering rule failed")))))
 
 (defun lift-http-to-invocation (service-type http-response invocation)
   "Read the OCML http-response object, invoking the appropriate ‘lift’
