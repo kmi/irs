@@ -56,6 +56,7 @@
     (if res
 	res
 	(error (make-condition 'irs.grounding::<grounding-fault>
+			       :service service-type
 			       :other-cause "Lowering rule failed")))))
 
 (defun lift-http-to-invocation (service-type http-response invocation)
