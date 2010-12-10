@@ -979,5 +979,91 @@
       :value
       #_testEchoRestService-interface-non-functional-properties)))
 
+;;; }}}
+;;; {{{ #_getImageRestService
 
+(def-class #_getImageRestGoal (goal) ?goal
+    ((has-input-role :value #_photo)
+     (has-output-role :value #_image)
+     (#_photo :type #_Photo)
+     (#_image :type string)))
+
+(def-rule #_lower-for-getImageRestService
+    ((#_grnd:lower #_getImageRestService ?invocation ?http-request)
+     if
+     (= ?photo (wsmo-role-value ?invocation #_photo))
+     (#_farm ?photo ?farm)
+     (#_server ?photo ?server)
+     (#_id ?photo ?id)
+     (#_secret ?photo ?secret)
+     (= ?url (make-string "http://farm~a.static.flickr.com/~a/~a_~a.jpg"
+			  ?farm ?server ?id ?secret))
+     (#_rfc2616:set-url ?http-request ?url)
+     (#_rfc2616:set-method ?http-request "GET")))
+
+(def-rule #_lift-for-getImageRestService
+    ((#_grnd:lift #_getImageRestService ?http-response ?invocation) if
+     (#_rfc2616:get-content ?http-response ?http-content)
+     (set-goal-slot-value ?invocation #_image ?http-content)))
+
+(def-class #_getImageRest-mediator-non-functional-properties (non-functional-properties)
+    nil)
+
+(def-class #_getImageRest-mediator (wg-mediator) ?mediator
+    ((has-source-component :value #_getImageRestGoal)
+     (has-non-functional-properties
+      :value #_getImageRest-mediator-non-functional-properties)))
+
+(def-class #_getImageRestService (web-service) ?web-service
+    ((has-capability :value #_getImageRestService-capability)
+     (has-interface :value #_getImageRestService-interface)
+     (has-non-functional-properties
+      :value #_getImageRestService-non-functional-properties)
+     (has-output-role :value #_hasContent :value #_hasContentType)
+     (#_hasContent :cardinality 1)
+     (#_hasContentType :cardinality 1)))
+
+(def-class #_getImageRestService-non-functional-properties
+    (non-functional-properties)
+    nil)
+
+(def-class #_getImageRestService-capability-non-functional-properties
+           (non-functional-properties)
+           nil)
+
+(def-class #_getImageRestService-capability
+           (capability)
+           ?capability
+           ((used-mediator :value #_getImageRest-mediator)
+            (has-non-functional-properties
+             :value
+             #_getImageRestService-capability-non-functional-properties)))
+
+(def-class #_getImageRestService-interface-non-functional-properties
+           (non-functional-properties)
+           nil)
+
+(def-class #_getImageRestService-interface-choreography
+           (choreography)
+           ((has-earthing :value #_getImageRestService-grounding)))
+
+(def-instance #_getImageRestService-grounding rest-grounding
+  ())
+
+(def-class #_getImageRestService-interface-orchestration-problem-solving-pattern
+    (problem-solving-pattern)
+    ((has-body :value nil)))
+
+(def-class #_getImageRestService-interface-orchestration
+           (orchestration)
+           ((has-problem-solving-pattern
+             :value
+             #_getImageRestService-interface-orchestration-problem-solving-pattern)))
+
+(def-class #_getImageRestService-interface (interface) ?interface
+    ((has-choreography :value #_getImageRestService-interface-choreography)
+     (has-orchestration :value #_getImageRestService-interface-orchestration)
+     (has-non-functional-properties
+      :value
+      #_getImageRestService-interface-non-functional-properties)))
 ;;; }}}

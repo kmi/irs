@@ -58,3 +58,11 @@
 	      `((#_flickr:hasAccount "#_nih:theFlickrAccount")
 		(#_flickr:hasToken "#_nih:theFlickrToken")
 		(#_flickr:hasPhoto ,(first *photos-recently-updated*)))))))
+
+(test (flickr-get-image :depends-on flickr-photos-recently-updated)
+  (let* ((result (wp:achieve-goal-slotted
+		  'ocml::nih-application '#_flickr:getImageRestGoal
+		  `((#_flickr:photo ,(first *photos-recently-updated*)))))
+	 (typeof (type-of result)))
+    (is (and (equal (first typeof) 'simple-array)
+	     (equal (second typeof) '(unsigned-byte 8))))))
