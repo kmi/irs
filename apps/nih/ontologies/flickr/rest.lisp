@@ -117,8 +117,7 @@
 
 (def-class #_authGetFrobRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_authGetFrobRestService-grounding)))
+           ((has-earthing :value #_authGetFrobRestService-grounding)))
 
 (def-instance #_authGetFrobRestService-grounding rest-grounding
   ())
@@ -139,12 +138,6 @@
      (has-non-functional-properties
       :value
       #_authGetFrobRestService-interface-non-functional-properties)))
-
-(def-class #_authGetFrobRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_authGetFrobRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -225,8 +218,7 @@
 
 (def-class #_authGetTokenRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_authGetTokenRestService-grounding)))
+           ((has-earthing :value #_authGetTokenRestService-grounding)))
 
 (def-instance #_authGetTokenRestService-grounding rest-grounding
   ())
@@ -247,12 +239,6 @@
      (has-non-functional-properties
       :value
       #_authGetTokenRestService-interface-non-functional-properties)))
-
-(def-class #_authGetTokenRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_authGetTokenRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -330,8 +316,7 @@
 
 (def-class #_photosRecentlyUpdatedRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_photosRecentlyUpdatedRestService-grounding)))
+           ((has-earthing :value #_photosRecentlyUpdatedRestService-grounding)))
 
 (def-instance #_photosRecentlyUpdatedRestService-grounding rest-grounding
   ())
@@ -352,12 +337,6 @@
      (has-non-functional-properties
       :value
       #_photosRecentlyUpdatedRestService-interface-non-functional-properties)))
-
-(def-class #_photosRecentlyUpdatedRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_photosRecentlyUpdatedRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; {{{ Lifting and lowering
 (def-rule #_lower-for-photosRecentlyUpdatedRestService
@@ -458,8 +437,7 @@
 (def-class
   #_photosRecentlyUpdatedRestServiceJson-interface-choreography
   (choreography)
-  ((has-grounding :value ((grounded-to-rest)))
-   (has-earthing :value
+  ((has-earthing :value
   #_photosRecentlyUpdatedRestServiceJson-grounding)))
 
 (def-instance #_photosRecentlyUpdatedRestServiceJson-grounding
@@ -486,15 +464,6 @@
   #_photosRecentlyUpdatedRestServiceJson-interface-orchestration)
    (has-non-functional-properties :value
     #_photosRecentlyUpdatedRestServiceJson-interface-non-functional-properties)))
-
-(def-class
-  #_photosRecentlyUpdatedRestServiceJson-publisher-information
-  (publisher-information)
-  ((has-associated-web-service-interface 
-    :value 
-    #_photosRecentlyUpdatedRestServiceJson-interface)
-   (has-web-service-host :value "yahoo.com")
-   (has-web-service-port :value 80)))
 
 ;;; {{{ Lifting and lowering
 
@@ -667,8 +636,7 @@
 
 (def-class #_photosGetSizesRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_photosGetSizesRestService-grounding)))
+           ((has-earthing :value #_photosGetSizesRestService-grounding)))
 
 (def-instance #_photosGetSizesRestService-grounding rest-grounding
   ())
@@ -689,12 +657,6 @@
      (has-non-functional-properties
       :value
       #_photosGetSizesRestService-interface-non-functional-properties)))
-
-(def-class #_photosGetSizesRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_photosGetSizesRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; {{{ Lifting and lowering
 (def-rule #_lower-for-photosGetSizesRestService
@@ -805,8 +767,7 @@
 
 (def-class #_authCheckTokenRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_authCheckTokenRestService-grounding)))
+           ((has-earthing :value #_authCheckTokenRestService-grounding)))
 
 (def-instance #_authCheckTokenRestService-grounding rest-grounding
   ())
@@ -827,12 +788,6 @@
      (has-non-functional-properties
       :value
       #_authCheckTokenRestService-interface-non-functional-properties)))
-
-(def-class #_authCheckTokenRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_authCheckTokenRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -909,8 +864,7 @@
 
 (def-class #_testLoginRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_testLoginRestService-grounding)))
+           ((has-earthing :value #_testLoginRestService-grounding)))
 
 (def-instance #_testLoginRestService-grounding rest-grounding
   ())
@@ -931,12 +885,6 @@
      (has-non-functional-properties
       :value
       #_testLoginRestService-interface-non-functional-properties)))
-
-(def-class #_testLoginRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_testLoginRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -1009,8 +957,7 @@
 
 (def-class #_testEchoRestService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_testEchoRestService-grounding)))
+           ((has-earthing :value #_testEchoRestService-grounding)))
 
 (def-instance #_testEchoRestService-grounding rest-grounding
   ())
@@ -1032,10 +979,5 @@
       :value
       #_testEchoRestService-interface-non-functional-properties)))
 
-(def-class #_testEchoRestService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_testEchoRestService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}

@@ -61,8 +61,7 @@
 
 (def-class #_photosGetSizesXmlrpcService-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))
-            (has-earthing :value #_photosGetSizesXmlrpcService-grounding)))
+           ((has-earthing :value #_photosGetSizesXmlrpcService-grounding)))
 
 (def-instance #_photosGetSizesXmlrpcService-grounding rest-grounding
   ())
@@ -83,12 +82,6 @@
      (has-non-functional-properties
       :value
       #_photosGetSizesXmlrpcService-interface-non-functional-properties)))
-
-(def-class #_photosGetSizesXmlrpcService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_photosGetSizesXmlrpcService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
 
 ;;; {{{ Lifting and lowering
 (def-rule #_lower-for-photosGetSizesXmlrpcService
