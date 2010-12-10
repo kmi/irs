@@ -1,6 +1,26 @@
-;;; Copyright © 2008 The Open University.
+;;; Copyright © 2008,2010 The Open University.
 
 (in-package :irs.grounding.rest)
+
+;;; This is for services with no defined grounding, i.e. those that
+;;; are using the REST grounding without legacy accoutrements.  This
+;;; is matches up with the definition of
+;;; wsmo-protocol:invoke-web-service-operation below for
+;;; grounding-type eql to nil.
+(defmethod wsmo-protocol::make-invocation-name-for-web-service-operation2
+    ((type (eql nil)) (implementation-info (eql nil)))
+  nil)
+
+;;; We will now support services using the grounded-to-rest approach
+;;; that don't declare a grounding.  This means less rubbish in a
+;;; service description.
+(defmethod wsmo-protocol:invoke-web-service-operation
+    ((grounding-type (eql nil)) grounding operation
+     name output-type input-roles-and-soap-bindings
+     values host port location service)
+  (wp:invoke-web-service-operation 'ocml::grounded-to-rest grounding operation
+				   name output-type input-roles-and-soap-bindings
+				   values host port location service))
 
 (defmethod wsmo-protocol:invoke-web-service-operation
     ((grounding-type (eql 'ocml::grounded-to-rest)) grounding

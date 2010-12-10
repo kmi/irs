@@ -1,3 +1,5 @@
+;;; Copyright © 2010 The Open University
+
 (in-package wsmo-protocol)
 
 (defun generate-service-soap-name (ontology web-service)
@@ -48,27 +50,28 @@
     (let* ((host (web-onto::findany '?x `(ocml::wsmo-web-service-host ,web-service ?x)))
            (port (web-onto::findany '?x `(ocml::wsmo-web-service-port ,web-service ?x)))
            (location (web-onto::findany '?x `(ocml::wsmo-web-service-location ,web-service ?x)))
+           (earthing (web-onto::findany '?x `(ocml::associated-earthing ,web-service ?x)))
            (input-roles (input-roles web-service))
            (output-role-with-soap-binding
             (output-role-with-soap-binding web-service))
            (output-type (intern (string-upcase (second output-role-with-soap-binding))
                                 (find-package "API-SOAP-OLD")))
            (orchestration-execution-pattern (get-orchestration-execution-pattern web-service)))
-      (cond ((and orchestration-execution-pattern
-                  (not (ocml:nothing? orchestration-execution-pattern)))
+      (cond ((and orchestration-execution-pattern (not (ocml:nothing? orchestration-execution-pattern)))
              (run-orchestration orchestration-execution-pattern web-service))
-            (host (internal-invoke-service
-                   web-service
-                   (generate-service-soap-name ontology web-service)
-                   input-roles
-                   (let ((input-role-values
-                          (mapcar #'(lambda (input-role)
-                                      (ocml::findany
-                                       '?x
-                                       `(= ?x (ocml::wsmo-role-value ,web-service ,input-role))))
-                                  input-roles)))
-                     input-role-values)
-                   host port location output-type))
+            ((or host earthing)
+	     (internal-invoke-service
+		     web-service
+		     (generate-service-soap-name ontology web-service)
+		     input-roles
+		     (let ((input-role-values
+			    (mapcar #'(lambda (input-role)
+					(ocml::findany
+					 '?x
+					 `(= ?x (ocml::wsmo-role-value ,web-service ,input-role))))
+				    input-roles)))
+		       input-role-values)
+		     host port location output-type))
             ;;;if no published web service try calling an internal function
             ((generic-get-internal-method web-service)
              (let ((internal-method (generic-get-internal-method web-service)))
