@@ -519,13 +519,13 @@
      (#_addArgument ?args "nojsoncallback" "1")
      (#_signArguments #_rest ?args ?account)
      (#_asQuery ?args ?query)
-     (= ?url (make-string "~A~A" ?base-url ?query)) (exec (output "here here here"))
+     (= ?url (make-string "~A~A" ?base-url ?query))
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-photosRecentlyUpdatedRestServiceJson
-    ((#_grnd:lift #_photosRecentlyUpdatedRestServiceJson ?http-response ?invocation) if (exec (output "here here here"))
-     (#_rfc2616:get-content ?http-response ?http-content) (exec (output "here here here"))
-     (#_json:serialiseJson ?json ?http-content) (exec (output "test ~A~%" ?json))
+    ((#_grnd:lift #_photosRecentlyUpdatedRestServiceJson ?http-response ?invocation) if
+     (#_rfc2616:get-content ?http-response ?http-content)
+     (#_json:serialiseJson ?json ?http-content)
      (#_json:Object ?json)
      (#_json:members ?json ?objMembers)
      (member ?photosKeyValuePair ?objMembers)
