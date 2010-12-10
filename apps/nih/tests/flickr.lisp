@@ -53,9 +53,8 @@
 	       `((#_flickr:hasAccount "#_nih:theFlickrAccount")
 		 (#_flickr:hasToken "#_nih:theFlickrToken")
 		 (#_flickr:hasPhoto ,(first *photos-recently-updated*))))))
-  (is (listp (read-from-string
-	      (wp:achieve-goal-slotted
-	       'ocml::nih-application '#_flickr:photosGetSizesXmlrpcGoal
-	       `((#_flickr:hasAccount "#_nih:theFlickrAccount")
-		 (#_flickr:hasToken "#_nih:theFlickrToken")
-		 (#_flickr:hasPhoto ,(first *photos-recently-updated*))))))))
+  (is (listp (wp:achieve-goal-slotted
+	      'ocml::nih-application '#_flickr:photosGetSizesXmlrpcGoal
+	      `((#_flickr:hasAccount "#_nih:theFlickrAccount")
+		(#_flickr:hasToken "#_nih:theFlickrToken")
+		(#_flickr:hasPhoto ,(first *photos-recently-updated*)))))))
