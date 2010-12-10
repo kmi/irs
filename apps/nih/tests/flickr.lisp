@@ -25,7 +25,12 @@
 	   'ocml::nih-application '#_flickr:photosRecentlyUpdatedRestGoal
 	   `((#_flickr:hasAccount "#_nih:theFlickrAccount")
 	     (#_flickr:hasToken "#_nih:theFlickrToken")
-	     (#_flickr:hasMinimumDate 1))))))
+	     (#_flickr:hasMinimumDate 1)))))
+  (is (listp (wp:achieve-goal-slotted
+	      'ocml::nih-application '#_flickr:photosRecentlyUpdatedRestGoalJson
+	      `((#_flickr:hasAccount "#_nih:theFlickrAccount")
+		(#_flickr:hasToken "#_nih:theFlickrToken")
+		(#_flickr:hasMinimumDate 1))))))
 
 (test flickr-auth-checktoken
   (finishes
