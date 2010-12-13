@@ -10,32 +10,26 @@
 
 (test amazons3-file-upload-test
   (finishes
-    (with-output-to-string (str)
-      (ip::raw-irs-achieve-goal
+    (wp:achieve-goal-slotted
        'ocml::nih-application 'ocml::put-object-goal
        `((ocml::has-account "#_nih:theS3Account")
          (ocml::has-bucket "lhdl")
          (ocml::has-key "test")
-         (ocml::has-data ,nih-tests::*random-string*))
-       str nil t))))
+         (ocml::has-data ,nih-tests::*random-string*)))))
 
 (test (amazons3-file-download-test
        :depends-on (and amazons3-file-upload-test))
   (is (string=
-       (with-output-to-string (str)
-         (ip::raw-irs-achieve-goal
-          'ocml::nih-application 'ocml::get-object-goal
-          '((ocml::has-account "#_nih:theS3Account")
-            (ocml::has-bucket "lhdl")
-            (ocml::has-key "test"))
-          str nil t))
+       (wp:achieve-goal-slotted
+	'ocml::nih-application 'ocml::get-object-goal
+	'((ocml::has-account "#_nih:theS3Account")
+	  (ocml::has-bucket "lhdl")
+	  (ocml::has-key "test")))
        nih-tests::*random-string*)))
 
 (test amazons3-bucket-test
   (finishes
-   (with-output-to-string (str)
-     (ip::raw-irs-achieve-goal
-      'ocml::nih-application 'ocml::get-bucket-goal
-      '((ocml::has-account "#_nih:theS3Account")
-        (ocml::has-bucket "lhdl"))
-      str nil t))))
+    (wp:achieve-goal-slotted
+     'ocml::nih-application 'ocml::get-bucket-goal
+     '((ocml::has-account "#_nih:theS3Account")
+       (ocml::has-bucket "lhdl")))))

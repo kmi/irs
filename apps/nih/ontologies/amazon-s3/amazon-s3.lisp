@@ -23,8 +23,8 @@
     ((has-input-role :value has-account
                      :value has-bucket
                      :value has-key)
-     (has-output-role :value #_hasContent
-                      :value #_hasContentType)
+     (has-output-role :value #_hasContentType
+                      :value #_hasContent)
      (has-account :type #_amazon-account)
      (has-bucket :type #_amazon-bucket)
      (has-key :type #_amazon-object-key)
