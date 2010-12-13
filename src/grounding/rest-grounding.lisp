@@ -51,6 +51,11 @@
                            `(and  (ocml::suitable-web-service ?goal ,invocation)
                                   (,output-role ?goal ?value))))))))
 
+;;; XXX Returning a single value is simply wrong, and is done here
+;;; only to fit the legacy pattern.  What we ought to do is return the
+;;; whole lot, and indeed multiple return values are accessible when
+;;; doing orchestration.  The single value returned is the value in
+;;; the last slot mentioned by the goal's :output-type declarations.
 (defun output-role (invocation)
   ;; In this case, we are interested only in direct has-output-role's
   ;; on the service, not the goal.  Because this lifting and lowering
