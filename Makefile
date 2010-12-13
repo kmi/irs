@@ -40,6 +40,9 @@ check tests: lw-tests
 lw-tests:
 	cat scripts/run-tests.lisp | $(lispworks) -init -
 
+sbcl-tests:
+	cat scripts/run-tests.lisp | sbcl
+
 lispworks-console:
 	lispworks -build scripts/make-lispworks-console.lisp
 
