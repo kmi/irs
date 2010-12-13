@@ -137,3 +137,118 @@ version."
    (#_xml:elementByName ?inner-root ?sizes "sizes")))
 
 ;;; }}}
+
+;;; {{{ #_photosRecentlyUpdatedXmlRpc Goal, Service, groundings
+
+(def-class #_photosRecentlyUpdatedXmlRpcGoal (goal) ?goal
+    ((has-input-role :value #_hasAccount
+		     :value #_hasToken
+		     :value #_hasMinimumDate)
+     (has-output-role :value #_hasPhotoList)
+     (#_hasAccount :type #_Account)
+     (#_hasToken :type #_Token)
+     ;; XXX hasMinimumDate is the Unix time.  It must be > 0.
+     (#_hasMinimumDate :type integer)
+     (#_hasPhotoList :type #_PhotoList)))
+
+(def-class #_photosRecentlyUpdatedXmlRpc-mediator-non-functional-properties (non-functional-properties)
+    nil)
+
+(def-class #_photosRecentlyUpdatedXmlRpc-mediator (wg-mediator) ?mediator
+    ((has-source-component :value #_photosRecentlyUpdatedXmlRpcGoal)
+     (has-non-functional-properties
+      :value #_photosRecentlyUpdatedXmlRpc-mediator-non-functional-properties)))
+
+(def-class #_photosRecentlyUpdatedXmlRpcService (web-service) ?web-service
+    ((has-capability :value #_photosRecentlyUpdatedXmlRpcService-capability)
+     (has-interface :value #_photosRecentlyUpdatedXmlRpcService-interface)
+     (has-non-functional-properties
+      :value #_photosRecentlyUpdatedXmlRpcService-non-functional-properties)
+     (has-output-role :value #_hasContent :value #_hasContentType)
+     (#_hasContent :cardinality 1)
+     (#_hasContentType :cardinality 1)))
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-non-functional-properties
+    (non-functional-properties)
+    nil)
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-capability-non-functional-properties
+           (non-functional-properties)
+           nil)
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-capability
+           (capability)
+           ?capability
+           ((used-mediator :value #_photosRecentlyUpdatedXmlRpc-mediator)
+            (has-non-functional-properties
+             :value
+             #_photosRecentlyUpdatedXmlRpcService-capability-non-functional-properties)))
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-interface-non-functional-properties
+           (non-functional-properties)
+           nil)
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-interface-choreography
+           (choreography)
+           ((has-earthing :value #_photosRecentlyUpdatedXmlRpcService-grounding)))
+
+(def-instance #_photosRecentlyUpdatedXmlRpcService-grounding rest-grounding
+  ())
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-interface-orchestration-problem-solving-pattern
+    (problem-solving-pattern)
+    ((has-body :value nil)))
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-interface-orchestration
+           (orchestration)
+           ((has-problem-solving-pattern
+             :value
+             #_photosRecentlyUpdatedXmlRpcService-interface-orchestration-problem-solving-pattern)))
+
+(def-class #_photosRecentlyUpdatedXmlRpcService-interface (interface) ?interface
+    ((has-choreography :value #_photosRecentlyUpdatedXmlRpcService-interface-choreography)
+     (has-orchestration :value #_photosRecentlyUpdatedXmlRpcService-interface-orchestration)
+     (has-non-functional-properties
+      :value
+      #_photosRecentlyUpdatedXmlRpcService-interface-non-functional-properties)))
+
+;;; {{{ Lifting and lowering
+
+(def-rule #_argsForRecentlyUpdated
+    ((#_argsForRecentlyUpdated ?invocation ?args) if
+     (= ?account (wsmo-role-value ?invocation #_hasAccount))
+     (= ?token (wsmo-role-value ?invocation #_hasToken))
+     (#_hasValue ?token ?token-string)
+     (#_hasKey ?account ?apikey)
+     (#_hasValue ?apikey ?apikey-string)
+     (= ?min-date (wsmo-role-value ?invocation #_hasMinimumDate))
+     (= ?args (#_new-instance #_Arguments))
+     (#_addArgument ?args "method" "flickr.photos.recentlyUpdated")
+     (#_addArgument ?args "api_key" ?apikey-string)
+     (#_addArgument ?args "auth_token" ?token-string)
+     (#_addArgument ?args "min_date" ?min-date)))
+
+(def-rule #_lower-for-photosRecentlyUpdatedXmlRpcService
+    ((#_grnd:lower #_photosRecentlyUpdatedXmlRpcService ?invocation ?http-request) if
+     (#_argsForRecentlyUpdated ?invocation ?args)
+     (#_signArguments #_xmlrpc ?args ?account)
+     (#_argsToXmlrpcRequest ?args ?http-request)))
+
+(def-rule #_lift-for-photosRecentlyUpdatedXmlRpcService
+    ((#_grnd:lift #_photosRecentlyUpdatedXmlRpcService ?http-response ?invocation) if
+     (#_rfc2616:get-content ?http-response ?http-content)
+     (#_xml:serialiseXml ?xml ?http-content)
+     (#_xml:rootElement ?xml ?root)
+     (#_xml:elementByName ?root ?string "string")
+     (#_xml:contents ?string ?string-contents)
+     (member ?contentsx ?string-contents)
+     (#_xml:value ?contentsx ?contents)
+     (#_xml:serialiseXml ?xml2 ?contents)
+     (#_xml:rootElement ?xml2 ?root2)
+     (#_xml:elementByName ?root2 ?photos-element "photos")
+     (#_xmllyPhotoList ?photos-element ?photolist)
+     (set-goal-slot-value ?invocation #_hasPhotoList ?photolist)))
+
+;;; }}}
+
+;;; }}}
