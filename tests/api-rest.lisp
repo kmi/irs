@@ -74,6 +74,7 @@
     </tns:Result>
 </tns:ResultSet>")))
 
+#+:irs-lispworks
 (test knowledge-base-api-test
   (finishes
     (parse-xml
@@ -89,7 +90,7 @@
 
 ;;; Test that the instance upload works.  We change the abbreviation
 ;;; used for seconds in the SI units ontology.
-
+#+:irs-lispworks
 (defparameter *test-send-instance*
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <tns:OcmlInstance xmlns:tns=\"http://kmi.open.ac.uk/ocml/xsd/20080215/OcmlModel\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><tns:Iri>http://kmi.open.ac.uk/ontologies/international-system-units#Second</tns:Iri><tns:ClassIri>http://kmi.open.ac.uk/ontologies/physical-quantities#UnitOfMeasure</tns:ClassIri><tns:Documentation>The SI standard unit of time.</tns:Documentation><tns:SlotValue><tns:Iri>http://kmi.open.ac.uk/ontologies/physical-quantities#hasAbbreviation</tns:Iri><tns:SlotTypeIri>http://www.kmi.open.ac.uk/projects/ocml/namespaces/assumed/BASE-ONTOLOGY#STRING</tns:SlotTypeIri><tns:Value tns:ltype=\"string\">a</tns:Value></tns:SlotValue><tns:SlotValue><tns:Iri>http://kmi.open.ac.uk/ontologies/physical-quantities#hasConversionRate</tns:Iri><tns:SlotTypeIri>http://kmi.open.ac.uk/ontologies/physical-quantities#ConversionRate</tns:SlotTypeIri><tns:Value tns:ltype=\"symbol\">http://kmi.open.ac.uk/ontologies/physical-quantities#IdentityConversionRate</tns:Value></tns:SlotValue><tns:SlotValue><tns:Iri>http://kmi.open.ac.uk/ontologies/physical-quantities#hasDimension</tns:Iri><tns:SlotTypeIri>http://kmi.open.ac.uk/ontologies/physical-quantities#PhysicalDimension</tns:SlotTypeIri><tns:Value tns:ltype=\"symbol\">http://kmi.open.ac.uk/ontologies/standard-dimensions#TimeDimension</tns:Value></tns:SlotValue></tns:OcmlInstance>")
@@ -108,6 +109,7 @@
   </tns:SlotValue>
 </tns:OcmlInstance>")
 
+#+:irs-lispworks
 (test send-instance-test
       (is (= 200
              (multiple-value-bind (content response-code)
@@ -184,6 +186,7 @@
 
 </tns:OcmlOntology>")
 
+#+:lispworks
 (test send-ontology-test
   (is (= 200
          (multiple-value-bind (content response-code)
@@ -212,6 +215,7 @@
   xsi:schemaLocation=\"http://kmi.open.ac.uk/ocml/xsd/20080215/OcmlModel
   OcmlModel.xsd\"><tns:Iri>http://ip-super.org/ontologies/process/cobra/v1.1.1#BirthdayEvent</tns:Iri><tns:SuperClass>http://ip-super.org/ontologies/process/cobra/v1.1.1#MonitoringEvent</tns:SuperClass><tns:Slot><tns:Iri>http://ip-super.org/ontologies/process/cobra/v1.1.1#leadsToState</tns:Iri><tns:SlotTypeIri>http://ip-super.org/ontologies/process/cobra/v1.1.1#BusinessActivityStateType</tns:SlotTypeIri><tns:MinCardinality>1</tns:MinCardinality><tns:MaxCardinality>1</tns:MaxCardinality></tns:Slot><tns:Slot><tns:Iri>http://ip-super.org/ontologies/process/cobra/v1.1.1#canOccurInState</tns:Iri><tns:SlotTypeIri>http://ip-super.org/ontologies/process/cobra/v1.1.1#BusinessActivityStateType</tns:SlotTypeIri><tns:MinCardinality>1</tns:MinCardinality></tns:Slot><tns:Slot><tns:Iri>http://ip-super.org/ontologies/process/cobra/v1.1.1#generatedBy</tns:Iri><tns:SlotTypeIri>http://ip-super.org/ontologies/process/cobra/v1.1.1#Agent</tns:SlotTypeIri><tns:MinCardinality>1</tns:MinCardinality><tns:MaxCardinality>1</tns:MaxCardinality></tns:Slot><tns:Slot><tns:Iri>http://ip-super.org/ontologies/process/cobra/v1.1.1#concernsActivityInstance</tns:Iri><tns:SlotTypeIri>http://ip-super.org/ontologies/process/cobra/v1.1.1#ActivityInstance</tns:SlotTypeIri><tns:MaxCardinality>1</tns:MaxCardinality></tns:Slot><tns:Slot><tns:Iri>http://ip-super.org/ontologies/process/cobra/v1.1.1#concernsProcessInstance</tns:Iri><tns:SlotTypeIri>http://ip-super.org/ontologies/process/cobra/v1.1.1#ProcessInstance</tns:SlotTypeIri><tns:MinCardinality>1</tns:MinCardinality><tns:MaxCardinality>1</tns:MaxCardinality></tns:Slot><tns:Documentation/></tns:OcmlClass>")
 
+#+:lispworks
 (test send-class-test
   (is (= 200
          (multiple-value-bind (content response-code)

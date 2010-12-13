@@ -5,6 +5,7 @@
   :depends-on (:irs-tests-core :trusted-travel)
   :components
   ((:file "api-rest")
+   #+:irs-use-lispweb
    (:file "browser-interface")
    (:file "cs-invocation")
    (:file "grounding")
