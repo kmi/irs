@@ -43,6 +43,24 @@
 (setf (logical-pathname-translations "irs")
       `(("irs:**;*.*.*" ,(from-irs-home "**/*.*"))))
 
+
+;;; {{{ QuickLisp
+
+(let ((quicklisp (concatenate 'string *irs-home* "/quicklisp.lisp")))
+  (when (probe-file quicklisp)
+    (load quicklisp)
+    (push :quicklisp *features*)))
+
+#+:quicklisp
+(let ((quicklisp-setup (quicklisp-quickstart::qmerge "setup.lisp")))
+  (if (probe-file quicklisp-setup)
+      (load quicklisp-setup)
+    (quicklisp-quickstart:install)))
+
+#+:quicklisp
+(ql:quickload "asdf")
+;;; }}}
+
 ;;;; ASDF system definition setup.
 
 (unless (find-package '#:asdf)
