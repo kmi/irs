@@ -1,32 +1,47 @@
 * Getting IRS
 
-Use Git to get a copy of the IRS source.
+Use Git to get a copy of the IRS source:
 
-    git clone http://github.com/kmi/irs.git
+    $ git clone http://github.com/kmi/irs.git
 
 This will produce a directory called ‘irs’.
 
 * Getting external dependencies
 
-The IRS depends on several ASDF-based Lisp libraries.  The easiest way
-to get these is probably clbuild
-<http://common-lisp.net/project/clbuild/>.
+The IRS depends on several ASDF-based Lisp libraries.  The first is
+the OCML reasoner, and due to the tight coupling between them, we use
+Git's submodule functionality to get OCML and keep it in sync.  On a
+fresh IRS install, you should run:
 
-The IRS also depends on the OCML reasoner, and due to the tight
-dependency between them, we use Git's submodule functionality to get
-OCML and keep it in sync.  On a fresh IRS install, you should run:
-
+    $ cd irs
     $ git submodule init
     $ git submodule update
 
+Following subsequent Git operations that affect the state of
+external/ocml, you should run:
+
+    $ git submodule update
+
+In addition, we need several libraries from the wider Common Lisp
+ecosystem.  You can install these any way you choose, but the easiest
+is to use Zach Beane's Quicklisp (currently in beta, so be careful).
+You can install Quicklisp and download all the necessary libraries by
+running:
+
+    $ make install-quicklisp
+
 * Load, build and run the IRS
 
-On Linux: You first need to run ‘make linux’, which will create some
-scaled graphics (Lispworks 5 on Linux doesn't seem to scale them
-properly itself, so we do so it ourselves).
+If you are using Lispworks 5 on Linux you first need to run:
 
-Run a Lisp (Lispworks 6 is recommended, SBCL works sometimes).  You
-need to load the file scripts/irs.lisp:
+    $ make linux
+
+which will create some scaled graphics for the user interface
+(Lispworks 5 on Linux doesn't scale them properly itself, so we do so
+it ourselves).
+
+Run a Lisp (Lispworks 6 and SBCL are supported).  You need to load the
+file scripts/irs.lisp:
 
     CL-USER> (load "scripts/irs.lisp")
 

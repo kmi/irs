@@ -15,6 +15,10 @@ update-external:
 	git submodule init
 	git submodule update
 
+install-quicklisp:
+	curl -O http://beta.quicklisp.org/quicklisp.lisp
+	cat scripts/install-quicklisp.lisp | $(lispworks) -init -
+
 find_object_file_names = \
 		-name "*.fasl" -o -name "*.fsl" \
 		-o -name "*.pfsl" -o -name "*.ufasl" \

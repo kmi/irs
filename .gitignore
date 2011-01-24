@@ -64,3 +64,5 @@ doc/*.vr
 # Windows image thumbnails
 Thumbs.db
 
+# Quicklisp file
+/quicklisp.lisp
