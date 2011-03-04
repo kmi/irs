@@ -116,6 +116,7 @@ IRS HTTP server will redirect to the Yahoo servers."
   (setf hunchentoot:*dispatch-table* (construct-dispatch-table)
 	*web-interface-server* (make-instance 'hunchentoot:acceptor
 					      :port irs:*port* :address irs:*host*))
+  (ocml::ensure-directories-exist (logical-pathname "irs:log;"))
   (setf hunchentoot:*message-log-pathname*
 	(logical-pathname "irs:log;hunchentoot-message.log")
 	hunchentoot:*access-log-pathname*
