@@ -57,8 +57,6 @@
       (load quicklisp-setup)
     (quicklisp-quickstart:install)))
 
-#+:quicklisp
-(ql:quickload "asdf")
 ;;; }}}
 
 ;;;; ASDF system definition setup.
