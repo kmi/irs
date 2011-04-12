@@ -289,7 +289,7 @@ IRS HTTP server will redirect to the Yahoo servers."
         the " ((:a :href "http://www.wsmo.org/") "WSMO working
         group") ".")
 
-     (:ul (:li ((:a :href "http://www.kmi.open.ac.uk/projects/irs/")
+     (:ul (:li ((:a :href "http://technologies.kmi.open.ac.uk/irs/")
                 "IRS homepage"))
           (:li ((:a :href "irs/news" ) "News")))
      (:center
