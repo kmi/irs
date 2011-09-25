@@ -36,14 +36,15 @@
             (if (ocml:nothing? val)
                 irs:*connection-read-timeout*
                 val)))
-         (ocml-request (lower-invocation-to-http service invocation)))
+         (ocml-request
+	  (lower-invocation-to-http earthing service invocation)))
     (let ((method (method-of ocml-request))
           (url (url-of ocml-request)))
       (irs.api.javascript:event
        :rpc-call service (format nil "~A ~A" method url)))
     (let ((ocml-response (invoke-ocml-request ocml-request
                                               :read-timeout connection-read-timeout)))
-      (lift-http-to-invocation service ocml-response invocation)
+      (lift-http-to-invocation earthing ocml-response invocation)
       (let ((output-role (output-role invocation)))
         (if (or (ocml:nothing? output-role) (null output-role))
             nil
@@ -71,25 +72,30 @@
     ((type (eql 'ocml::grounded-to-rest)) implementation-info)
   implementation-info)
 
-(defun lower-invocation-to-http (service-type invocation)
+;;;
+(defun lower-invocation-to-http (earthing service-type invocation)
   "Create an OCML http-request object for INVOCATION, returning its name."
-  (let ((res (web-onto::findany
+  (let* ((rule (web-onto::findany 'ocml::?r
+				  `(ocml::lower-rule ,earthing ocml::?r)))
+	 (res (web-onto::findany
               '?httpmsg
               `(and
                 (= ?httpmsg (#_rfc2616:new-instance #_rfc2616:http-request))
-                (#_grnd:lower ,service-type ,invocation ?httpmsg)))))
+                (,rule ,invocation ?httpmsg)))))
     (if res
 	res
 	(error (make-condition 'irs.grounding::<grounding-fault>
 			       :service service-type
 			       :other-cause "Lowering rule failed")))))
 
-(defun lift-http-to-invocation (service-type http-response invocation)
+(defun lift-http-to-invocation (earthing http-response invocation)
   "Read the OCML http-response object, invoking the appropriate ‘lift’
 rule."
-  (web-onto::findany
-   '?http-response `(and (= ?http-response ,http-response)
-                         (#_grnd:lift ,service-type ?http-response ,invocation))))
+  (let ((rule (web-onto::findany 'ocml::?rule
+				 `(ocml::lift-rule ,earthing ocml::?rule))))
+    (web-onto::findany
+     '?http-response `(and (= ?http-response ,http-response)
+			   (,rule ?http-response ,invocation)))))
 
 ;; I want some abstraction here, because at some point OCML names will
 ;; cease being symbols and become a class instance or something.

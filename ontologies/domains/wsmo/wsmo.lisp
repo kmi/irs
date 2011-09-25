@@ -163,7 +163,9 @@
 ;;;
 ;;; It should be accessed through a collection of relations that I'll
 ;;; be working out, mostly over in the ‘HTTP’ ontology.
-(def-class rest-grounding (http-grounding-mixin))
+(def-class rest-grounding (http-grounding-mixin)
+    ((lower-rule :type rule)
+     (lift-rule :type rule)))
 
 (def-class soap-grounding (grounding http-grounding-mixin)
   (;; The URL for POSTing the SOAP request to.
