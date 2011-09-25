@@ -63,7 +63,8 @@
             (has-earthing :value #_add-web-service-grounding)))
 
 (def-instance #_add-web-service-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-add-service)
+   (lift-rule #_lift-for-add-service)))
 
 (DEF-CLASS #_add-web-service-interface-orchestration-problem-solving-pattern
     (PROBLEM-SOLVING-PATTERN)
@@ -97,8 +98,8 @@
 ;;; skyhooks, store those values against the service instance, and
 ;;; work from there.  but that's a whole other layer of crud I don't
 ;;; have time for.  Instead, we'll just take the goal args and run.
-(def-rule #_lower-for-add
-    ((#_hg:lower #_add-web-service ?invocation ?http-request)
+(def-rule #_lower-for-add-service
+    ((#_lower-for-add-service ?invocation ?http-request)
      if
      (= ?a (wsmo-role-value ?invocation '#_hasA))
      (= ?b (wsmo-role-value ?invocation 'has-b))
@@ -109,7 +110,7 @@
      (#_rfc2616:set-method ?http-request "GET")))
 
 (def-rule #_lift-for-add
-    ((#_hg:lift #_add-web-service ?http-response ?invocation)
+    ((#_lift-for-add-service ?http-response ?invocation)
      if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation has-sum ?http-content)))

@@ -28,7 +28,7 @@
 ;;; {{{ #_authGetFrobRestService
 
 (def-rule #_lower-for-authGetFrobRestService
-    ((#_grnd:lower #_authGetFrobRestService ?invocation ?http-request)
+    ((#_lower-for-authGetFrobRestService ?invocation ?http-request)
      if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
@@ -44,7 +44,8 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-authGetFrobRestService
-    ((#_grnd:lift #_authGetFrobRestService ?http-response ?invocation) if
+    ((#_lift-for-authGetFrobRestService ?http-response ?invocation)
+     if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      (#_extractFrobFromXml ?xml ?frob)
@@ -116,11 +117,12 @@
            nil)
 
 (def-class #_authGetFrobRestService-interface-choreography
-           (choreography)
-           ((has-earthing :value #_authGetFrobRestService-grounding)))
+    (choreography)
+    ((has-earthing :value #_authGetFrobRestService-grounding)))
 
 (def-instance #_authGetFrobRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-authGetFrobRestService)
+   (lift-rule #_lift-for-authGetFrobRestService)))
 
 (def-class #_authGetFrobRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -144,7 +146,7 @@
 ;;; {{{ #_authGetTokenRestService
 
 (def-rule #_lower-for-authGetTokenRestService
-    ((#_grnd:lower #_authGetTokenRestService ?invocation ?http-request) if
+    ((#_lower-for-authGetTokenRestService ?invocation ?http-request) if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
@@ -162,7 +164,8 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-authGetTokenRestService
-    ((#_grnd:lift #_authGetTokenRestService ?http-response ?invocation) if
+    ((#_lift #_lift-for-authGetTokenRestService ?http-response ?invocation)
+     if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      (#_extractTokenFromXml ?xml ?token)
@@ -221,7 +224,8 @@
            ((has-earthing :value #_authGetTokenRestService-grounding)))
 
 (def-instance #_authGetTokenRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-authGetTokenRestService)
+   (lift-rule #_lift-for-authGetTokenRestService)))
 
 (def-class #_authGetTokenRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -319,7 +323,8 @@
            ((has-earthing :value #_photosRecentlyUpdatedRestService-grounding)))
 
 (def-instance #_photosRecentlyUpdatedRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-photosRecentlyUpdatedRestService)
+   (lift-rule #_lift-for-photosRecentlyUpdatedRestService)))
 
 (def-class #_photosRecentlyUpdatedRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -340,7 +345,7 @@
 
 ;;; {{{ Lifting and lowering
 (def-rule #_lower-for-photosRecentlyUpdatedRestService
-    ((#_grnd:lower #_photosRecentlyUpdatedRestService ?invocation ?http-request) if
+    ((#_lower-for-photosRecentlyUpdatedRestService ?invocation ?http-request) if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
@@ -360,7 +365,8 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-photosRecentlyUpdatedRestService
-    ((#_grnd:lift #_photosRecentlyUpdatedRestService ?http-response ?invocation) if
+    ((#_lift-for-photosRecentlyUpdatedRestService ?http-response ?invocation)
+     if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      (#_xml:rootElement ?xml ?root-element)
@@ -441,8 +447,9 @@
   #_photosRecentlyUpdatedRestServiceJson-grounding)))
 
 (def-instance #_photosRecentlyUpdatedRestServiceJson-grounding
-  rest-grounding
-  ())
+    rest-grounding
+  ((lower-rule #_lower-for-photosRecentlyUpdatedRestServiceJson)
+   (lift-rule #_lift-for-photosRecentlyUpdatedRestServiceJson)))
 
 (def-class
   #_photosRecentlyUpdatedRestServiceJson-interface-orchestration-problem-solving-pattern
@@ -499,7 +506,8 @@
 |#
 
 (def-rule #_lower-for-photosRecentlyUpdatedRestServiceJson
-  ((#_grnd:lower #_photosRecentlyUpdatedRestServiceJson ?invocation ?http-request) if
+  ((#_lower-for-photosRecentlyUpdatedRestServiceJson ?invocation ?http-request)
+   if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
@@ -523,7 +531,8 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-photosRecentlyUpdatedRestServiceJson
-    ((#_grnd:lift #_photosRecentlyUpdatedRestServiceJson ?http-response ?invocation) if
+    ((#_lift-for-photosRecentlyUpdatedRestServiceJson ?http-response ?invocation)
+     if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_json:serialiseJson ?json ?http-content)
      (#_json:Object ?json)
@@ -639,7 +648,8 @@
            ((has-earthing :value #_photosGetSizesRestService-grounding)))
 
 (def-instance #_photosGetSizesRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-photosGetSizesRestService)
+   (lift-rule #_lift-for-photosGetSizesRestService)))
 
 (def-class #_photosGetSizesRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -660,7 +670,7 @@
 
 ;;; {{{ Lifting and lowering
 (def-rule #_lower-for-photosGetSizesRestService
-    ((#_grnd:lower #_photosGetSizesRestService ?invocation ?http-request) if
+    ((#_lower-for-photosGetSizesRestService ?invocation ?http-request) if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (#_argsForPhotosGetSizes ?invocation ?args)
@@ -670,7 +680,8 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-photosGetSizesRestService
-    ((#_grnd:lift #_photosGetSizesRestService ?http-response ?invocation) if
+    ((#_lift-for-photosGetSizesRestService ?http-response ?invocation)
+     if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      (#_xml:rootElement ?xml ?root-element)
@@ -704,7 +715,7 @@
      (#_hasResult :type #_xml:Document)))
 
 (def-rule #_lower-for-authCheckTokenRestService
-    ((#_grnd:lower #_authCheckTokenRestService ?invocation ?http-request) if
+    ((#_lower-for-authCheckTokenRestService ?invocation ?http-request) if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
@@ -722,7 +733,7 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-authCheckTokenRestService
-    ((#_grnd:lift #_authCheckTokenRestService ?http-response ?invocation) if
+    ((#_lift-for-authCheckTokenRestService ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      ;; XXX We don't decode this yet.
@@ -770,7 +781,8 @@
            ((has-earthing :value #_authCheckTokenRestService-grounding)))
 
 (def-instance #_authCheckTokenRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-authCheckTokenRestService)
+   (lift-rule #_lift-for-authCheckTokenRestService)))
 
 (def-class #_authCheckTokenRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -801,7 +813,7 @@
      (#_hasResult :type #_xml:Document)))
 
 (def-rule #_lower-for-testLoginRestService
-    ((#_grnd:lower #_testLoginRestService ?invocation ?http-request) if
+    ((#_lower-for-testLoginRestService ?invocation ?http-request) if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
@@ -819,7 +831,7 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-testLoginRestService
-    ((#_grnd:lift #_testLoginRestService ?http-response ?invocation) if
+    ((#_lift-for-testLoginRestService ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      ;; XXX We don't decode this yet.
@@ -867,7 +879,8 @@
            ((has-earthing :value #_testLoginRestService-grounding)))
 
 (def-instance #_testLoginRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-testLoginRestService)
+   (lift-rule #_lift-for-testLoginRestService)))
 
 (def-class #_testLoginRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -897,7 +910,7 @@
      (#_hasResult :type #_xml:Document)))
 
 (def-rule #_lower-for-testEchoRestService
-    ((#_grnd:lower #_testEchoRestService ?invocation ?http-request) if
+    ((#_lower-for-testEchoRestService ?invocation ?http-request) if
      (#_rfc2616:set-method ?http-request "GET")
      (= ?base-url "http://api.flickr.com/services/rest/?")
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
@@ -912,7 +925,7 @@
      (#_rfc2616:set-url ?http-request ?url)))
 
 (def-rule #_lift-for-testEchoRestService
-    ((#_grnd:lift #_testEchoRestService ?http-response ?invocation) if
+    ((#_lift-for-testEchoRestService ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      ;; XXX We don't decode this yet.
@@ -960,7 +973,8 @@
            ((has-earthing :value #_testEchoRestService-grounding)))
 
 (def-instance #_testEchoRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-testEchoRestService)
+   (lift-rule #_lift-for-testEchoRestService)))
 
 (def-class #_testEchoRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -989,7 +1003,7 @@
      (#_image :type string)))
 
 (def-rule #_lower-for-getImageRestService
-    ((#_grnd:lower #_getImageRestService ?invocation ?http-request)
+    ((#_lower-for-getImageRestService ?invocation ?http-request)
      if
      (= ?photo (wsmo-role-value ?invocation #_photo))
      (#_farm ?photo ?farm)
@@ -1002,7 +1016,7 @@
      (#_rfc2616:set-method ?http-request "GET")))
 
 (def-rule #_lift-for-getImageRestService
-    ((#_grnd:lift #_getImageRestService ?http-response ?invocation) if
+    ((#_lift-for-getImageRestService ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation #_image ?http-content)))
 
@@ -1048,7 +1062,8 @@
            ((has-earthing :value #_getImageRestService-grounding)))
 
 (def-instance #_getImageRestService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-getImageRestService)
+   (lift-rule #_lift-for-getImageRestService)))
 
 (def-class #_getImageRestService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)

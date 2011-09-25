@@ -88,7 +88,8 @@
             (has-earthing :value put-object-web-service-grounding)))
 
 (def-instance put-object-web-service-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-put-object)
+   (lift-rule #_lift-for-put-object)))
 
 (DEF-CLASS PUT-OBJECT-WEB-SERVICE-INTERFACE-ORCHESTRATION-PROBLEM-SOLVING-PATTERN
     (PROBLEM-SOLVING-PATTERN)
@@ -117,7 +118,7 @@
 ;;; {{{ put-object http grounding
 
 (def-rule #_lower-for-put-object
-    ((#_hg:lower put-object-web-service ?invocation ?http-request)
+    ((#_lower-for-put-object ?invocation ?http-request)
      if
      ;; Set the content
      (= ?content (wsmo-role-value ?invocation has-data))
@@ -142,7 +143,7 @@
 (def-rule #_lift-for-put-object
     ;; This is a no-op, since there's no meaningful content in the
     ;; response.
-    ((#_hg:lift put-object-web-service ?http-response ?invocation)))
+    ((#_lift-for-put-object ?http-response ?invocation)))
 ;;; }}}
 
 ;;; {{{ get-object-web-service
@@ -189,7 +190,8 @@
             (has-earthing :value get-object-web-service-grounding)))
 
 (def-instance get-object-web-service-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-get-object)
+   (lift-rule #_lift-for-get-object)))
 
 (def-class get-object-web-service-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -218,7 +220,7 @@
 ;;; {{{ get-object http grounding
 
 (def-rule #_lower-for-get-object
-    ((#_hg:lower get-object-web-service ?invocation ?http-request)
+    ((#_lower-for-get-object ?invocation ?http-request)
      if
      ;; Set the date
      (= ?date (#_rfc2616:format-http-time (#_hg:current-time)))
@@ -237,7 +239,7 @@
      (#_sign-amazon ?http-request ?canonical-url ?account)))
 
 (def-rule #_lift-for-get-object
-    ((#_hg:lift get-object-web-service ?http-response ?invocation)
+    ((#_lift-for-get-object ?http-response ?invocation)
      if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation #_hasContent ?http-content)
@@ -247,7 +249,7 @@
 ;;; {{{ get-bucket http grounding
 
 (def-rule #_lower-for-get-bucket
-    ((#_hg:lower get-bucket-web-service ?invocation ?http-request)
+    ((#_lower-for-get-bucket ?invocation ?http-request)
      if
      (= ?date (#_rfc2616:format-http-time (#_hg:current-time)))
      (#_rfc2616:set-header ?http-request "Date" ?date)
@@ -264,7 +266,7 @@
      (#_sign-amazon ?http-request ?canonical-url ?account)))
 
 (def-rule #_lift-for-get-bucket
-    ((#_hg:lift get-bucket-web-service ?http-response ?invocation)
+    ((#_lift-for-get-bucket ?http-response ?invocation)
      if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation #_hasContent ?http-content)
@@ -316,7 +318,8 @@
             (has-earthing :value get-bucket-web-service-grounding)))
 
 (def-instance get-bucket-web-service-grounding rest-grounding
-  ())
+  ((lift-rule #_lift-for-get-bucket)
+   (lower-rule #_lower-for-get-bucket)))
 
 (def-class get-bucket-web-service-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)

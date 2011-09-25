@@ -59,10 +59,14 @@
 
 (def-class ocml-query-web-service-interface-choreography
            (choreography)
-           ((has-grounding :value ((grounded-to-rest)))))
+    ((has-earthing :value ocml-query-web-service-interface-grounding)))
 
-(def-rule #_lower-ocml-query-web-service
-    ((#_hg:lower ocml-query-web-service ?invocation ?http-request) if
+(def-instance ocml-query-web-service-interface-grounding rest-grounding
+  ((lower-rule #_lower-for-ocml-query-web-service)
+   (lift-rule #_lift-for-ocml-query-web-service)))
+
+(def-rule #_lower-for-ocml-query-web-service
+    ((#_lower-for-ocml-query-web-service ?invocation ?http-request) if
      (= ?query (wsmo-role-value ?invocation has-query))
      (= ?ontology (wsmo-role-value ?invocation has-ontology))
      (= ?format (wsmo-role-value ?invocation has-format))
@@ -73,8 +77,8 @@
      (#_rfc2616:set-url ?http-request ?url)
      (#_rfc2616:set-method ?http-request "GET")))
 
-(def-rule #_lift-ocml-query-web-service
-    ((#_hg:lift ocml-query-web-service ?http-response ?invocation) if
+(def-rule #_lift-for-ocml-query-web-service
+    ((#_lift-for-ocml-query-web-service ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation has-query-result ?http-content)))
 

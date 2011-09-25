@@ -64,7 +64,8 @@
            ((has-earthing :value #_photosGetSizesXmlrpcService-grounding)))
 
 (def-instance #_photosGetSizesXmlrpcService-grounding rest-grounding
-  ())
+  ((lift-rule #_lift-for-photosGetSizesXmlrpcService)
+   (lower-rule #_lower-for-photosGetSizesXmlrpcService)))
 
 (def-class #_photosGetSizesXmlrpcService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -85,14 +86,14 @@
 
 ;;; {{{ Lifting and lowering
 (def-rule #_lower-for-photosGetSizesXmlrpcService
-    ((#_grnd:lower #_photosGetSizesXmlrpcService ?invocation ?http-request) if
+    ((#_lower-for-photosGetSizesXmlrpcService ?invocation ?http-request) if
      (#_argsForPhotosGetSizes ?invocation ?args)
      (= ?account (wsmo-role-value ?invocation #_hasAccount))
      (#_signArguments #_xmlrpc ?args ?account)
      (#_argsToXmlrpcRequest ?args ?http-request)))
 
 (def-rule #_lift-for-photosGetSizesXmlrpcService
-    ((#_grnd:lift #_photosGetSizesXmlrpcService ?http-response ?invocation) if
+    ((#_lift-for-photosGetSizesXmlrpcService ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      (#_getTheXmlrpcValue ?xml ?value)
@@ -193,7 +194,8 @@ version."
            ((has-earthing :value #_photosRecentlyUpdatedXmlRpcService-grounding)))
 
 (def-instance #_photosRecentlyUpdatedXmlRpcService-grounding rest-grounding
-  ())
+  ((lift-rule #_lift-for-photosRecentlyUpdatedXmlRpcService)
+   (lower-rule #_lower-for-photosRecentlyUpdatedXmlRpcService)))
 
 (def-class #_photosRecentlyUpdatedXmlRpcService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
@@ -229,13 +231,15 @@ version."
      (#_addArgument ?args "min_date" ?min-date)))
 
 (def-rule #_lower-for-photosRecentlyUpdatedXmlRpcService
-    ((#_grnd:lower #_photosRecentlyUpdatedXmlRpcService ?invocation ?http-request) if
+    ((#_lower-for-photosRecentlyUpdatedXmlRpcService ?invocation ?http-request)
+     if
      (#_argsForRecentlyUpdated ?invocation ?args)
      (#_signArguments #_xmlrpc ?args ?account)
      (#_argsToXmlrpcRequest ?args ?http-request)))
 
 (def-rule #_lift-for-photosRecentlyUpdatedXmlRpcService
-    ((#_grnd:lift #_photosRecentlyUpdatedXmlRpcService ?http-response ?invocation) if
+    ((#_lift-for-photosRecentlyUpdatedXmlRpcService ?http-response ?invocation)
+     if
      (#_rfc2616:get-content ?http-response ?http-content)
      (#_xml:serialiseXml ?xml ?http-content)
      (#_xml:rootElement ?xml ?root)

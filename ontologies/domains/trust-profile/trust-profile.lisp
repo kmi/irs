@@ -222,29 +222,12 @@
       (WSMO-ROLE-VALUE ?web-service 'HAS-DATE-AND-TIME)
       (WSMO-ROLE-VALUE ?web-service 'has-train-timetable))))))
 
-
-
 (def-class get-train-timetable-service-interface-T1 (interface)
-  ((has-choreography :value get-train-timetable-service-choreography-T1)
-   (has-publisher-information :value get-train-timetable-service-publisher-information-T1)))
+    ((has-choreography :value get-train-timetable-service-choreography-T1)))
 
 (DEF-CLASS GET-TRAIN-TIMETABLE-SERVICE-CHOREOGRAPHY-T1
            (CHOREOGRAPHY)
-           ((has-grounding ((grounded-to-rest)))))
-
-
-
-
-(DEF-CLASS GET-TRAIN-TIMETABLE-SERVICE-PUBLISHER-INFORMATION-T1
-           (PUBLISHER-INFORMATION)
-           ((HAS-ASSOCIATED-WEB-SERVICE-INTERFACE
-             :VALUE
-             GET-TRAIN-TIMETABLE-SERVICE-INTERFACE-T1)
-            (HAS-WEB-SERVICE-HOST :VALUE "localhost")
-            (HAS-WEB-SERVICE-PORT :VALUE 8080)
-            (HAS-WEB-SERVICE-LOCATION :VALUE "")))
-
-
+    ((has-earthing :value #_generic-grounding)))
 
 ;;trusted ws2
 
@@ -288,24 +271,11 @@
 
 
 (def-class get-train-timetable-service-interface-T2 (interface)
-  ((has-choreography :value get-train-timetable-service-choreography-T2)
-   (has-publisher-information :value get-train-timetable-service-publisher-information-T2)))
+  ((has-choreography :value get-train-timetable-service-choreography-T2)))
 
 (DEF-CLASS GET-TRAIN-TIMETABLE-SERVICE-CHOREOGRAPHY-T2
-           (CHOREOGRAPHY)
-           ((has-grounding :value ((grounded-to-rest)))))
-
-(DEF-CLASS GET-TRAIN-TIMETABLE-SERVICE-PUBLISHER-INFORMATION-T2
-           (PUBLISHER-INFORMATION)
-           ((HAS-ASSOCIATED-WEB-SERVICE-INTERFACE
-             :VALUE
-             GET-TRAIN-TIMETABLE-SERVICE-INTERFACE-T2)
-            (HAS-WEB-SERVICE-HOST :VALUE "localhost")
-            (HAS-WEB-SERVICE-PORT :VALUE 8080)
-            (HAS-WEB-SERVICE-LOCATION :VALUE "")))
-
-
-
+    (CHOREOGRAPHY)
+    ((has-earthing :value #_generic-grounding)))
 
 ;;trusted ws3
 
@@ -345,52 +315,11 @@
 
 
 (def-class get-train-timetable-service-interface-T3 (interface)
-  ((has-choreography :value get-train-timetable-service-choreography-T3)
-   (has-publisher-information :value get-train-timetable-service-publisher-information-T3)))
+  ((has-choreography :value get-train-timetable-service-choreography-T3)))
 
 (DEF-CLASS GET-TRAIN-TIMETABLE-SERVICE-CHOREOGRAPHY-T3
-           (CHOREOGRAPHY)
-           ((has-grounding :value ((grounded-to-rest)))))
-
-(DEF-CLASS GET-TRAIN-TIMETABLE-SERVICE-PUBLISHER-INFORMATION-T3
-           (PUBLISHER-INFORMATION)
-           ((HAS-ASSOCIATED-WEB-SERVICE-INTERFACE
-             :VALUE
-             GET-TRAIN-TIMETABLE-SERVICE-INTERFACE-T3)
-            (HAS-WEB-SERVICE-HOST :VALUE "localhost")
-            (HAS-WEB-SERVICE-PORT :VALUE 8080)
-            (HAS-WEB-SERVICE-LOCATION :VALUE "")))
-
-
-(def-rule #_lower-for-t1
-    ((#_hg:lower get-train-timetable-service-T1 ?invocation ?http-request)
-     if
-     (#_generic-lower-get-timetable ?invocation ?http-request)))
-
-(def-rule #_lift-for-t1
-    ((#_hg:lift get-train-timetable-service-T1 ?http-response ?invocation)
-     if
-     (#_generic-lift-get-timetable ?http-response ?invocation)))
-
-(def-rule #_lower-for-t2
-    ((#_hg:lower get-train-timetable-service-T2 ?invocation ?http-request)
-     if
-     (#_generic-lower-get-timetable ?invocation ?http-request)))
-
-(def-rule #_lift-for-t2
-    ((#_hg:lift get-train-timetable-service-T2 ?http-response ?invocation)
-     if
-     (#_generic-lift-get-timetable ?http-response ?invocation)))
-
-(def-rule #_lower-for-t3
-    ((#_hg:lower get-train-timetable-service-T3 ?invocation ?http-request)
-     if
-     (#_generic-lower-get-timetable ?invocation ?http-request)))
-
-(def-rule #_lift-for-t3
-    ((#_hg:lift get-train-timetable-service-T3 ?http-response ?invocation)
-     if
-     (#_generic-lift-get-timetable ?http-response ?invocation)))
+    (CHOREOGRAPHY)
+    ((has-earthing :value #_generic-grounding)))
 
 (def-rule #_generic-lower-get-timetable
     ((#_generic-lower-get-timetable ?invocation ?http-request)
@@ -409,3 +338,7 @@
      if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation has-train-timetable ?http-content)))
+
+(def-instance #_generic-grounding rest-grounding
+  ((lower-rule #_generic-lower-get-timetable)
+   (lift-rule #_generic-lift-get-timetable)))

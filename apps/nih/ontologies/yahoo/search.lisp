@@ -21,7 +21,7 @@
   :iff-def (= ?id "9_cFTSPV34FNhnTqZZw4_nAuoZ2qvHYW0OSaGMc208MeUVFeUQDTh.R3dd.nfG_3QQ--"))
 
 (def-rule #_lower-for-webSearchService
-    ((#_hg:lower #_webSearchService ?invocation ?http-request)
+    ((#_lower-webSearchService ?invocation ?http-request)
      if
      (= ?rawquery (wsmo-role-value ?invocation #_hasQuery))
      (#_rfc2616:url-encoding ?rawquery ?query)
@@ -32,7 +32,7 @@
      (#_rfc2616:set-method ?http-request "GET")))
 
 (def-rule #_lift-for-webSearchService
-    ((#_hg:lift #_webSearchService ?http-response ?invocation) if
+    ((#_lift-forwebSearchService ?http-response ?invocation) if
      (#_rfc2616:get-content ?http-response ?http-content)
      (set-goal-slot-value ?invocation #_hasResultSet ?http-content)
      (#_rfc2616:header-value ?http-request "Content-Type" ?content-type)
@@ -83,7 +83,8 @@
             (has-earthing :value #_webSearchService-grounding)))
 
 (def-instance #_webSearchService-grounding rest-grounding
-  ())
+  ((lower-rule #_lower-for-webSearchService)
+   (lift-rule #_lift-for-webSearchService)))
 
 (def-class #_webSearchService-interface-orchestration-problem-solving-pattern
     (problem-solving-pattern)
