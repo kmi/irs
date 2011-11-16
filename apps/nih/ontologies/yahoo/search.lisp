@@ -103,10 +103,4 @@
       :value
       #_webSearchService-interface-non-functional-properties)))
 
-(def-class #_webSearchService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_webSearchService-interface)
-     (has-web-service-host :value "yahoo.com")
-     (has-web-service-port :value 80)))
-
 ;;; }}}

@@ -82,13 +82,6 @@
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       #_add-web-service-interface-non-functional-properties)))
-
-(def-class #_add-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_add-web-service-interface)
-     (has-web-service-host :value "erehwon")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ add http grounding
 

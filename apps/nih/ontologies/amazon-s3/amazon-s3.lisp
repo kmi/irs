@@ -108,12 +108,6 @@
       :VALUE
       PUT-OBJECT-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class put-object-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value put-object-web-service-interface)
-     (has-web-service-host :value "s3.amazonaws.com")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ put-object http grounding
 
@@ -209,12 +203,6 @@
      (has-non-functional-properties
       :value
       get-object-web-service-interface-non-functional-properties)))
-
-(def-class get-object-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value get-object-web-service-interface)
-     (has-web-service-host :value "s3.amazonaws.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ get-object http grounding
@@ -337,12 +325,6 @@
      (has-non-functional-properties
       :value
       get-bucket-web-service-interface-non-functional-properties)))
-
-(def-class get-bucket-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value get-bucket-web-service-interface)
-     (has-web-service-host :value "s3.amazonaws.com")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 

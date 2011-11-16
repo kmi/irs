@@ -746,12 +746,6 @@ service returns a link to the created files.")))
       :VALUE
       IMPORT-VTK-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class import-vtk-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-vtk-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ stl-importer-web-service
 (DEF-CLASS import-stl-mediator-non-functional-properties (non-functional-properties)
@@ -818,12 +812,6 @@ service returns a link to the created files.")))
       :VALUE
       IMPORT-STL-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class import-stl-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-stl-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ vrml-importer-web-service
 (DEF-CLASS import-vrml-mediator-non-functional-properties (non-functional-properties)
@@ -888,12 +876,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       IMPORT-VRML-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class import-vrml-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-vrml-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ image-sequence-importer-web-service
@@ -960,12 +942,6 @@ service returns a link to the created files.")))
       :VALUE
       IMPORT-IMAGE-SEQUENCE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class import-image-sequence-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-image-sequence-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ import-landmark-cloud-web-service
 (DEF-CLASS import-landmark-cloud-mediator-non-functional-properties (non-functional-properties)
@@ -1029,12 +1005,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       IMPORT-LANDMARK-CLOUD-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class import-landmark-cloud-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-landmark-cloud-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ import-dicom-web-service
@@ -1102,12 +1072,6 @@ service returns a link to the created files.")))
       :VALUE
       IMPORT-DICOM-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class import-dicom-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-dicom-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ import-raw-volume-web-service
 (DEF-CLASS import-raw-volume-mediator-non-functional-properties (non-functional-properties)
@@ -1172,12 +1136,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       IMPORT-RAW-VOLUME-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class import-raw-volume-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value import-raw-volume-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -1245,12 +1203,6 @@ service returns a link to the created files.")))
       :VALUE
       EXTRACT-ISO-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class extract-iso-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value extract-iso-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ render-surface-web-service
 (def-class render-surface-mediator-non-functional-properties (non-functional-properties)
@@ -1315,12 +1267,6 @@ service returns a link to the created files.")))
       :VALUE
       RENDER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class render-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value render-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ decimate-surface-web-service
 (def-class decimate-surface-mediator-non-functional-properties (non-functional-properties)
@@ -1384,12 +1330,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       DECIMATE-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class decimate-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value decimate-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -1456,12 +1396,6 @@ service returns a link to the created files.")))
       :VALUE
       CREATE-CONE-SURFACE-PARAMETRIC-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class create-cone-surface-parametric-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value create-cone-surface-parametric-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ create-cube-surface-parametric-web-service
 (def-class create-cube-surface-parametric-mediator-non-functional-properties (non-functional-properties)
@@ -1526,12 +1460,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       CREATE-CUBE-SURFACE-PARAMETRIC-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class create-cube-surface-parametric-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value create-cube-surface-parametric-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ create-cylinder-surface-parametric-web-service
@@ -1598,12 +1526,6 @@ service returns a link to the created files.")))
       :VALUE
       CREATE-CYLINDER-SURFACE-PARAMETRIC-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class create-cylinder-surface-parametric-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value create-cylinder-surface-parametric-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ create-plane-surface-parametric-web-service
 (def-class create-plane-surface-parametric-mediator-non-functional-properties (non-functional-properties)
@@ -1668,12 +1590,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       CREATE-PLANE-SURFACE-PARAMETRIC-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class create-plane-surface-parametric-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value create-plane-surface-parametric-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ create-sphere-surface-parametric-web-service
@@ -1740,12 +1656,6 @@ service returns a link to the created files.")))
       :VALUE
       CREATE-SPHERE-SURFACE-PARAMETRIC-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class create-sphere-surface-parametric-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value create-sphere-surface-parametric-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 
 ;;; {{{ export-vtk-web-service
@@ -1811,12 +1721,6 @@ service returns a link to the created files.")))
       :VALUE
       EXPORT-VTK-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class export-vtk-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value export-vtk-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ export-stl-web-service
 (def-class export-stl-mediator-non-functional-properties (non-functional-properties)
@@ -1880,12 +1784,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       EXPORT-STL-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class export-stl-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value export-stl-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ export-bmp-web-service
@@ -1952,12 +1850,6 @@ service returns a link to the created files.")))
       :VALUE
       EXPORT-BMP-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class export-bmp-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value export-bmp-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ export-vrml-web-service
 (def-class export-vrml-mediator-non-functional-properties (non-functional-properties)
@@ -2022,14 +1914,7 @@ service returns a link to the created files.")))
       :VALUE
       EXPORT-VRML-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class export-vrml-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value export-vrml-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
-
 ;;; {{{ measure-volume-web-service
 (def-class measure-volume-mediator-non-functional-properties (non-functional-properties)
     nil)
@@ -2092,12 +1977,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       MEASURE-VOLUME-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class measure-volume-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value measure-volume-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 
@@ -2164,12 +2043,6 @@ service returns a link to the created files.")))
       :VALUE
       CLEAN-FILTER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class clean-filter-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value clean-filter-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ connectivity-filter-surface-web-service
 (def-class connectivity-filter-surface-mediator-non-functional-properties (non-functional-properties)
@@ -2235,11 +2108,6 @@ service returns a link to the created files.")))
       :VALUE
       CONNECTIVITY-FILTER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class connectivity-filter-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value connectivity-filter-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 ;;; }}}
 ;;; {{{ generate-normal-filter-surface-web-service
 (def-class generate-normal-filter-surface-mediator-non-functional-properties (non-functional-properties)
@@ -2304,11 +2172,6 @@ service returns a link to the created files.")))
       :VALUE
       GENERATE-NORMAL-FILTER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class generate-normal-filter-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value generate-normal-filter-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 ;;; }}}
 ;;; {{{ smooth-filter-surface-web-service
 (def-class smooth-filter-surface-mediator-non-functional-properties (non-functional-properties)
@@ -2372,12 +2235,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       SMOOTH-FILTER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class smooth-filter-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value smooth-filter-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 ;;; {{{ strip-filter-surface-web-service
@@ -2443,12 +2300,6 @@ service returns a link to the created files.")))
       :VALUE
       STRIP-FILTER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class strip-filter-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value strip-filter-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
-
 ;;; }}}
 ;;; {{{ triangulate-filter-surface-web-service
 (def-class triangulate-filter-surface-mediator-non-functional-properties (non-functional-properties)
@@ -2513,11 +2364,6 @@ service returns a link to the created files.")))
       :VALUE
       TRIANGULATE-FILTER-SURFACE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class triangulate-filter-surface-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value triangulate-filter-surface-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 ;;; }}}
 
 ;;; {{{ create-ref-sys-service
@@ -2582,12 +2428,6 @@ service returns a link to the created files.")))
      (HAS-NON-FUNCTIONAL-PROPERTIES
       :VALUE
       CREATE-REF-SYS-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
-
-(def-class create-ref-sys-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value create-ref-sys-web-service-interface)
-     (has-web-service-host :value "lhdl.cis.beds.ac.uk")
-     (has-web-service-port :value 80)))
 
 ;;; }}}
 

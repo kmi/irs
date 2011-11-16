@@ -98,12 +98,4 @@
      (has-non-functional-properties
       :value
       ocml-query-web-service-interface-non-functional-properties)))
-
-(def-class ocml-query-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value ocml-query-web-service-interface)
-     (has-web-service-host :value "localhost")
-     (has-web-service-port :value 8080)
-     (has-web-service-location :value "/api-rest/query")))
-
 ;;; }}}

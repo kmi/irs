@@ -143,12 +143,6 @@
       :VALUE
       DOWNLOAD-FILE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class download-file-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value download-file-web-service-interface)
-     (has-web-service-host :value "www.biomedtown.org")
-     (has-web-service-port :value 80)))
-
 (def-rule #_lower-for-download-file
     ((#_hg:lower download-file-web-service ?invocation ?http-request) if
      (#_sharedBit ?invocation ?http-request)
@@ -242,12 +236,6 @@
       :VALUE
       UPLOAD-FILE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class upload-file-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value upload-file-web-service-interface)
-     (has-web-service-host :value "www.biomedtown.org")
-     (has-web-service-port :value 80)))
-
 (def-rule #_lower-for-upload-file
     ((#_hg:lower upload-file-web-service ?invocation ?http-request) if
      (#_sharedBit ?invocation ?http-request)
@@ -334,12 +322,6 @@
       :VALUE
       DELETE-FILE-WEB-SERVICE-INTERFACE-NON-FUNCTIONAL-PROPERTIES)))
 
-(def-class delete-file-web-service-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value delete-file-web-service-interface)
-     (has-web-service-host :value "www.biomedtown.org")
-     (has-web-service-port :value 80)))
-
 (def-rule #_lower-for-delete-file
     ((#_hg:lower delete-file-web-service ?invocation ?http-request) if
      (#_sharedBit ?invocation ?http-request)
@@ -413,12 +395,6 @@
      (has-non-functional-properties
       :value
       #_simpleSearchService-interface-non-functional-properties)))
-
-(def-class #_simpleSearchService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_simpleSearchService-interface)
-     (has-web-service-host :value "www.biomedtown.org")
-     (has-web-service-port :value 80)))
 
 (def-rule #_lower-for-simpleSearch
     ((#_hg:lower #_simpleSearchService ?invocation ?http-request) if
@@ -495,12 +471,6 @@
      (has-non-functional-properties
       :value
       #_listSandboxService-interface-non-functional-properties)))
-
-(def-class #_listSandboxService-publisher-information
-    (publisher-information)
-    ((has-associated-web-service-interface :value #_listSandboxService-interface)
-     (has-web-service-host :value "www.biomedtown.org")
-     (has-web-service-port :value 80)))
 
 (def-rule #_lower-for-listSandbox
     ((#_hg:lower #_listSandboxService ?invocation ?http-request) if
