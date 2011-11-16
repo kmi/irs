@@ -66,7 +66,7 @@ IRS HTTP server will redirect to the Yahoo servers."
 (defun construct-dispatch-table ()
   "Create the dispatch table based on current plugins."
   (append (apply #'append (mapcar #'plugin-dispatch-table *irs-plugins*))
-	  (list #'hunchentoot:default-dispatcher)))
+	  (list #'hunchentoot:dispatch-easy-handlers)))
 
 (defun plugins-of-type (type)
   (assert (typep type 'plugin-type))
@@ -74,10 +74,6 @@ IRS HTTP server will redirect to the Yahoo servers."
                  :key #'plugin-type))
 
 (defun start-web-interface ()
-  (setf hunchentoot:*default-handler* #'draw-default-page)
-  ;; Otherwise Hunchentoot will write it's own message to the client,
-  ;; and that mucks up our corporate image.
-  (setf hunchentoot:*handle-http-errors-p* nil)
   (register-plugin
    :irs :core
    "The Internet Reasoning Service"
@@ -114,12 +110,12 @@ IRS HTTP server will redirect to the Yahoo servers."
     (hunchentoot:stop *web-interface-server*)
     (setf *web-interface-server* nil))
   (setf hunchentoot:*dispatch-table* (construct-dispatch-table)
-	*web-interface-server* (make-instance 'hunchentoot:acceptor
+	*web-interface-server* (make-instance 'hunchentoot:easy-acceptor
 					      :port irs:*port* :address irs:*host*))
   (ocml::ensure-directories-exist (logical-pathname "irs:log;"))
-  (setf hunchentoot:*message-log-pathname*
+  (setf (hunchentoot:acceptor-message-log-destination *web-interface-server*)
 	(logical-pathname "irs:log;hunchentoot-message.log")
-	hunchentoot:*access-log-pathname*
+	(hunchentoot:acceptor-access-log-destination *web-interface-server*)
 	(logical-pathname "irs:log;hunchentoot-access.log"))
   (hunchentoot:start *web-interface-server*))
 
@@ -312,11 +308,6 @@ IRS HTTP server will redirect to the Yahoo servers."
 
 (defun redirect-to-top-page ()
   (hunchentoot:redirect (format nil "~A~A" (base-href) "irs")))
-
-(defun draw-default-page ()
-  (setf (hunchentoot:return-code*) hunchentoot:+http-not-found+)
-  (standard-page "You seem to be lost"
-    (:p "There is no known page here.  Click on one of the links above.")))
 
 ;;; {{{ Graphing
 (defun draw-graph-page ()
